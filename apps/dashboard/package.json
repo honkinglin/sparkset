@@ -1,0 +1,13 @@
+{
+  "name": "@sparkline/dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -b",
+    "lint": "echo 'TODO: add dashboard lint'",
+    "test": "echo 'TODO: add dashboard tests'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

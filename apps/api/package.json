@@ -1,0 +1,13 @@
+{
+  "name": "@sparkline/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -b",
+    "lint": "echo 'TODO: add api lint'",
+    "test": "echo 'TODO: add api tests'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

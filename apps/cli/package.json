@@ -1,0 +1,16 @@
+{
+  "name": "@sparkline/cli",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "sparkline": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -b",
+    "lint": "echo 'TODO: add cli lint'",
+    "test": "echo 'TODO: add cli tests'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
