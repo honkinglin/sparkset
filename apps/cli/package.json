@@ -12,6 +12,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "echo 'TODO: add cli tests'"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "commander": "^14.0.2"
+  }
 }
