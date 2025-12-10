@@ -12,6 +12,7 @@ import {
   PrismaActionRepository,
   PrismaConversationRepository,
   getPrisma,
+  createDBClient,
 } from '@sparkline/db';
 
 const env = loadEnv();
@@ -20,12 +21,13 @@ const app = Fastify({ logger: env.LOG_LEVEL });
 let datasourceService: DatasourceService;
 let actionService: ActionService;
 let conversationService: ConversationService;
+let prismaClient;
 const dsConfig = buildDatasourceConfig(env);
 if (process.env.DATABASE_URL) {
-  const prisma = getPrisma();
-  datasourceService = new DatasourceService(new PrismaDatasourceRepository(prisma));
-  actionService = new ActionService(new PrismaActionRepository(prisma));
-  conversationService = new ConversationService(new PrismaConversationRepository(prisma));
+  prismaClient = getPrisma();
+  datasourceService = new DatasourceService(new PrismaDatasourceRepository(prismaClient));
+  actionService = new ActionService(new PrismaActionRepository(prismaClient));
+  conversationService = new ConversationService(new PrismaConversationRepository(prismaClient));
   app.log.info('Datasource service backed by Prisma ORM');
 } else if (dsConfig) {
   const repo = new MySQLDatasourceRepository(new MySQLRepo(dsConfig));
@@ -40,7 +42,43 @@ if (process.env.DATABASE_URL) {
   app.log.warn('DB env not set; using in-memory datasource store');
 }
 
-registerRoutes(app, { datasourceService, actionService, conversationService });
+const getDBClient = async (datasourceId: number) => {
+  const ds = (await datasourceService.list()).find((d) => d.id === datasourceId);
+  if (!ds) throw new Error('Datasource not found');
+  return createDBClient(
+    {
+      id: ds.id,
+      name: ds.name,
+      type: ds.type,
+      host: ds.host,
+      port: ds.port,
+      username: ds.username,
+      password: ds.password,
+      database: ds.database,
+    },
+    prismaClient,
+  );
+};
+
+registerRoutes(app, {
+  datasourceService,
+  actionService,
+  conversationService,
+  queryExecutor: undefined,
+  getDBClient,
+  getDatasourceConfig: async (id: number) => {
+    const ds = (await datasourceService.list()).find((d) => d.id === id);
+    if (!ds) throw new Error('Datasource not found');
+    return {
+      id: ds.id,
+      host: ds.host,
+      port: ds.port,
+      username: ds.username,
+      password: ds.password,
+      database: ds.database,
+    };
+  },
+});
 
 void app
   .listen({ host: env.HOST, port: Number(env.PORT) })
