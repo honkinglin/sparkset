@@ -1,8 +1,8 @@
 -- Demo seed: create datasources row for a local MySQL database and a sample table.
 -- Adjust credentials before running.
 
-INSERT INTO datasources (name, type, host, port, username, password, database)
-VALUES ('local-mysql', 'mysql', '127.0.0.1', 3306, 'root', 'root', 'sparkline_demo');
+INSERT INTO datasources (`name`, `type`, `host`, `port`, `username`, `password`, `database`, `created_at`, `updated_at`)
+VALUES ('local-mysql', 'mysql', '127.0.0.1', 3306, 'root', '123456', 'sparkline_demo', NOW(), NOW());
 
 CREATE DATABASE IF NOT EXISTS sparkline_demo;
 USE sparkline_demo;

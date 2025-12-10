@@ -1,4 +1,5 @@
 import { Button } from '../components/ui/button';
+import { fetchDatasources } from '../lib/api';
 
 const mockTemplates = [
   { id: 1, name: '本周取消订单数', type: 'sql', updatedAt: '2025-12-01' },
@@ -20,7 +21,14 @@ const mockSessions = [
   },
 ];
 
-const Page = () => {
+const Page = async () => {
+  let datasources = [] as Awaited<ReturnType<typeof fetchDatasources>>;
+  try {
+    datasources = await fetchDatasources();
+  } catch (err) {
+    console.warn('Failed to fetch datasources', err);
+  }
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -33,6 +41,52 @@ const Page = () => {
           <Button>新建查询</Button>
         </div>
       </header>
+
+      <section className="card p-5 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-slate-400">数据源</p>
+            <h2 className="text-xl font-semibold">已连接的数据源</h2>
+          </div>
+          <Button variant="ghost" size="sm">
+            管理
+          </Button>
+        </div>
+        <div className="overflow-auto border border-white/10 rounded-xl">
+          <table className="table w-full text-sm">
+            <thead className="bg-white/5 text-left">
+              <tr>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">名称</th>
+                <th className="px-4 py-2">类型</th>
+                <th className="px-4 py-2">Host</th>
+                <th className="px-4 py-2">数据库</th>
+                <th className="px-4 py-2">最近同步</th>
+              </tr>
+            </thead>
+            <tbody>
+              {datasources.length === 0 ? (
+                <tr>
+                  <td className="px-4 py-3 text-slate-400" colSpan={6}>
+                    暂无数据源，请先通过 CLI 或 API 添加。
+                  </td>
+                </tr>
+              ) : (
+                datasources.map((ds) => (
+                  <tr key={ds.id} className="border-t border-white/10">
+                    <td className="px-4 py-3">{ds.id}</td>
+                    <td className="px-4 py-3 font-medium">{ds.name}</td>
+                    <td className="px-4 py-3 uppercase text-xs text-slate-300">{ds.type}</td>
+                    <td className="px-4 py-3 text-slate-200">{`${ds.host}:${ds.port}`}</td>
+                    <td className="px-4 py-3 text-slate-200">{ds.database}</td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">{ds.lastSyncAt ?? '-'}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         <div className="card p-5 md:col-span-2 space-y-4">
