@@ -2,9 +2,13 @@ import { FastifyReply } from 'fastify';
 import { ActionService } from '../../services/actionService';
 import { actionCreateSchema, actionUpdateSchema } from '../../validators/action';
 import { TypedRequest } from '../types';
+import { ActionExecutor } from '@sparkline/core';
 
 export class ActionsController {
-  constructor(private service: ActionService) {}
+  constructor(
+    private service: ActionService,
+    private actionExecutor?: ActionExecutor,
+  ) {}
 
   async index(_req: TypedRequest, reply: FastifyReply) {
     const items = await this.service.list();
@@ -20,13 +24,13 @@ export class ActionsController {
 
   async store(req: TypedRequest, reply: FastifyReply) {
     const parsed = actionCreateSchema.parse(req.body);
-    const item = this.service.create(parsed);
+    const item = await this.service.create(parsed);
     return reply.code(201).send(item);
   }
 
   async update(req: TypedRequest, reply: FastifyReply) {
     const parsed = actionUpdateSchema.parse({ ...req.body, ...req.params });
-    const item = this.service.update(parsed);
+    const item = await this.service.update(parsed);
     return reply.send(item);
   }
 
@@ -40,7 +44,17 @@ export class ActionsController {
     const id = Number((req.params as { id: string }).id);
     const item = await this.service.get(id);
     if (!item) return reply.code(404).send({ message: 'Action not found' });
-    // TODO: integrate real executor; stub returns payload
-    return reply.send({ message: 'Action executed', action: item });
+    if (!this.actionExecutor)
+      return reply.send({ message: 'Action executed (stub)', action: item });
+    const result = await this.actionExecutor.run({
+      id: item.id,
+      type: item.type,
+      payload: item.payload,
+      parameters: item.parameters,
+    });
+    if (!result.success) {
+      return reply.code(400).send({ message: result.error?.message ?? 'Execution failed' });
+    }
+    return reply.send({ actionId: item.id, result: result.data });
   }
 }

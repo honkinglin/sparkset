@@ -9,7 +9,7 @@ import { ActionService } from '../app/services/actionService';
 import { ConversationsController } from '../app/Controllers/Http/ConversationsController';
 import { ConversationService } from '../app/services/conversationService';
 import { QueryService } from '../app/services/queryService';
-import { QueryPlanner, QueryExecutor } from '@sparkline/core';
+import { QueryPlanner, QueryExecutor, ActionExecutor } from '@sparkline/core';
 
 const healthController = new HealthController();
 const actionsController = new ActionsController(new ActionService());
@@ -22,6 +22,7 @@ interface RouteDeps {
   conversationService?: ConversationService;
   queryService?: QueryService;
   queryExecutor?: QueryExecutor;
+  actionExecutor?: ActionExecutor;
   getDBClient?: (datasourceId: number) => Promise<unknown>;
   getDatasourceConfig?: (datasourceId: number) => Promise<unknown>;
 }
@@ -52,13 +53,23 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
   const actionSvc = deps.actionService ?? actionsController['service'];
   const conversationSvc = deps.conversationService ?? conversationsController['service'];
 
-  app.get('/actions', (req, reply) => new ActionsController(actionSvc).index(req, reply));
-  app.get('/actions/:id', (req, reply) => new ActionsController(actionSvc).show(req, reply));
-  app.post('/actions', (req, reply) => new ActionsController(actionSvc).store(req, reply));
-  app.put('/actions/:id', (req, reply) => new ActionsController(actionSvc).update(req, reply));
-  app.delete('/actions/:id', (req, reply) => new ActionsController(actionSvc).destroy(req, reply));
+  app.get('/actions', (req, reply) =>
+    new ActionsController(actionSvc, deps.actionExecutor).index(req, reply),
+  );
+  app.get('/actions/:id', (req, reply) =>
+    new ActionsController(actionSvc, deps.actionExecutor).show(req, reply),
+  );
+  app.post('/actions', (req, reply) =>
+    new ActionsController(actionSvc, deps.actionExecutor).store(req, reply),
+  );
+  app.put('/actions/:id', (req, reply) =>
+    new ActionsController(actionSvc, deps.actionExecutor).update(req, reply),
+  );
+  app.delete('/actions/:id', (req, reply) =>
+    new ActionsController(actionSvc, deps.actionExecutor).destroy(req, reply),
+  );
   app.post('/actions/:id/execute', (req, reply) =>
-    new ActionsController(actionSvc).execute(req, reply),
+    new ActionsController(actionSvc, deps.actionExecutor).execute(req, reply),
   );
 
   app.post('/query', (req, reply) =>

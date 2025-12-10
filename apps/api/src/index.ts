@@ -20,7 +20,13 @@ import {
   InMemorySchemaCacheRepository,
   InMemoryDBClient,
 } from '@sparkline/db';
-import { QueryExecutor } from '@sparkline/core';
+import {
+  ActionExecutor,
+  ActionRegistry,
+  QueryExecutor,
+  createSqlActionHandler,
+  createEchoHandler,
+} from '@sparkline/core';
 
 const env = loadEnv();
 const app = Fastify({ logger: env.LOG_LEVEL });
@@ -36,6 +42,7 @@ let conversationService: ConversationService;
 let schemaService: SchemaService;
 let prismaClient;
 let queryExecutor: QueryExecutor | undefined;
+let actionExecutor: ActionExecutor | undefined;
 const dsConfig = buildDatasourceConfig(env);
 if (process.env.DATABASE_URL) {
   prismaClient = getPrisma();
@@ -168,12 +175,22 @@ const getDBClient = async (datasourceId: number) => {
   );
 };
 
+// Build action executor registry
+if (queryExecutor) {
+  const registry = new ActionRegistry();
+  registry.register(createSqlActionHandler({ executor: queryExecutor }));
+  registry.register(createEchoHandler('api'));
+  registry.register(createEchoHandler('file'));
+  actionExecutor = new ActionExecutor(registry);
+}
+
 registerRoutes(app, {
   datasourceService,
   actionService,
   conversationService,
   schemaService,
   queryExecutor,
+  actionExecutor,
   getDBClient,
   getDatasourceConfig: async (id: number) => {
     const ds = (await datasourceService.list()).find((d) => d.id === id);

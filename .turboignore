@@ -1,0 +1,4 @@
+# Ignore Next.js build artifacts from Turbo cache (not needed for API/CLI tasks)
+.next
+.vercel
+.turbo
