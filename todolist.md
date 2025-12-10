@@ -13,7 +13,7 @@
 
 ## 阶段 2：核心模块
 
-- [ ] 数据源管理：API/CLI 已通，Dashboard 表单与手动同步入口待补
+- [x] 数据源管理：API/CLI + Dashboard 表单 + 手动同步入口
 - [ ] Schema 缓存：同步任务、缓存表、API/CLI 查询
 - [ ] Action 与工具管理：模型/迁移完成，工具注册表与前端管理待补
 - [ ] AI 服务封装：Vercel AI SDK 封装、提示词模板、fallback 配置
