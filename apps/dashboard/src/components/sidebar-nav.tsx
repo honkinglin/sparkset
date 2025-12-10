@@ -3,22 +3,41 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-const nav = [
-  { href: '/', label: '数据源', badge: 'DS' },
-  { href: '/query', label: '查询工作台', badge: 'QL' },
-  { href: '/templates', label: '模板', badge: 'TP' },
-  { href: '/conversations', label: '对话记录', badge: 'CV' },
+type NavItem = { href: string; label: string; badge?: string; desc?: string };
+type NavGroup = { title: string; items: NavItem[] };
+
+const navGroups: NavGroup[] = [
+  {
+    title: '主导航',
+    items: [
+      { href: '/', label: '数据源', badge: 'DS' },
+      { href: '/query', label: '查询工作台', badge: 'QL', desc: '自然语言查询' },
+    ],
+  },
+  {
+    title: '资产',
+    items: [
+      { href: '/templates', label: '模板', badge: 'TP', desc: '复用 SQL/动作' },
+      { href: '/conversations', label: '对话记录', badge: 'CV', desc: '历史会话' },
+    ],
+  },
 ];
 
 export default function SidebarNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  const activeGroupKey = useMemo(
+    () => navGroups.find((g) => g.items.some((i) => i.href === pathname))?.title,
+    [pathname],
+  );
 
   const SidebarBody = (
     <>
@@ -32,24 +51,52 @@ export default function SidebarNav() {
             beta
           </span>
         </div>
-        <nav className="space-y-1 text-sm text-slate-200/80">
-          {nav.map((item) => {
-            const active = pathname === item.href;
+        <nav className="space-y-4 text-sm text-slate-200/80">
+          {navGroups.map((group) => {
+            const isCollapsed = collapsed[group.title] ?? false;
+            const hasActive = activeGroupKey === group.title;
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={clsx(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-white/5',
-                  active && 'bg-white/8 text-white shadow-inner',
+              <div key={group.title} className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => setCollapsed((prev) => ({ ...prev, [group.title]: !isCollapsed }))}
+                  className={clsx(
+                    'flex w-full items-center justify-between px-2 text-xs uppercase tracking-[0.08em] text-slate-400',
+                    hasActive && 'text-brand-200',
+                  )}
+                >
+                  <span>{group.title}</span>
+                  <span className="text-slate-500">{isCollapsed ? '+' : '−'}</span>
+                </button>
+                {!isCollapsed && (
+                  <div className="space-y-1">
+                    {group.items.map((item) => {
+                      const active = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={clsx(
+                            'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-white/5',
+                            active && 'bg-white/8 text-white shadow-inner',
+                          )}
+                        >
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-white/5 text-[11px] uppercase tracking-tight">
+                            {item.badge ?? item.label.slice(0, 2)}
+                          </span>
+                          <span className="flex-1">
+                            <div className="font-medium">{item.label}</div>
+                            {item.desc && (
+                              <div className="text-[11px] text-slate-400">{item.desc}</div>
+                            )}
+                          </span>
+                          {active && <span className="text-xs text-brand-300">●</span>}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-              >
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-white/5 text-[11px] uppercase tracking-tight">
-                  {item.badge}
-                </span>
-                <span className="flex-1">{item.label}</span>
-                {active && <span className="text-xs text-brand-300">●</span>}
-              </Link>
+              </div>
             );
           })}
         </nav>
