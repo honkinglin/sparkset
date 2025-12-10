@@ -54,7 +54,7 @@ export class QueryService {
 
     // If executor wired, run real queries
     if (this.deps.executor) {
-      const execResult = await this.deps.executor.execute(plan.sql);
+      const execResult = await this.deps.executor.execute(plan.sql, { limit: input.limit });
       return {
         sql: plan.sql.map((s) => s.sql).join('\n'),
         rows: execResult.rows as QueryResultRow[],
