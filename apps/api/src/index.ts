@@ -14,6 +14,7 @@ import {
   getPrisma,
   createDBClient,
 } from '@sparkline/db';
+import { QueryExecutor } from '@sparkline/core';
 
 const env = loadEnv();
 const app = Fastify({ logger: env.LOG_LEVEL });
@@ -22,12 +23,44 @@ let datasourceService: DatasourceService;
 let actionService: ActionService;
 let conversationService: ConversationService;
 let prismaClient;
+let queryExecutor: QueryExecutor | undefined;
 const dsConfig = buildDatasourceConfig(env);
 if (process.env.DATABASE_URL) {
   prismaClient = getPrisma();
   datasourceService = new DatasourceService(new PrismaDatasourceRepository(prismaClient));
   actionService = new ActionService(new PrismaActionRepository(prismaClient));
   conversationService = new ConversationService(new PrismaConversationRepository(prismaClient));
+  queryExecutor = new QueryExecutor({
+    getDBClient: async (dsId) => {
+      const ds = (await datasourceService.list()).find((d) => d.id === dsId);
+      if (!ds) throw new Error('Datasource not found');
+      return createDBClient(
+        {
+          id: ds.id,
+          name: ds.name,
+          type: ds.type,
+          host: ds.host,
+          port: ds.port,
+          username: ds.username,
+          password: ds.password,
+          database: ds.database,
+        },
+        prismaClient,
+      );
+    },
+    getDatasourceConfig: async (id) => {
+      const ds = (await datasourceService.list()).find((d) => d.id === id);
+      if (!ds) throw new Error('Datasource not found');
+      return {
+        id: ds.id,
+        host: ds.host,
+        port: ds.port,
+        username: ds.username,
+        password: ds.password,
+        database: ds.database,
+      };
+    },
+  });
   app.log.info('Datasource service backed by Prisma ORM');
 } else if (dsConfig) {
   const repo = new MySQLDatasourceRepository(new MySQLRepo(dsConfig));
@@ -64,7 +97,7 @@ registerRoutes(app, {
   datasourceService,
   actionService,
   conversationService,
-  queryExecutor: undefined,
+  queryExecutor,
   getDBClient,
   getDatasourceConfig: async (id: number) => {
     const ds = (await datasourceService.list()).find((d) => d.id === id);
