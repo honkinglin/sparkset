@@ -67,6 +67,34 @@ if (process.env.DATABASE_URL) {
   datasourceService = new DatasourceService(repo);
   actionService = new ActionService();
   conversationService = new ConversationService();
+  queryExecutor = new QueryExecutor({
+    getDBClient: async (dsId) => {
+      const ds = (await datasourceService.list()).find((d) => d.id === dsId);
+      if (!ds) throw new Error('Datasource not found');
+      return createDBClient({
+        id: ds.id,
+        name: ds.name,
+        type: ds.type,
+        host: ds.host,
+        port: ds.port,
+        username: ds.username,
+        password: ds.password,
+        database: ds.database,
+      });
+    },
+    getDatasourceConfig: async (id) => {
+      const ds = (await datasourceService.list()).find((d) => d.id === id);
+      if (!ds) throw new Error('Datasource not found');
+      return {
+        id: ds.id,
+        host: ds.host,
+        port: ds.port,
+        username: ds.username,
+        password: ds.password,
+        database: ds.database,
+      };
+    },
+  });
   app.log.info('Datasource service backed by MySQL direct client');
 } else {
   datasourceService = new DatasourceService();
