@@ -1,4 +1,8 @@
-const baseUrl = process.env.SPARKLINE_API_URL ?? 'http://localhost:3333';
+let baseUrl = process.env.SPARKLINE_API_URL ?? 'http://localhost:3333';
+
+export const setBaseUrl = (url: string) => {
+  baseUrl = url;
+};
 
 export class ApiError extends Error {
   constructor(

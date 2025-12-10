@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { apiFetch } from './http';
+import { apiFetch, setBaseUrl } from './http';
 
 const program = new Command();
 program
@@ -8,6 +8,15 @@ program
   .description('Sparkline AI operations CLI')
   .version('0.1.0')
   .showHelpAfterError();
+
+program.option('--api <url>', 'Override API base url');
+
+program.hook('preAction', (thisCommand) => {
+  const { api } = thisCommand.opts();
+  if (api) {
+    setBaseUrl(api as string);
+  }
+});
 
 program
   .command('datasource:add')
