@@ -7,7 +7,8 @@ export class ActionsController {
   constructor(private service: ActionService) {}
 
   async index(_req: TypedRequest, reply: FastifyReply) {
-    return reply.send({ items: this.service.list() });
+    const items = await this.service.list();
+    return reply.send({ items });
   }
 
   async show(req: TypedRequest, reply: FastifyReply) {
