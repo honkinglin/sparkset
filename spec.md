@@ -1,13 +1,10 @@
-Sparkline AI 运营助手设计文档
-=============
+# Sparkline AI 运营助手设计文档
 
-概述
---
+## 概述
 
 Sparkline 运营助手旨在帮助企业运营团队通过自然语言与数据源交互，自动生成并执行查询，快速获得业务洞察。系统不仅支持统计性问题（例如“本周有多少人取消了订单？”），还支持列出用户列表、分析地区分布等复杂查询，并为未来的 API 调用、文件读取等更多工具类型预留接口。
 
-总体架构
-----
+## 总体架构
 
 整体架构分为数据层、核心服务层和交互层三部分，数据流从左至右贯穿各层：
 
@@ -20,10 +17,9 @@ Sparkline 运营助手旨在帮助企业运营团队通过自然语言与数据�
 4. **API 层（AdonisJS）**：提供统一的 HTTP 接口，负责身份验证、参数校验、调用核心服务并返回结果。所有前端、CLI 调用均经由此层。
 
 5. **交互层**：
+   - **Dashboard**：基于 Next.js 和 shadcn/ui，实现管理界面，提供数据源管理、查询工作台、对话记录、模板列表等模块。采用可折叠的侧边栏布局[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)方便导航。
 
-    * **Dashboard**：基于 Next.js 和 shadcn/ui，实现管理界面，提供数据源管理、查询工作台、对话记录、模板列表等模块。采用可折叠的侧边栏布局[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)方便导航。
-
-    * **CLI**：提供命令行工具，支持添加/同步数据源、执行动作、查看历史记录等，适用于自动化或技术用户场景。
+   - **CLI**：提供命令行工具，支持添加/同步数据源、执行动作、查看历史记录等，适用于自动化或技术用户场景。
 
 6. **持久化存储**：用于存储会话和动作模板，便于复用和审计。会话记录按消息拆分存储，动作模板记录生成的 SQL 或其他工具调用参数。
 
@@ -31,23 +27,21 @@ Motia 的设计强调通过单一原语“Step”统一 API、队列和工作流
 
 Vercel AI Gateway 提供模型与提供商切换的能力，可根据成本或性能需要选择不同模型，并支持配置默认提供者和回退机制[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=between%20different%20AI%20models%20,ensure%20high%20availability%20and%20reliability)[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=Specifying%20the%20model)。
 
-技术栈选择
------
+## 技术栈选择
 
-* **TypeScript**：统一前后端语言，提高类型安全和开发效率。
+- **TypeScript**：统一前后端语言，提高类型安全和开发效率。
 
-* **AdonisJS**：成熟的 Node.js MVC 框架，提供完善的路由、ORM、验证和中间件体系，适合快速构建 API。
+- **AdonisJS**：成熟的 Node.js MVC 框架，提供完善的路由、ORM、验证和中间件体系，适合快速构建 API。
 
-* **Next.js + shadcn/ui**：前端框架，支持服务器端渲染和客户端渲染混合。shadcn/ui 提供现代化 UI 组件和多种侧边栏布局供参考[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)。
+- **Next.js + shadcn/ui**：前端框架，支持服务器端渲染和客户端渲染混合。shadcn/ui 提供现代化 UI 组件和多种侧边栏布局供参考[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)。
 
-* **Vercel AI SDK (v6)**：用于调用多模型，多提供商的语言模型，可在每次调用或全局指定模型与提供商，支持自动回退[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=between%20different%20AI%20models%20,ensure%20high%20availability%20and%20reliability)[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=Specifying%20the%20model)。
+- **Vercel AI SDK (v6)**：用于调用多模型，多提供商的语言模型，可在每次调用或全局指定模型与提供商，支持自动回退[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=between%20different%20AI%20models%20,ensure%20high%20availability%20and%20reliability)[vercel.com](https://vercel.com/docs/ai-gateway/models-and-providers#:~:text=Specifying%20the%20model)。
 
-* **Turborepo**：monorepo 构建工具，对多包项目进行任务缓存与并行化，提升编译效率。
+- **Turborepo**：monorepo 构建工具，对多包项目进行任务缓存与并行化，提升编译效率。
 
-* **数据库**：初期使用 MySQL，通过 open‑source 的连接库统一接口；后续可扩展其他数据库。
+- **数据库**：初期使用 MySQL，通过 open‑source 的连接库统一接口；后续可扩展其他数据库。
 
-目录结构与模块拆分
----------
+## 目录结构与模块拆分
 
 项目采用 monorepo 管理，根目录包含 `turbo.json` 和工作区配置，子目录划分如下：
 
@@ -69,6 +63,8 @@ text
 
 4. **逻辑简洁严谨**：实现核心流程时保持逻辑清晰，避免过度嵌套和重复代码；对复杂步骤提供必要的注释，以便后续维护。
 
+5. **UI 组件使用规范**：前端组件尽量使用 shadcn 内置组件，非必要不自造组件；新增组件必须通过官方命令 `pnpm dlx shadcn@latest add <component>` 安装，组件列表参考 https://ui.shadcn.com/llms.txt，高阶页面/布局优先参考 https://ui.shadcn.com/blocks 示例实现。
+
 ### 开发要求与用户体验
 
 此外，项目在开发过程中需遵循以下体验和设计原则：
@@ -83,8 +79,7 @@ text
 
 其中 **packages/core** 中包含 Action 执行器，它会根据 Action 的 `type` 字段分发到对应的工具实现，例如 `sql`、`api` 或 `file`。新增工具只需在 **packages/ai** 或专用包中实现，并在注册表中声明。
 
-数据模型设计
-------
+## 数据模型设计
 
 ### DataSource
 
@@ -136,8 +131,7 @@ ts
 
 `interface ToolDefinition {   id: string;   name: string;   description: string;   type: 'sql' | 'api' | 'file' | 'custom';   inputSchema: any;    // 用于约束参数结构   handler: (args: any) => Promise<any>; // 执行函数 }`
 
-关键模块说明
-------
+## 关键模块说明
 
 1. **DataSource Manager**：负责新增、编辑和删除数据源，提供同步接口。同步任务可以定时触发或通过 CLI/后台手动触发，更新 Schema 缓存表。
 
@@ -152,13 +146,11 @@ ts
 6. **API 层**：提供 RESTful 接口，包括数据源管理、动作执行、会话记录、模板管理等。中间件负责鉴权、日志和异常处理。
 
 7. **Dashboard & CLI**：
+   - Dashboard 提供可视化的查询工作台、结果展示、会话历史、模板管理等。利用 shadcn/ui 的侧边栏布局[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)实现良好用户体验。
 
-    * Dashboard 提供可视化的查询工作台、结果展示、会话历史、模板管理等。利用 shadcn/ui 的侧边栏布局[ui-thing.behonbaker.com](https://ui-thing.behonbaker.com/blocks/sidebar#:~:text=More%20options%20for%20header%20links)实现良好用户体验。
+   - CLI 面向技术用户或自动化脚本，支持命令行下的查询和管理操作。
 
-    * CLI 面向技术用户或自动化脚本，支持命令行下的查询和管理操作。
-
-流程说明
-----
+## 流程说明
 
 1. 用户通过 Dashboard 或 CLI 提出自然语言问题，系统在会话表中记录请求。
 
@@ -170,30 +162,27 @@ ts
 
 5. 用户可将某次成功的查询保存为 Action 模板，后续在同一或不同会话中直接复用。
 
-安全与错误处理
--------
+## 安全与错误处理
 
-* 对所有生成的 SQL 必须先执行 dry‑run，确认为只读查询且不会修改数据。
+- 对所有生成的 SQL 必须先执行 dry‑run，确认为只读查询且不会修改数据。
 
-* 对跨数据源查询使用事务或临时表隔离，防止部分成功部分失败。
+- 对跨数据源查询使用事务或临时表隔离，防止部分成功部分失败。
 
-* 工具注册时可以设置安全等级，AI 调用前需检查当前用户或场景是否有权限使用。
+- 工具注册时可以设置安全等级，AI 调用前需检查当前用户或场景是否有权限使用。
 
-* 日志和追踪系统对每次查询的执行情况进行记录，便于审计和故障排查。
+- 日志和追踪系统对每次查询的执行情况进行记录，便于审计和故障排查。
 
-扩展与迭代
------
+## 扩展与迭代
 
-* **数据源扩展**：通过在 `packages/db` 中实现新的连接模块，更新 DataSource 类型，即可支持新的数据库。
+- **数据源扩展**：通过在 `packages/db` 中实现新的连接模块，更新 DataSource 类型，即可支持新的数据库。
 
-* **工具生态**：新增文件处理、外部 API 调用、数据清洗等工具，只需实现对应 handler 并在 Tool Registry 中注册，AI 即可选择使用。
+- **工具生态**：新增文件处理、外部 API 调用、数据清洗等工具，只需实现对应 handler 并在 Tool Registry 中注册，AI 即可选择使用。
 
-* **权限与多租户**：后续可在会话和动作记录中增加用户和租户字段，引入身份验证和权限控制模块。
+- **权限与多租户**：后续可在会话和动作记录中增加用户和租户字段，引入身份验证和权限控制模块。
 
-* **观测性**：借鉴 Motia 的工作台理念[motia.dev](https://www.motia.dev/docs#:~:text=Why%20Motia%3F)，在 Dashboard 中引入实时日志和链路追踪，提升调试效率。
+- **观测性**：借鉴 Motia 的工作台理念[motia.dev](https://www.motia.dev/docs#:~:text=Why%20Motia%3F)，在 Dashboard 中引入实时日志和链路追踪，提升调试效率。
 
-开发计划
-----
+## 开发计划
 
 为了确保项目顺利推进，以下提供一套详细的开发计划，涵盖前期研究、任务拆分和验收标准。
 
@@ -238,92 +227,82 @@ ts
 #### 阶段 2：核心模块开发
 
 1. **数据源管理用例**：
+   - 实现 `POST /datasources`、`PUT /datasources/:id`、`DELETE /datasources/:id` 接口，支持创建、修改和删除数据源，并进行基础校验（名称唯一、连接信息完整）。
 
-    * 实现 `POST /datasources`、`PUT /datasources/:id`、`DELETE /datasources/:id` 接口，支持创建、修改和删除数据源，并进行基础校验（名称唯一、连接信息完整）。
+   - 实现 CLI 命令 `datasource:add`、`datasource:update`、`datasource:remove`；编写参数提示和成功/失败提示。
 
-    * 实现 CLI 命令 `datasource:add`、`datasource:update`、`datasource:remove`；编写参数提示和成功/失败提示。
+   - Dashboard 中开发添加/编辑数据源的表单页面，提交后调用 API 并显示结果；在数据源列表页提供删除按钮。
 
-    * Dashboard 中开发添加/编辑数据源的表单页面，提交后调用 API 并显示结果；在数据源列表页提供删除按钮。
-
-    * 实现 `POST /datasources/:id/sync` API 和 `datasource:sync` CLI 命令，用于手动同步 Schema；编写计划任务在后台定时同步。
+   - 实现 `POST /datasources/:id/sync` API 和 `datasource:sync` CLI 命令，用于手动同步 Schema；编写计划任务在后台定时同步。
 
 2. **Schema 缓存用例**：
+   - 编写同步任务，连接数据库读取 `information_schema`，将表名、字段名、字段类型和注释存入 `table_schema` 和 `column_definition` 缓存表。
 
-    * 编写同步任务，连接数据库读取 `information_schema`，将表名、字段名、字段类型和注释存入 `table_schema` 和 `column_definition` 缓存表。
-
-    * 提供 API `GET /schemas/:datasourceId` 返回缓存结构供 AI 模块使用；在 CLI 中提供 `datasource:schema` 命令查看同步结果。
+   - 提供 API `GET /schemas/:datasourceId` 返回缓存结构供 AI 模块使用；在 CLI 中提供 `datasource:schema` 命令查看同步结果。
 
 3. **Action 和工具管理用例**：
+   - 定义 Action 模型并创建 `actions` 表，包含 `id`、`name`、`type`、`payload` 等字段。
 
-    * 定义 Action 模型并创建 `actions` 表，包含 `id`、`name`、`type`、`payload` 等字段。
+   - 实现 `POST /actions`、`GET /actions/:id`、`GET /actions` 接口用于保存和查询模板；CLI 命令 `action:save`、`action:list`。
 
-    * 实现 `POST /actions`、`GET /actions/:id`、`GET /actions` 接口用于保存和查询模板；CLI 命令 `action:save`、`action:list`。
-
-    * 实现工具注册表数据结构，提供 `GET /tools` 接口列出可用工具名称、描述和输入结构。
+   - 实现工具注册表数据结构，提供 `GET /tools` 接口列出可用工具名称、描述和输入结构。
 
 4. **AI 服务封装用例**：
+   - 封装 Vercel AI SDK，支持在调用时指定 `model` 和 `provider` 字符串或实例；实现全局默认提供者配置及回退机制。
 
-    * 封装 Vercel AI SDK，支持在调用时指定 `model` 和 `provider` 字符串或实例；实现全局默认提供者配置及回退机制。
-
-    * 设计提示词模板：包含用户请求、Schema 信息、已注册工具列表等，并在生成 SQL 时插入上下文。
+   - 设计提示词模板：包含用户请求、Schema 信息、已注册工具列表等，并在生成 SQL 时插入上下文。
 
 5. **查询执行用例**：
+   - 编写查询执行器：根据 Action 类型读取 SQL 列表或工具定义；先对 SQL 执行 dry‑run，通过解析 AST 确保无写入或危险操作。
 
-    * 编写查询执行器：根据 Action 类型读取 SQL 列表或工具定义；先对 SQL 执行 dry‑run，通过解析 AST 确保无写入或危险操作。
+   - 支持跨数据源查询：拆分 SQL 到不同数据库执行，再根据关联字段在内存中合并结果（如用户与订单）；确保执行顺序和错误回滚。
 
-    * 支持跨数据源查询：拆分 SQL 到不同数据库执行，再根据关联字段在内存中合并结果（如用户与订单）；确保执行顺序和错误回滚。
-
-    * 返回结构化结果供前端渲染或 CLI 输出。
+   - 返回结构化结果供前端渲染或 CLI 输出。
 
 6. **会话与消息用例**：
+   - 在 `conversations` 和 `conversation_messages` 表实现增删查接口；记录每次查询的请求、生成的 SQL、返回结果。
 
-    * 在 `conversations` 和 `conversation_messages` 表实现增删查接口；记录每次查询的请求、生成的 SQL、返回结果。
+   - 提供 `POST /conversations` 创建会话、`POST /conversations/:id/messages` 追加消息；CLI 命令 `conversation:list` 列出历史会话。
 
-    * 提供 `POST /conversations` 创建会话、`POST /conversations/:id/messages` 追加消息；CLI 命令 `conversation:list` 列出历史会话。
-
-    * 在 Dashboard 中展示对话列表，点击可展开查看每条消息和 SQL 详情；支持保存为模板的操作按钮。
+   - 在 Dashboard 中展示对话列表，点击可展开查看每条消息和 SQL 详情；支持保存为模板的操作按钮。
 
 #### 阶段 3：API 与交互层
 
 1. **API 集成用例**：
+   - 根据核心模块完成所有 RESTful API 实现，确保前端/CLI 调用的数据格式和错误信息统一。
 
-    * 根据核心模块完成所有 RESTful API 实现，确保前端/CLI 调用的数据格式和错误信息统一。
+   - 实现 `POST /query` 接口，接收自然语言请求，调用 AI 服务并返回查询结果；支持分页和筛选参数。
 
-    * 实现 `POST /query` 接口，接收自然语言请求，调用 AI 服务并返回查询结果；支持分页和筛选参数。
+   - 实现 `POST /actions/:id/execute` 接口，通过模板运行查询并返回结果。
 
-    * 实现 `POST /actions/:id/execute` 接口，通过模板运行查询并返回结果。
-
-    * 暴露 `GET /conversations`、`GET /conversations/:id` 接口用于查询历史会话和消息。
+   - 暴露 `GET /conversations`、`GET /conversations/:id` 接口用于查询历史会话和消息。
 
 2. **Dashboard 开发用例**：
+   - **数据源管理页面**：列表展示现有数据源，提供新增、编辑、删除和手动同步按钮；表单中校验必填项，操作结果以通知反馈。
 
-    * **数据源管理页面**：列表展示现有数据源，提供新增、编辑、删除和手动同步按钮；表单中校验必填项，操作结果以通知反馈。
+   - **查询工作台**：提供输入框让用户输入自然语言查询，提交后调用 `/query` 并展示表格结果；支持将查询保存为模板。
 
-    * **查询工作台**：提供输入框让用户输入自然语言查询，提交后调用 `/query` 并展示表格结果；支持将查询保存为模板。
+   - **对话记录页面**：按时间顺序列出会话，点击展开可查看每条消息内容、生成的 SQL 和执行摘要。
 
-    * **对话记录页面**：按时间顺序列出会话，点击展开可查看每条消息内容、生成的 SQL 和执行摘要。
+   - **模板列表页面**：展示保存的 Action 模板，支持搜索、执行、删除。
 
-    * **模板列表页面**：展示保存的 Action 模板，支持搜索、执行、删除。
-
-    * 使用 shadcn/ui 的侧边栏和表格组件组织布局，保持交互简单、美观。
+   - 使用 shadcn/ui 的侧边栏和表格组件组织布局，保持交互简单、美观。
 
 3. **CLI 开发用例**：
+   - 补充 `query:run` 命令：接受自然语言参数，调用 `/query` API，并以表格形式输出结果；支持 `--action` 参数执行指定模板。
 
-    * 补充 `query:run` 命令：接受自然语言参数，调用 `/query` API，并以表格形式输出结果；支持 `--action` 参数执行指定模板。
+   - `conversation:list` 命令：列出所有会话 ID 和创建时间；`conversation:show <id>` 显示具体消息和结果。
 
-    * `conversation:list` 命令：列出所有会话 ID 和创建时间；`conversation:show <id>` 显示具体消息和结果。
+   - `action:exec <id>` 命令：执行已有模板并展示结果。
 
-    * `action:exec <id>` 命令：执行已有模板并展示结果。
-
-    * `help` 命令提供帮助信息，所有命令输出均符合交互体验要求。
+   - `help` 命令提供帮助信息，所有命令输出均符合交互体验要求。
 
 4. **前后端集成和测试**：
+   - 制定接口文档并在前端调用时遵循；对常见错误状态码进行处理和用户提示。
 
-    * 制定接口文档并在前端调用时遵循；对常见错误状态码进行处理和用户提示。
+   - 编写单元测试覆盖 API 控制器与服务逻辑；编写端到端测试验证 UI 和 CLI 的主要用例。
 
-    * 编写单元测试覆盖 API 控制器与服务逻辑；编写端到端测试验证 UI 和 CLI 的主要用例。
-
-    * 确保页面加载时有合适的 loading 状态，发生错误时展示友好的提示。
+   - 确保页面加载时有合适的 loading 状态，发生错误时展示友好的提示。
 
 #### 阶段 4：工具生态与AI强化
 
@@ -363,7 +342,6 @@ ts
 
 6. **扩展性验证**：新增一种工具或数据源类型时，不需要大改现有框架即可集成，证明设计具有扩展性。
 
-结语
---
+## 结语
 
 本文档提出的设计兼顾当前需求和未来扩展性，通过统一的抽象与模块化拆分，为 AI 运营助手提供稳定、安全、可迭代的技术基础。开发团队可据此开展系统实现，后续根据业务需求逐步完善各模块功能。
