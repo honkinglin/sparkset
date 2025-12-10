@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+@layer base {
+  :root {
+    color-scheme: dark;
+    --sidebar: 220 11% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 215 14% 16%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 13% 23%;
+    --sidebar-ring: 215 20% 65%;
+  }
 }
 
 body {
@@ -12,22 +22,22 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
-  background: #0b1224;
+  background: hsl(222, 50%, 6%);
   color: #f8fafc;
   min-height: 100vh;
 }
 
 .sidebar {
-  backdrop-filter: blur(12px);
-  background: rgba(12, 18, 35, 0.85);
-  border-right: 1px solid rgba(148, 163, 184, 0.12);
+  backdrop-filter: blur(10px);
+  background: hsl(var(--sidebar));
+  border-right: 1px solid hsl(var(--sidebar-border));
 }
 
 .card {
-  background: rgba(16, 23, 42, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid hsl(var(--sidebar-border));
   border-radius: 16px;
-  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
 .table th,
