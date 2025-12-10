@@ -34,6 +34,14 @@ program
   });
 
 program
+  .command('datasource:list')
+  .description('List datasources')
+  .action(async () => {
+    const res = await apiFetch('/datasources');
+    console.table(res.items);
+  });
+
+program
   .command('datasource:update')
   .description('Update a datasource')
   .requiredOption('--id <id>', 'Datasource id')
