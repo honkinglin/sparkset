@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { runQuery } from '../../lib/query';
 import { fetchDatasources } from '../../lib/api';
 import { Button } from '../../components/ui/button';
+import QueryForm from './queryForm';
 
 const QueryPage = async () => {
   const datasources = await fetchDatasources().catch(() => []);
