@@ -11,7 +11,6 @@ import { QueryService } from '../app/services/queryService';
 
 const healthController = new HealthController();
 const actionsController = new ActionsController(new ActionService());
-const queriesController = new QueriesController(new QueryService());
 const conversationsController = new ConversationsController(new ConversationService());
 
 interface RouteDeps {
@@ -43,7 +42,6 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
 
   const actionSvc = deps.actionService ?? actionsController['service'];
   const conversationSvc = deps.conversationService ?? conversationsController['service'];
-  const querySvc = deps.queryService ?? queriesController['service'];
 
   app.get('/actions', (req, reply) => new ActionsController(actionSvc).index(req, reply));
   app.get('/actions/:id', (req, reply) => new ActionsController(actionSvc).show(req, reply));
@@ -54,7 +52,16 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
     new ActionsController(actionSvc).execute(req, reply),
   );
 
-  app.post('/query', (req, reply) => new QueriesController(querySvc).run(req, reply));
+  app.post('/query', (req, reply) =>
+    new QueriesController(
+      deps.queryService ??
+        new QueryService({
+          getDatasource: (id) =>
+            deps.datasourceService.list().then((items) => items.find((d) => d.id === id) ?? null),
+          getAction: (id) => actionSvc.get(id),
+        }),
+    ).run(req, reply),
+  );
 
   app.get('/conversations', (req, reply) =>
     new ConversationsController(conversationSvc).index(req, reply),
