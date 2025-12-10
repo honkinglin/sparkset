@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import { DatasourceService } from './app/services/datasourceService';
 import { ActionService } from './app/services/actionService';
 import { ConversationService } from './app/services/conversationService';
@@ -23,6 +24,11 @@ import { QueryExecutor } from '@sparkline/core';
 
 const env = loadEnv();
 const app = Fastify({ logger: env.LOG_LEVEL });
+app.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
 let datasourceService: DatasourceService;
 let actionService: ActionService;
