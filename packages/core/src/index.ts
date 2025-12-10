@@ -42,3 +42,7 @@ export class ActionExecutor {
     return handler.execute(ctx);
   }
 }
+
+export * from './query/types';
+export * from './query/planner';
+export * from './query/executor';
