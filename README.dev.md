@@ -10,6 +10,13 @@
 5. 启动 Dashboard：`pnpm dev --filter @sparkline/dashboard`
 6. CLI 示例：`SPARKLINE_API_URL=http://localhost:3333 pnpm dev --filter @sparkline/cli -- query:run "本周订单数"`
 
+## Demo Seed（本地快速体验）
+
+1. 确保本机 MySQL 运行，root/root（或改脚本密码）。
+2. 执行 `mysql -uroot -proot < scripts/demo-seed.sql` 创建示例数据库、表与 datasources 记录。
+3. 设置环境变量 `DATABASE_URL="mysql://root:root@localhost:3306/sparkline_demo"` 并启动 API。
+4. 使用 CLI 或 POST /query 发送问题，如：`curl -X POST http://localhost:3333/query -H 'Content-Type: application/json' -d '{"question":"查询订单列表","limit":5,"datasource":1}'`。
+
 ## 环境变量
 
 - `DATABASE_URL`：Prisma 连接串，推荐使用。
