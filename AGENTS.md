@@ -35,6 +35,120 @@
 - Use shadcn components via CLI (list at https://ui.shadcn.com/llms.txt). Layouts should reference blocks (https://ui.shadcn.com/blocks); sidebar-02 is the baseline for dashboard shell.
 - Keep `components.json` in sync; new components must be added through shadcn CLI so tailwind tokens stay consistent.
 
+## Component Development Guidelines
+
+### File Naming Convention
+
+- **Component files MUST use kebab-case naming**: `query-form.tsx`, `ai-provider-manager.tsx`, `page-header.tsx`
+- **Exception**: shadcn UI components in `src/components/ui/` follow shadcn's naming (usually kebab-case)
+- **Page components** in `src/app/` follow Next.js App Router conventions (kebab-case for directories, but can use camelCase for page.tsx if needed)
+- **Avoid redundant namespace in module components**: Components already placed in `components/{module}/` directory should NOT repeat the module name in the filename
+  - ❌ **Wrong**: `components/datasource/datasource-manager.tsx`, `components/query/query-result.tsx`
+  - ✅ **Correct**: `components/datasource/manager.tsx`, `components/query/result.tsx`
+  - **Rationale**: The directory already provides the namespace context, so repeating it in the filename is redundant
+  - **Exception**: Only use `{module}-{name}.tsx` format when the component is a global component in `components/` root (e.g., `datasource-selector.tsx` is global and used across modules)
+
+### Component Organization
+
+- **Global vs Module Components**:
+  - **Global public components**: Components that can be used across multiple modules/features should be placed directly in `src/components/` (not in module subdirectories)
+    - Examples: `datasource-selector.tsx`, `ai-provider-selector.tsx`, `page-header.tsx`, `code-viewer.tsx`
+    - These are reusable UI components that are not tied to a specific feature
+    - If a component is used in 2+ different modules, it should be considered global
+  - **Module-specific components**: Components that are specific to a single feature/module should be placed in `src/components/{module}/`
+    - Examples: `src/components/query/result.tsx`, `src/components/query/schema-drawer.tsx`
+    - These components are tightly coupled to a specific feature's logic and UI
+    - **Note**: Component names should NOT repeat the module name (e.g., use `result.tsx` not `query-result.tsx` in `components/query/`)
+- **Module-based organization**: Group related components by feature/module
+  - **Prefer `components/{module}/` structure**: Components should be organized under `src/components/{module}/` when they can be shared or are substantial enough to warrant separation
+  - **Page-specific components**: Only keep truly page-specific, small components in `src/app/{module}/`
+  - Example: `src/components/query/` contains `result.tsx`, `result-table.tsx`, `schema-drawer.tsx`, `sql-viewer.tsx` (query module components)
+  - Example: `src/components/datasource/` contains `manager.tsx`, `detail.tsx` (datasource module components)
+- **Component structure**:
+  ```
+  apps/dashboard/src/
+  ├── components/          # Shared/reusable components
+  │   ├── ui/             # shadcn UI primitives
+  │   ├── datasource-selector.tsx    # Global component (used across modules)
+  │   ├── ai-provider-selector.tsx   # Global component (used across modules)
+  │   ├── code-viewer.tsx            # Global component (used across modules)
+  │   ├── page-header.tsx             # Global component (used across modules)
+  │   ├── query/          # Query module components
+  │   │   ├── result.tsx
+  │   │   ├── result-table.tsx
+  │   │   ├── schema-drawer.tsx
+  │   │   └── sql-viewer.tsx
+  │   └── datasource/     # Datasource module components
+  │       ├── manager.tsx
+  │       └── detail.tsx
+  └── app/
+      └── query/          # Query page (should be minimal, mostly composition)
+          └── page.tsx    # Main page component, imports from components/query/
+  ```
+- **Component splitting principles**:
+  - **Avoid flat structure**: Don't put all components directly in `src/app/{module}/` - extract to `components/{module}/`
+  - **Extract substantial components**: Any component over ~150 lines should be extracted
+  - **Extract reusable logic**: Components that can be reused or have clear boundaries should be extracted
+  - **Extract complex UI sections**: Large UI sections (forms, tables, drawers, modals) should be separate components
+  - **Keep pages clean**: Page components (`page.tsx`) should primarily compose smaller components, not contain large inline JSX
+  - **Single responsibility**: Each component should have a clear, single purpose
+  - **Benefits of splitting**:
+    - Easier to maintain and test
+    - Better code reusability
+    - Cleaner, more readable page components
+    - Easier to locate and modify specific functionality
+
+### Component Design Principles
+
+- **Visual Hierarchy**:
+  - Primary actions should be visually prominent (larger, primary color)
+  - Secondary actions should be subtle (smaller, muted colors)
+  - Use spacing, typography, and color to establish clear hierarchy
+- **Layout & Spacing**:
+  - Use consistent spacing scale (Tailwind's spacing tokens)
+  - Group related elements together with appropriate spacing
+  - Use cards/sections to separate distinct content areas
+- **Card Usage Guidelines**:
+  - **Avoid excessive Card nesting**: Don't nest Cards inside Cards - this creates visual clutter and excessive padding
+  - **Use Cards sparingly**: Cards should be used for distinct, self-contained content sections, not for every UI element
+  - **Prefer alternatives**: Use borders, dividers, spacing, and background colors to separate content instead of nested Cards
+  - **Design inspiration**: Reference excellent UI designs (e.g., Linear, Vercel, GitHub, Stripe) for inspiration
+  - **Principles**:
+    - One Card per major content section
+    - Use subtle borders and backgrounds for grouping instead of Cards
+    - Prefer clean, minimal layouts with generous whitespace
+    - Avoid "cardception" (cards within cards) - it looks cluttered
+  - **When to use Cards**:
+    - Main content containers (e.g., query results panel)
+    - Distinct feature sections that need clear separation
+    - Modal/dialog content
+  - **When NOT to use Cards**:
+    - Inside other Cards (use borders/backgrounds instead)
+    - For small UI elements (use Badge, Button, etc.)
+    - For simple groupings (use spacing and borders)
+- **Design Aesthetics**:
+  - **Strive for elegance**: Aim for clean, minimal, and sophisticated designs
+  - **Reference excellent designs**: Study and learn from top-tier products (Linear, Vercel, GitHub, Stripe, etc.)
+  - **Whitespace is powerful**: Use generous spacing to create breathing room
+  - **Subtle is better**: Prefer subtle borders, shadows, and backgrounds over heavy visual elements
+  - **Consistency matters**: Maintain consistent spacing, typography, and color usage throughout
+- **Interaction Design**:
+  - Provide clear visual feedback for all interactive elements
+  - Use appropriate loading states (skeletons, spinners)
+  - Handle empty states gracefully with helpful messages
+  - Use progressive disclosure (drawers, collapsibles) for secondary information
+  - Ensure responsive design works on mobile and desktop
+- **Accessibility**:
+  - Use semantic HTML elements
+  - Provide proper ARIA labels where needed
+  - Ensure keyboard navigation works
+  - Maintain sufficient color contrast
+- **Code Quality**:
+  - Keep components focused and single-purpose
+  - Extract complex logic into custom hooks
+  - Use TypeScript types/interfaces for props
+  - Prefer composition over complex prop drilling
+
 ## Security & Configuration Tips
 
 - Set `DATABASE_URL` for API to hit real MySQL; default falls back to in-memory stores (limited).
