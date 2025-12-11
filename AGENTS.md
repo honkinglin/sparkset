@@ -64,6 +64,7 @@
   - **Page-specific components**: Only keep truly page-specific, small components in `src/app/{module}/`
   - Example: `src/components/query/` contains `result.tsx`, `result-table.tsx`, `schema-drawer.tsx`, `sql-viewer.tsx` (query module components)
   - Example: `src/components/datasource/` contains `manager.tsx`, `detail.tsx` (datasource module components)
+  - Example: `src/components/ai-provider/` contains `manager.tsx` (ai-provider module components)
 - **Component structure**:
   ```
   apps/dashboard/src/
@@ -78,9 +79,11 @@
   │   │   ├── result-table.tsx
   │   │   ├── schema-drawer.tsx
   │   │   └── sql-viewer.tsx
-  │   └── datasource/     # Datasource module components
-  │       ├── manager.tsx
-  │       └── detail.tsx
+  │   ├── datasource/     # Datasource module components
+  │   │   ├── manager.tsx
+  │   │   └── detail.tsx
+  │   └── ai-provider/    # AI Provider module components
+  │       └── manager.tsx
   └── app/
       └── query/          # Query page (should be minimal, mostly composition)
           └── page.tsx    # Main page component, imports from components/query/
@@ -148,6 +151,19 @@
   - Extract complex logic into custom hooks
   - Use TypeScript types/interfaces for props
   - Prefer composition over complex prop drilling
+- **Formatting & Linting**:
+  - **Always format code after changes**: Run Prettier to format code after making any code changes
+    - Use `pnpm prettier --write <file>` to format specific files
+    - Use `pnpm prettier --write .` to format all files (if needed)
+    - Pre-commit hooks will check formatting, but it's better to fix issues proactively
+  - **Fix linting issues**: Address ESLint warnings and errors before committing
+    - Run `pnpm lint` to check for linting issues
+    - Fix issues or use appropriate ESLint disable comments only when necessary
+  - **Pre-commit checks**: The project uses Husky pre-commit hooks that run:
+    - Prettier formatting checks
+    - ESLint checks
+    - Ensure all checks pass before committing
+  - **Best practice**: Format and lint code immediately after making changes, not just before committing
 
 ## Security & Configuration Tips
 

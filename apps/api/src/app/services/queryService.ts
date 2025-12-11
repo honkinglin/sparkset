@@ -1,14 +1,18 @@
-import { DataSource } from '@sparkline/models';
-import { QueryPlanner, QueryExecutor } from '@sparkline/core';
-import { DatasourceService } from '../services/datasourceService';
-import { ActionService } from '../services/actionService';
+import { AIClient, VercelAIClient } from '@sparkline/ai';
+import { QueryExecutor, QueryPlanner } from '@sparkline/core';
 import { DBClient, DataSourceConfig } from '@sparkline/db';
+import { DataSource } from '@sparkline/models';
+import { ActionService } from '../services/actionService';
+import { AIProviderService } from '../services/aiProviderService';
+import { DatasourceService } from '../services/datasourceService';
+import { SchemaService } from '../services/schemaService';
 
 export interface QueryRequest {
   question: string;
   datasource?: number;
   action?: number;
   limit?: number;
+  aiProvider?: number;
 }
 
 export type QueryResultRow = Record<string, unknown>;
@@ -28,14 +32,55 @@ export class QueryService {
     private deps: {
       datasourceService: DatasourceService;
       actionService: ActionService;
+      schemaService: SchemaService;
+      aiProviderService: AIProviderService;
       planner?: QueryPlanner;
       executor?: QueryExecutor;
       getDBClient?: (datasourceId: number) => Promise<DBClient>;
       getDatasourceConfig?: (datasourceId: number) => Promise<DataSourceConfig>;
+      logger?: {
+        info: (msg: string, ...args: unknown[]) => void;
+        warn: (msg: string, ...args: unknown[]) => void;
+        error: (msg: string | Error, ...args: unknown[]) => void;
+      };
     },
   ) {}
 
+  /**
+   * 根据 provider ID 创建 AI Client
+   */
+  private async createAIClient(providerId?: number): Promise<AIClient> {
+    const providers = await this.deps.aiProviderService.list();
+
+    // 如果指定了 provider ID，使用指定的 provider
+    let provider = providerId ? providers.find((p) => p.id === providerId) : null;
+
+    // 如果没有指定或找不到，使用默认的 provider
+    if (!provider) {
+      provider = providers.find((p) => p.isDefault);
+    }
+
+    if (!provider) {
+      throw new Error('No AI provider available. Please configure an AI provider first.');
+    }
+
+    this.deps.logger?.info(
+      `Creating AI client with provider: ${provider.name} (${provider.defaultModel || 'default model'})`,
+    );
+
+    return new VercelAIClient({
+      defaultModel: provider.defaultModel || 'gpt-4o-mini',
+      defaultProvider: provider.type,
+      defaultApiKey: provider.apiKey,
+      defaultBaseURL: provider.baseURL,
+      logger: this.deps.logger,
+    });
+  }
+
   async run(input: QueryRequest): Promise<QueryResponse> {
+    // 动态创建 AI Client
+    const aiClient = await this.createAIClient(input.aiProvider);
+
     // Plan
     const planner =
       this.deps.planner ??
@@ -44,10 +89,11 @@ export class QueryService {
           const list = await this.deps.datasourceService.list();
           return list[0]?.id ?? null;
         },
-        buildSql: async (q, ds) => ({
-          sql: `SELECT * FROM orders${input.limit ? ` LIMIT ${input.limit}` : ''}; -- TODO: replace with AI generated SQL for ${q}`,
-          datasourceId: ds,
-        }),
+        getSchemas: async (datasourceId: number) => {
+          return this.deps.schemaService.list(datasourceId);
+        },
+        aiClient,
+        logger: this.deps.logger,
       });
 
     const plan = await planner.plan(input.question, input.datasource, input.limit);
@@ -62,17 +108,13 @@ export class QueryService {
       };
     }
 
-    // Stub fallback
-    const rows: QueryResultRow[] = [
-      { user: 'Alice', region: '杭州', orders: 34, refundRate: '2.1%' },
-      { user: 'Bob', region: '上海', orders: 21, refundRate: '1.5%' },
-      { user: 'Carol', region: '北京', orders: 18, refundRate: '3.2%' },
-    ];
-    const limitedRows = input.limit ? rows.slice(0, input.limit) : rows;
+    // Stub fallback (当没有 executor 时使用)
+    // 返回空结果，提示用户配置 executor
+    const limitedRows: QueryResultRow[] = [];
     return {
       sql: plan.sql.map((s) => s.sql).join('\n'),
       rows: limitedRows,
-      summary: 'Stubbed query response; replace with AI + executor pipeline.',
+      summary: '查询执行器未配置。请确保已正确配置数据源和查询执行器。',
     };
   }
 }

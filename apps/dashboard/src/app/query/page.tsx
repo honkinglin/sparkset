@@ -1,39 +1,33 @@
 import Link from 'next/link';
-import { runQuery } from '../../lib/query';
-import { fetchDatasources } from '../../lib/api';
-import QueryRunner from './queryRunner';
+import { PageHeader } from '../../components/page-header';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Card, CardContent } from '../../components/ui/card';
+import { fetchAIProviders, fetchDatasources } from '../../lib/api';
+import QueryRunner from './query-runner';
 
 const QueryPage = async () => {
   const datasources = await fetchDatasources().catch(() => []);
-  const firstDsId = datasources[0]?.id;
-
-  let result: Awaited<ReturnType<typeof runQuery>> | null = null;
-  if (firstDsId) {
-    try {
-      result = await runQuery({ question: '查询订单列表', datasource: firstDsId, limit: 5 });
-    } catch (err) {
-      console.warn('query failed', err);
-    }
-  }
+  const aiProviders = await fetchAIProviders().catch(() => []);
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-300">Sparkline AI 运营助手</p>
-          <h1 className="text-3xl font-semibold tracking-tight">查询工作台（实时）</h1>
-        </div>
-      </header>
+      <PageHeader title="查询工作台" description="使用自然语言查询数据库，AI 自动生成 SQL 并执行" />
 
       {datasources.length === 0 ? (
-        <div className="card p-5 text-slate-400 space-y-3">
-          <div>未获取到数据源，请确认 API 运行并至少存在一个数据源。</div>
-          <Link href="/" className="text-brand-400 hover:underline text-sm">
-            前往数据源页查看
-          </Link>
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <Alert>
+              <AlertDescription className="space-y-3">
+                <div>未获取到数据源，请确认 API 运行并至少存在一个数据源。</div>
+                <Link href="/" className="text-primary hover:underline text-sm font-medium">
+                  前往数据源页查看
+                </Link>
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
       ) : (
-        <QueryRunner datasources={datasources} initialResult={result} />
+        <QueryRunner datasources={datasources} aiProviders={aiProviders} initialResult={null} />
       )}
     </div>
   );

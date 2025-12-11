@@ -5,4 +5,5 @@ export const queryRequestSchema = z.object({
   datasource: z.coerce.number().int().positive().optional(),
   action: z.coerce.number().int().positive().optional(),
   limit: z.coerce.number().int().positive().optional(),
+  aiProvider: z.coerce.number().int().positive().optional(),
 });

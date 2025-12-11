@@ -9,7 +9,6 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 model DataSource {
@@ -34,6 +33,8 @@ model TableSchema {
   id           Int                 @id @default(autoincrement())
   datasourceId Int                 @map("datasource_id")
   tableName    String              @map("table_name")
+  tableComment String?             @map("table_comment")
+  semanticDescription String?      @map("semantic_description")
   createdAt    DateTime            @default(now()) @map("created_at")
   updatedAt    DateTime            @updatedAt @map("updated_at")
 
@@ -51,6 +52,7 @@ model ColumnDefinition {
   name            String
   dataType        String    @map("data_type")
   columnComment   String?   @map("column_comment")
+  semanticDescription   String?   @map("semantic_description")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -97,3 +99,18 @@ model Message {
 
   @@map("conversation_messages")
 }
+
+model AIProvider {
+  id           Int       @id @default(autoincrement())
+  name         String    @unique
+  type         String
+  apiKey       String?   @map("api_key")
+  baseURL      String?   @map("base_url")
+  defaultModel String?   @map("default_model")
+  isDefault    Boolean   @default(false) @map("is_default")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("ai_providers")
+}
+

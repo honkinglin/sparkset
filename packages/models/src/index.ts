@@ -14,15 +14,19 @@ export interface DataSource {
 }
 
 export interface ColumnDefinition {
+  id?: number;
   name: string;
   type: string;
   comment?: string;
+  semanticDescription?: string;
 }
 
 export interface TableSchema {
   id: number;
   datasourceId: number;
   tableName: string;
+  tableComment?: string;
+  semanticDescription?: string;
   columns: ColumnDefinition[];
   updatedAt: Date;
 }
@@ -57,4 +61,16 @@ export interface Message {
   content: string;
   metadata?: unknown;
   createdAt: Date;
+}
+
+export interface AIProvider {
+  id: number;
+  name: string;
+  type: string;
+  apiKey?: string;
+  baseURL?: string;
+  defaultModel?: string;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

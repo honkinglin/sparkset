@@ -5,6 +5,7 @@ export interface QueryRequest {
   datasource?: number;
   action?: number;
   limit?: number;
+  aiProvider?: number;
 }
 
 export interface QueryResponse {

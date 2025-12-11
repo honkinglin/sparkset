@@ -50,7 +50,8 @@ const ensureReadOnly = (sql: string) => {
   if (!READONLY_PREFIX.some((re) => re.test(trimmed))) {
     throw new Error('Only read-only queries are allowed (SELECT/SHOW/DESCRIBE/EXPLAIN)');
   }
-  const forbidden = /(insert|update|delete|drop|alter|truncate|create|grant|revoke)/i;
+  // 使用单词边界 \b 确保只匹配完整的 SQL 关键字，避免误匹配字段名（如 created_at, updated_at）
+  const forbidden = /\b(insert|update|delete|drop|alter|truncate|create|grant|revoke)\b/i;
   if (forbidden.test(trimmed)) {
     throw new Error('Write operations are blocked in query runner');
   }

@@ -1,8 +1,12 @@
 'use client';
 
+import { AlertCircle, CheckCircle2, Play, X } from 'lucide-react';
 import { useState } from 'react';
 import { ActionDTO, executeAction } from '../lib/api';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 interface Props {
   actions: ActionDTO[];
@@ -29,69 +33,100 @@ export default function ActionTable({ actions }: Props) {
   };
 
   return (
-    <div className="card p-5 space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-400">模板列表</p>
-          <h2 className="text-xl font-semibold">已保存的动作模板</h2>
-        </div>
-        {message && <span className="text-sm text-slate-300">{message}</span>}
-      </div>
-      <div className="overflow-auto border border-white/10 rounded-xl">
-        <table className="table w-full text-sm">
-          <thead className="bg-white/5 text-left">
-            <tr>
-              <th className="px-4 py-2">名称</th>
-              <th className="px-4 py-2">类型</th>
-              <th className="px-4 py-2">描述</th>
-              <th className="px-4 py-2">最近更新</th>
-              <th className="px-4 py-2 text-right">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {actions.length === 0 ? (
-              <tr>
-                <td className="px-4 py-3 text-slate-400" colSpan={5}>
-                  暂无模板，可通过 API/CLI 创建。
-                </td>
-              </tr>
-            ) : (
-              actions.map((action) => (
-                <tr key={action.id} className="border-t border-white/10">
-                  <td className="px-4 py-3 font-medium">{action.name}</td>
-                  <td className="px-4 py-3 uppercase text-xs text-slate-300">{action.type}</td>
-                  <td className="px-4 py-3 text-slate-200">{action.description ?? '-'}</td>
-                  <td className="px-4 py-3 text-xs text-slate-400">
-                    {action.updatedAt ?? action.createdAt ?? '-'}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      disabled={runningId === action.id}
-                      onClick={() => handleExecute(action.id)}
-                    >
-                      {runningId === action.id ? '执行中...' : '执行'}
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>模板列表</CardTitle>
+          <CardDescription>已保存的动作模板，支持一键执行</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {message && (
+            <Alert variant={message.includes('成功') ? 'default' : 'destructive'} className="mb-4">
+              {message.includes('成功') ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : (
+                <AlertCircle className="h-4 w-4" />
+              )}
+              <AlertTitle>{message.includes('成功') ? '成功' : '错误'}</AlertTitle>
+              <AlertDescription>{message}</AlertDescription>
+            </Alert>
+          )}
+
+          {actions.length === 0 ? (
+            <div className="py-12 text-center text-sm text-muted-foreground">
+              暂无模板，可通过 API/CLI 创建。
+            </div>
+          ) : (
+            <div className="rounded-lg border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-medium">名称</th>
+                      <th className="px-4 py-3 text-left font-medium">类型</th>
+                      <th className="px-4 py-3 text-left font-medium">描述</th>
+                      <th className="px-4 py-3 text-left font-medium">最近更新</th>
+                      <th className="px-4 py-3 text-right font-medium">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {actions.map((action) => (
+                      <tr
+                        key={action.id}
+                        className="border-t border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <td className="px-4 py-3 font-medium">{action.name}</td>
+                        <td className="px-4 py-3">
+                          <Badge variant="outline" className="uppercase text-xs">
+                            {action.type}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {action.description ?? '-'}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-muted-foreground">
+                          {action.updatedAt ?? action.createdAt ?? '-'}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={runningId === action.id}
+                            onClick={() => handleExecute(action.id)}
+                          >
+                            <Play
+                              className={`mr-2 h-4 w-4 ${runningId === action.id ? 'animate-spin' : ''}`}
+                            />
+                            {runningId === action.id ? '执行中...' : '执行'}
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {resultPreview && (
-        <div className="card bg-white/5 border border-white/10 p-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-slate-300">执行结果</span>
-            <Button size="sm" variant="ghost" onClick={() => setResultPreview(null)}>
-              清除
-            </Button>
-          </div>
-          <pre className="text-xs whitespace-pre-wrap text-slate-100/90">
-            {JSON.stringify(resultPreview, null, 2)}
-          </pre>
-        </div>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>执行结果</CardTitle>
+              <Button size="sm" variant="ghost" onClick={() => setResultPreview(null)}>
+                <X className="mr-2 h-4 w-4" />
+                清除
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <pre className="rounded-lg bg-muted p-4 text-xs font-mono overflow-x-auto">
+              <code>{JSON.stringify(resultPreview, null, 2)}</code>
+            </pre>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { DataSourceConfig, DBClient, QueryResult } from './index';
 import mysql from 'mysql2/promise';
+import { DataSourceConfig, DBClient, QueryResult } from './index';
 
 class MySQLDBClient implements DBClient {
   async testConnection(config: DataSourceConfig): Promise<boolean> {
@@ -30,17 +30,17 @@ class MySQLDBClient implements DBClient {
 }
 
 class PrismaDBClient implements DBClient {
-  constructor(private prisma: PrismaClient) {}
+  private mysqlClient = new MySQLDBClient();
 
-  async testConnection(): Promise<boolean> {
-    await this.prisma.$queryRaw`SELECT 1`;
-    return true;
+  async testConnection(config: DataSourceConfig): Promise<boolean> {
+    // 使用 MySQL 客户端测试目标数据源的连接
+    return this.mysqlClient.testConnection(config);
   }
 
-  async query<T = unknown>(_config: DataSourceConfig, sql: string): Promise<QueryResult<T>> {
-    // Prisma does not expose raw connections easily per datasource; for now use $queryRawUnsafe
-    const rows = (await this.prisma.$queryRawUnsafe(sql)) as T[];
-    return { rows };
+  async query<T = unknown>(config: DataSourceConfig, sql: string): Promise<QueryResult<T>> {
+    // 使用 MySQL 客户端连接到目标数据源执行查询
+    // 不能使用 Prisma 默认连接，因为它指向 sparkline 应用数据库，而不是用户配置的数据源
+    return this.mysqlClient.query<T>(config, sql);
   }
 }
 

@@ -49,4 +49,40 @@ export class DatasourcesController {
     const tables = await this.schemaService.list(id);
     return reply.send({ id, tables });
   }
+
+  async show(req: TypedRequest, reply: FastifyReply) {
+    const id = Number((req.params as { id: string }).id);
+    const datasource = (await this.service.list()).find((item) => item.id === id);
+    if (!datasource) return reply.code(404).send({ message: 'Datasource not found' });
+    const tables = await this.schemaService.list(id);
+    return reply.send({ ...datasource, tables });
+  }
+
+  async updateTableMetadata(req: TypedRequest, reply: FastifyReply) {
+    const datasourceId = Number((req.params as { id: string }).id);
+    const tableId = Number((req.params as { tableId: string }).tableId);
+    const datasource = (await this.service.list()).find((item) => item.id === datasourceId);
+    if (!datasource) return reply.code(404).send({ message: 'Datasource not found' });
+
+    const body = req.body as { tableComment?: string | null; semanticDescription?: string | null };
+    await this.schemaService.updateTableMetadata(tableId, {
+      tableComment: body.tableComment,
+      semanticDescription: body.semanticDescription,
+    });
+    return reply.send({ success: true });
+  }
+
+  async updateColumnMetadata(req: TypedRequest, reply: FastifyReply) {
+    const datasourceId = Number((req.params as { id: string }).id);
+    const columnId = Number((req.params as { columnId: string }).columnId);
+    const datasource = (await this.service.list()).find((item) => item.id === datasourceId);
+    if (!datasource) return reply.code(404).send({ message: 'Datasource not found' });
+
+    const body = req.body as { columnComment?: string | null; semanticDescription?: string | null };
+    await this.schemaService.updateColumnMetadata(columnId, {
+      columnComment: body.columnComment,
+      semanticDescription: body.semanticDescription,
+    });
+    return reply.send({ success: true });
+  }
 }

@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { QueryExecutor, QueryPlanner } from '@sparkline/core';
+import { describe, expect, it, vi } from 'vitest';
 import { QueryService } from '../src/app/services/queryService';
-import { QueryPlanner } from '@sparkline/core';
-import { QueryExecutor } from '@sparkline/core';
 
 const makeDatasourceService = () => ({
   list: vi.fn().mockResolvedValue([
@@ -18,6 +17,28 @@ const makeDatasourceService = () => ({
   ]),
 });
 const makeActionService = () => ({ get: vi.fn().mockResolvedValue(null) });
+const makeSchemaService = () => ({
+  list: vi.fn().mockResolvedValue([
+    {
+      tableName: 'test_table',
+      columns: [{ name: 'id', type: 'int' }],
+    },
+  ]),
+});
+const makeAIProviderService = () => ({
+  list: vi.fn().mockResolvedValue([
+    {
+      id: 1,
+      name: 'test-provider',
+      type: 'openai',
+      apiKey: 'test-key',
+      defaultModel: 'gpt-4o-mini',
+      isDefault: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ]),
+});
 
 const planner = {
   plan: vi.fn().mockResolvedValue({
@@ -37,6 +58,8 @@ describe('QueryService', () => {
     const svc = new QueryService({
       datasourceService: makeDatasourceService() as any,
       actionService: makeActionService() as any,
+      schemaService: makeSchemaService() as any,
+      aiProviderService: makeAIProviderService() as any,
       planner,
       executor,
     });
@@ -45,12 +68,17 @@ describe('QueryService', () => {
     expect(res.rows[0]).toEqual({ a: 1 });
   });
 
-  it('falls back to stub rows when executor missing', async () => {
+  it('returns empty rows when executor missing', async () => {
     const svc = new QueryService({
       datasourceService: makeDatasourceService() as any,
       actionService: makeActionService() as any,
-    } as any);
+      schemaService: makeSchemaService() as any,
+      aiProviderService: makeAIProviderService() as any,
+      planner,
+    });
+
     const res = await svc.run({ question: 'hi', limit: 1 });
-    expect(res.rows).toHaveLength(1);
+    expect(res.rows).toHaveLength(0);
+    expect(res.summary).toContain('查询执行器未配置');
   });
 });

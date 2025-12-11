@@ -6,10 +6,16 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b",
+    "dev": "tsc -b --watch",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "echo 'TODO: add tests'"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@ai-sdk/anthropic": "beta",
+    "@ai-sdk/deepseek": "2.0.0-beta.49",
+    "@ai-sdk/openai": "beta",
+    "@sparkline/models": "workspace:*",
+    "ai": "beta"
+  }
 }

@@ -13,6 +13,12 @@ const envSchema = z.object({
   DB_USER: z.string().optional(),
   DB_PASSWORD: z.string().optional(),
   DB_NAME: z.string().optional(),
+  // AI 配置
+  AI_MODEL: z.string().default('gpt-4o-mini'),
+  AI_PROVIDER: z.string().default('openai'),
+  AI_API_KEY: z.string().optional(),
+  AI_BASE_URL: z.string().optional(),
+  AI_FALLBACK_MODELS: z.string().optional(), // JSON 数组字符串
 });
 
 export type Env = z.infer<typeof envSchema>;

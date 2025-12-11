@@ -1,32 +1,34 @@
-import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import { DatasourceService } from './app/services/datasourceService';
-import { ActionService } from './app/services/actionService';
-import { ConversationService } from './app/services/conversationService';
-import { SchemaService } from './app/services/schemaService';
-import { loadEnv } from './env';
-import { registerRoutes } from './start/routes';
-import { buildDatasourceConfig } from './config/database';
-import {
-  MySQLDatasourceRepository,
-  MySQLRepo,
-  PrismaDatasourceRepository,
-  PrismaActionRepository,
-  PrismaConversationRepository,
-  getPrisma,
-  createDBClient,
-  PrismaSchemaCacheRepository,
-  MySQLSchemaCacheRepository,
-  InMemorySchemaCacheRepository,
-  InMemoryDBClient,
-} from '@sparkline/db';
 import {
   ActionExecutor,
   ActionRegistry,
   QueryExecutor,
-  createSqlActionHandler,
   createEchoHandler,
+  createSqlActionHandler,
 } from '@sparkline/core';
+import {
+  InMemoryDBClient,
+  InMemorySchemaCacheRepository,
+  MySQLDatasourceRepository,
+  MySQLRepo,
+  MySQLSchemaCacheRepository,
+  PrismaAIProviderRepository,
+  PrismaActionRepository,
+  PrismaConversationRepository,
+  PrismaDatasourceRepository,
+  PrismaSchemaCacheRepository,
+  createDBClient,
+  getPrisma,
+} from '@sparkline/db';
+import Fastify from 'fastify';
+import { ActionService } from './app/services/actionService';
+import { AIProviderService } from './app/services/aiProviderService';
+import { ConversationService } from './app/services/conversationService';
+import { DatasourceService } from './app/services/datasourceService';
+import { SchemaService } from './app/services/schemaService';
+import { buildDatasourceConfig } from './config/database';
+import { loadEnv } from './env';
+import { registerRoutes } from './start/routes';
 
 const env = loadEnv();
 const app = Fastify({ logger: env.LOG_LEVEL });
@@ -40,15 +42,18 @@ let datasourceService: DatasourceService;
 let actionService: ActionService;
 let conversationService: ConversationService;
 let schemaService: SchemaService;
+let aiProviderService: AIProviderService;
 let prismaClient;
 let queryExecutor: QueryExecutor | undefined;
 let actionExecutor: ActionExecutor | undefined;
+
 const dsConfig = buildDatasourceConfig(env);
 if (process.env.DATABASE_URL) {
   prismaClient = getPrisma();
   datasourceService = new DatasourceService(new PrismaDatasourceRepository(prismaClient));
   actionService = new ActionService(new PrismaActionRepository(prismaClient));
   conversationService = new ConversationService(new PrismaConversationRepository(prismaClient));
+  aiProviderService = new AIProviderService(new PrismaAIProviderRepository(prismaClient));
   schemaService = new SchemaService({
     schemaRepo: new PrismaSchemaCacheRepository(prismaClient),
     getDBClient: async (ds) =>
@@ -65,6 +70,7 @@ if (process.env.DATABASE_URL) {
         },
         prismaClient,
       ),
+    logger: app.log,
   });
   queryExecutor = new QueryExecutor({
     getDBClient: async (dsId) => {
@@ -103,6 +109,7 @@ if (process.env.DATABASE_URL) {
   datasourceService = new DatasourceService(repo);
   actionService = new ActionService();
   conversationService = new ConversationService();
+  aiProviderService = new AIProviderService();
   schemaService = new SchemaService({
     schemaRepo: new MySQLSchemaCacheRepository(new MySQLRepo(dsConfig)),
     getDBClient: async (ds) =>
@@ -116,6 +123,7 @@ if (process.env.DATABASE_URL) {
         password: ds.password,
         database: ds.database,
       }),
+    logger: app.log,
   });
   queryExecutor = new QueryExecutor({
     getDBClient: async (dsId) => {
@@ -150,9 +158,11 @@ if (process.env.DATABASE_URL) {
   datasourceService = new DatasourceService();
   actionService = new ActionService();
   conversationService = new ConversationService();
+  aiProviderService = new AIProviderService();
   schemaService = new SchemaService({
     schemaRepo: new InMemorySchemaCacheRepository(),
     getDBClient: async () => new InMemoryDBClient(),
+    logger: app.log,
   });
   app.log.warn('DB env not set; using in-memory datasource store');
 }
@@ -184,11 +194,13 @@ if (queryExecutor) {
   actionExecutor = new ActionExecutor(registry);
 }
 
+// 注册路由并启动服务器
 registerRoutes(app, {
   datasourceService,
   actionService,
   conversationService,
   schemaService,
+  aiProviderService,
   queryExecutor,
   actionExecutor,
   getDBClient,
@@ -204,6 +216,7 @@ registerRoutes(app, {
       database: ds.database,
     };
   },
+  logger: app.log,
 });
 
 void app

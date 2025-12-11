@@ -31,11 +31,12 @@ export class InMemoryDBClient implements DBClient {
   }
 }
 
-export * from './repository';
+export * from './aiProviderRepo';
 export * from './datasourceRepo';
-export * from './prismaDatasourceRepository';
-export * from './prismaActionRepository';
-export * from './prismaConversationRepository';
-export * from './prismaClient';
 export * from './dbClientFactory';
+export * from './prismaActionRepository';
+export * from './prismaClient';
+export * from './prismaConversationRepository';
+export * from './prismaDatasourceRepository';
+export * from './repository';
 export * from './schemaRepo';
