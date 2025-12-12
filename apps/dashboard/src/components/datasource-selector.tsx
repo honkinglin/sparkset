@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import {
@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 interface Datasource {
   id: number;
   name: string;
+  isDefault?: boolean;
 }
 
 interface DatasourceSelectorProps {
@@ -39,6 +40,16 @@ export function DatasourceSelector({
 }: DatasourceSelectorProps) {
   const [open, setOpen] = useState(false);
   const selectedDatasource = datasources.find((ds) => ds.id === value);
+
+  // 如果 value 未提供，自动选择默认数据源
+  useEffect(() => {
+    if (value === undefined && datasources.length > 0) {
+      const defaultDatasource = datasources.find((d) => d.isDefault) ?? datasources[0];
+      if (defaultDatasource && onValueChange) {
+        onValueChange(defaultDatasource.id);
+      }
+    }
+  }, [value, datasources, onValueChange]);
 
   return (
     <div className={`flex items-center gap-1.5 ${className ?? ''}`}>
@@ -84,7 +95,10 @@ export function DatasourceSelector({
                         value === ds.id ? 'opacity-100' : 'opacity-0',
                       )}
                     />
-                    {ds.name}
+                    <span className="flex-1">{ds.name}</span>
+                    {ds.isDefault && (
+                      <span className="ml-2 text-xs text-muted-foreground">默认</span>
+                    )}
                   </CommandItem>
                 ))}
               </CommandGroup>

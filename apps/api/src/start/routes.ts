@@ -64,6 +64,9 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
       reply,
     ),
   );
+  app.post('/datasources/:id/set-default', (req, reply) =>
+    new DatasourcesController(deps.datasourceService, deps.schemaService).setDefault(req, reply),
+  );
   // 通用的 /datasources/:id 路由放在最后
   app.get('/datasources/:id', (req, reply) =>
     new DatasourcesController(deps.datasourceService, deps.schemaService).show(req, reply),
@@ -111,6 +114,7 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
             getDatasourceConfig: deps.getDatasourceConfig,
             logger: deps.logger,
           }),
+        conversationSvc,
       ).run(req, reply);
     } catch (error) {
       req.log.error(error, 'Query endpoint error');

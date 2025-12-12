@@ -3,6 +3,8 @@
 import { AlertCircle, CheckCircle2, Play, X } from 'lucide-react';
 import { useState } from 'react';
 import { ActionDTO, executeAction } from '../lib/api';
+import { ActionResult } from './action/result';
+import type { ActionExecutionResponse } from './action/types';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -122,9 +124,13 @@ export default function ActionTable({ actions }: Props) {
             </div>
           </CardHeader>
           <CardContent>
-            <pre className="rounded-lg bg-muted p-4 text-xs font-mono overflow-x-auto">
-              <code>{JSON.stringify(resultPreview, null, 2)}</code>
-            </pre>
+            <ActionResult
+              actionType={
+                actions.find((a) => a.id === (resultPreview as ActionExecutionResponse).actionId)
+                  ?.type || 'unknown'
+              }
+              result={resultPreview as ActionExecutionResponse}
+            />
           </CardContent>
         </Card>
       )}

@@ -1,11 +1,12 @@
-import { MySQLRepo } from './repository';
 import { DataSource } from '@sparkline/models';
+import { MySQLRepo } from './repository';
 
 export interface DatasourceRepository {
   list(): Promise<DataSource[]>;
   create(input: Omit<DataSource, 'id' | 'lastSyncAt'>): Promise<DataSource>;
   update(input: Partial<DataSource> & { id: number }): Promise<DataSource>;
   remove(id: number): Promise<void>;
+  setDefault(id: number): Promise<void>;
 }
 
 export class MySQLDatasourceRepository implements DatasourceRepository {
@@ -13,14 +14,19 @@ export class MySQLDatasourceRepository implements DatasourceRepository {
 
   async list(): Promise<DataSource[]> {
     const rows = await this.repo.query<DataSource>(
-      'SELECT id, name, type, host, port, username, password, database_name AS database, last_sync_at AS lastSyncAt FROM datasources',
+      'SELECT id, name, type, host, port, username, password, database_name AS database, is_default AS isDefault, last_sync_at AS lastSyncAt FROM datasources ORDER BY is_default DESC, id ASC',
     );
     return rows;
   }
 
   async create(input: Omit<DataSource, 'id' | 'lastSyncAt'>): Promise<DataSource> {
+    // 如果设置为默认，先取消其他数据源的默认状态
+    if (input.isDefault) {
+      await this.repo.query('UPDATE datasources SET is_default = false WHERE is_default = true');
+    }
+
     const sql =
-      'INSERT INTO datasources (name, type, host, port, username, password, database_name) VALUES (?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO datasources (name, type, host, port, username, password, database_name, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     const params = [
       input.name,
       input.type,
@@ -29,6 +35,7 @@ export class MySQLDatasourceRepository implements DatasourceRepository {
       input.username,
       input.password,
       input.database,
+      input.isDefault ?? false,
     ];
     const result = await this.repo.query<{ insertId: number }>(sql, params);
     const id = (result as unknown as { insertId: number }).insertId;
@@ -37,13 +44,22 @@ export class MySQLDatasourceRepository implements DatasourceRepository {
 
   async update(input: Partial<DataSource> & { id: number }): Promise<DataSource> {
     const existing = await this.repo.query<DataSource>(
-      'SELECT id, name, type, host, port, username, password, database_name AS database, last_sync_at AS lastSyncAt FROM datasources WHERE id = ? LIMIT 1',
+      'SELECT id, name, type, host, port, username, password, database_name AS database, is_default AS isDefault, last_sync_at AS lastSyncAt FROM datasources WHERE id = ? LIMIT 1',
       [input.id],
     );
     if (!existing.length) throw new Error('Datasource not found');
     const merged = { ...existing[0], ...input } as DataSource;
+
+    // 如果设置为默认，先取消其他数据源的默认状态
+    if (input.isDefault === true) {
+      await this.repo.query(
+        'UPDATE datasources SET is_default = false WHERE is_default = true AND id != ?',
+        [input.id],
+      );
+    }
+
     const sql =
-      'UPDATE datasources SET name=?, type=?, host=?, port=?, username=?, password=?, database_name=?, last_sync_at=? WHERE id=?';
+      'UPDATE datasources SET name=?, type=?, host=?, port=?, username=?, password=?, database_name=?, is_default=?, last_sync_at=? WHERE id=?';
     await this.repo.query(sql, [
       merged.name,
       merged.type,
@@ -52,6 +68,7 @@ export class MySQLDatasourceRepository implements DatasourceRepository {
       merged.username,
       merged.password,
       merged.database,
+      merged.isDefault ?? false,
       merged.lastSyncAt ?? null,
       merged.id,
     ]);
@@ -60,5 +77,12 @@ export class MySQLDatasourceRepository implements DatasourceRepository {
 
   async remove(id: number): Promise<void> {
     await this.repo.query('DELETE FROM datasources WHERE id = ?', [id]);
+  }
+
+  async setDefault(id: number): Promise<void> {
+    // 先取消所有数据源的默认状态
+    await this.repo.query('UPDATE datasources SET is_default = false WHERE is_default = true');
+    // 设置指定数据源为默认
+    await this.repo.query('UPDATE datasources SET is_default = true WHERE id = ?', [id]);
   }
 }

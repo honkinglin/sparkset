@@ -20,6 +20,7 @@ model DataSource {
   username    String
   password    String
   database    String
+  isDefault   Boolean   @default(false) @map("is_default")
   lastSyncAt  DateTime? @map("last_sync_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
@@ -69,6 +70,7 @@ model Action {
   type        String
   payload     Json
   parameters  Json?
+  inputSchema Json?   @map("input_schema")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

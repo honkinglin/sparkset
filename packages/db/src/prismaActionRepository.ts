@@ -30,6 +30,7 @@ export class PrismaActionRepository implements ActionRepository {
         type: input.type,
         payload: input.payload as unknown as object,
         parameters: input.parameters as unknown as object,
+        inputSchema: (input as any).inputSchema as unknown as object | undefined,
       },
     });
     return this.mapRow(row);
@@ -44,6 +45,7 @@ export class PrismaActionRepository implements ActionRepository {
         type: input.type,
         payload: input.payload as unknown as object,
         parameters: input.parameters as unknown as object,
+        inputSchema: (input as any).inputSchema as unknown as object | undefined,
       },
     });
     return this.mapRow(row);
@@ -60,6 +62,7 @@ export class PrismaActionRepository implements ActionRepository {
     type: string;
     payload: unknown;
     parameters: unknown;
+    inputSchema: unknown | null;
     createdAt: Date;
     updatedAt: Date;
   }): Action => ({
@@ -69,6 +72,7 @@ export class PrismaActionRepository implements ActionRepository {
     type: row.type,
     payload: row.payload,
     parameters: row.parameters ?? undefined,
+    inputSchema: row.inputSchema ?? undefined,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   });

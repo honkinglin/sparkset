@@ -1,7 +1,11 @@
 import { FastifyReply } from 'fastify';
 import { DatasourceService } from '../../services/datasourceService';
 import { SchemaService } from '../../services/schemaService';
-import { datasourceCreateSchema, datasourceUpdateSchema } from '../../validators/datasource';
+import {
+  datasourceCreateSchema,
+  datasourceUpdateSchema,
+  setDefaultSchema,
+} from '../../validators/datasource';
 import { TypedRequest } from '../types';
 
 export class DatasourcesController {
@@ -83,6 +87,12 @@ export class DatasourcesController {
       columnComment: body.columnComment,
       semanticDescription: body.semanticDescription,
     });
+    return reply.send({ success: true });
+  }
+
+  async setDefault(req: TypedRequest, reply: FastifyReply) {
+    const parsed = setDefaultSchema.parse(req.params);
+    await this.service.setDefault(parsed.id);
     return reply.send({ success: true });
   }
 }

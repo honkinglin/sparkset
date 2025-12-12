@@ -9,7 +9,7 @@ import { QueryResponse, runQuery } from '../../lib/query';
 import QueryForm from './query-form';
 
 interface Props {
-  datasources: { id: number; name: string }[];
+  datasources: { id: number; name: string; isDefault?: boolean }[];
   aiProviders: { id: number; name: string; type: string; isDefault: boolean }[];
   initialResult: QueryResponse | null;
   apiBase?: string;
@@ -19,10 +19,13 @@ export default function QueryRunner({ datasources, aiProviders, initialResult }:
   const [result, setResult] = useState<QueryResponse | null>(initialResult);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeDatasource, setActiveDatasource] = useState<number | undefined>(datasources[0]?.id);
+  const defaultDatasourceId = datasources.find((d) => d.isDefault)?.id ?? datasources[0]?.id;
+  const [activeDatasource, setActiveDatasource] = useState<number | undefined>(defaultDatasourceId);
+  const [question, setQuestion] = useState<string>('');
 
   const handleRun = async (body: Parameters<typeof runQuery>[0]) => {
     setActiveDatasource(body.datasource);
+    setQuestion(body.question || '');
     setLoading(true);
     setError(null);
     try {
@@ -41,7 +44,7 @@ export default function QueryRunner({ datasources, aiProviders, initialResult }:
       <QueryForm
         datasources={datasources}
         aiProviders={aiProviders}
-        defaultDs={datasources[0]?.id}
+        defaultDs={defaultDatasourceId}
         defaultAiProvider={
           aiProviders.find((p) => p.isDefault)?.id ?? aiProviders[0]?.id ?? undefined
         }
@@ -69,7 +72,9 @@ export default function QueryRunner({ datasources, aiProviders, initialResult }:
         </Card>
       )}
 
-      {result && <QueryResult result={result} datasourceId={activeDatasource} />}
+      {result && (
+        <QueryResult result={result} datasourceId={activeDatasource} question={question} />
+      )}
     </div>
   );
 }

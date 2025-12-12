@@ -54,13 +54,20 @@ export interface SqlActionPayload {
 
 export const createSqlActionHandler = (deps: {
   executor: QueryExecutor;
-  defaultDatasourceId?: number;
+  defaultDatasourceId?: number | (() => Promise<number | undefined>);
 }) => {
   const handler: ActionHandler = {
     type: 'sql',
     async execute(ctx: ActionContext<SqlActionPayload>) {
       const payload = ctx.payload;
-      const dsId = payload.datasourceId ?? deps.defaultDatasourceId;
+      let dsId = payload.datasourceId;
+      if (!dsId) {
+        if (typeof deps.defaultDatasourceId === 'function') {
+          dsId = await deps.defaultDatasourceId();
+        } else {
+          dsId = deps.defaultDatasourceId;
+        }
+      }
       if (!dsId)
         return { success: false, error: new Error('Datasource is required for SQL action') };
 

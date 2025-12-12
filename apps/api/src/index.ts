@@ -48,7 +48,9 @@ let queryExecutor: QueryExecutor | undefined;
 let actionExecutor: ActionExecutor | undefined;
 
 const dsConfig = buildDatasourceConfig(env);
+app.log.info(`DATABASE_URL: ${process.env.DATABASE_URL ? 'SET' : 'NOT SET'}`);
 if (process.env.DATABASE_URL) {
+  app.log.info('Using Prisma with DATABASE_URL');
   prismaClient = getPrisma();
   datasourceService = new DatasourceService(new PrismaDatasourceRepository(prismaClient));
   actionService = new ActionService(new PrismaActionRepository(prismaClient));
@@ -104,6 +106,7 @@ if (process.env.DATABASE_URL) {
     },
   });
   app.log.info('Datasource service backed by Prisma ORM');
+  app.log.info('ConversationService is using Prisma repository (persistent storage)');
 } else if (dsConfig) {
   const repo = new MySQLDatasourceRepository(new MySQLRepo(dsConfig));
   datasourceService = new DatasourceService(repo);
@@ -158,6 +161,9 @@ if (process.env.DATABASE_URL) {
   datasourceService = new DatasourceService();
   actionService = new ActionService();
   conversationService = new ConversationService();
+  app.log.warn(
+    'ConversationService is using in-memory storage. Set DATABASE_URL to enable persistent conversation storage.',
+  );
   aiProviderService = new AIProviderService();
   schemaService = new SchemaService({
     schemaRepo: new InMemorySchemaCacheRepository(),
@@ -188,7 +194,15 @@ const getDBClient = async (datasourceId: number) => {
 // Build action executor registry
 if (queryExecutor) {
   const registry = new ActionRegistry();
-  registry.register(createSqlActionHandler({ executor: queryExecutor }));
+  registry.register(
+    createSqlActionHandler({
+      executor: queryExecutor,
+      defaultDatasourceId: async () => {
+        const list = await datasourceService.list();
+        return list.find((d) => d.isDefault)?.id;
+      },
+    }),
+  );
   registry.register(createEchoHandler('api'));
   registry.register(createEchoHandler('file'));
   actionExecutor = new ActionExecutor(registry);

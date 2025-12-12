@@ -13,7 +13,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { runQuery } from '../../lib/query';
 
 interface Props {
-  datasources: { id: number; name: string }[];
+  datasources: { id: number; name: string; isDefault?: boolean }[];
   aiProviders: { id: number; name: string; type: string; isDefault: boolean }[];
   defaultDs?: number;
   defaultAiProvider?: number;
@@ -34,7 +34,9 @@ const QueryForm = ({
   onDatasourceChange,
 }: Props) => {
   const [question, setQuestion] = useState('');
-  const [datasource, setDatasource] = useState(defaultDs ?? datasources[0]?.id);
+  const defaultDatasourceId =
+    defaultDs ?? datasources.find((d) => d.isDefault)?.id ?? datasources[0]?.id;
+  const [datasource, setDatasource] = useState(defaultDatasourceId);
   const [aiProvider, setAiProvider] = useState(
     defaultAiProvider ?? aiProviders.find((p) => p.isDefault)?.id ?? aiProviders[0]?.id,
   );

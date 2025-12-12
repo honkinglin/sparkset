@@ -32,6 +32,7 @@ export interface DatasourceDTO {
   port: number;
   username: string;
   database: string;
+  isDefault: boolean;
   lastSyncAt?: string;
 }
 
@@ -55,6 +56,10 @@ export async function syncDatasource(id: number): Promise<{ id: number; lastSync
 
 export async function removeDatasource(id: number): Promise<void> {
   await request(`/datasources/${id}`, { method: 'DELETE' });
+}
+
+export async function setDefaultDatasource(id: number): Promise<{ success: boolean }> {
+  return request(`/datasources/${id}/set-default`, { method: 'POST' });
 }
 
 export interface TableColumnDTO {
@@ -111,6 +116,19 @@ export async function updateColumnMetadata(
 }
 
 // Actions
+export interface ParameterDefinition {
+  name: string;
+  type: 'string' | 'number' | 'boolean';
+  required?: boolean;
+  default?: unknown;
+  description?: string;
+  label?: string;
+}
+
+export interface ActionInputSchema {
+  parameters: ParameterDefinition[];
+}
+
 export interface ActionDTO {
   id: number;
   name: string;
@@ -118,6 +136,7 @@ export interface ActionDTO {
   type: string;
   payload: unknown;
   parameters?: unknown;
+  inputSchema?: ActionInputSchema | null;
   updatedAt?: string;
   createdAt?: string;
 }
@@ -132,6 +151,42 @@ export async function executeAction(id: number, parameters?: unknown) {
     method: 'POST',
     body: parameters ? JSON.stringify({ parameters }) : undefined,
   });
+}
+
+export type CreateActionInput = {
+  name: string;
+  description?: string;
+  type: string;
+  payload: unknown;
+  parameters?: unknown;
+  inputSchema?: ActionInputSchema;
+};
+
+export type UpdateActionInput = Partial<CreateActionInput> & {
+  id: number;
+};
+
+export async function createAction(payload: CreateActionInput): Promise<ActionDTO> {
+  return request<ActionDTO>('/actions', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAction(payload: UpdateActionInput): Promise<ActionDTO> {
+  const { id, ...data } = payload;
+  return request<ActionDTO>(`/actions/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteAction(id: number): Promise<void> {
+  await request(`/actions/${id}`, { method: 'DELETE' });
+}
+
+export async function getAction(id: number): Promise<ActionDTO> {
+  return request<ActionDTO>(`/actions/${id}`, { cache: 'no-store' });
 }
 
 // AI Providers
@@ -179,4 +234,35 @@ export async function removeAIProvider(id: number): Promise<void> {
 
 export async function setDefaultAIProvider(id: number): Promise<{ success: boolean }> {
   return request(`/ai-providers/${id}/set-default`, { method: 'POST' });
+}
+
+// Conversations
+export interface ConversationDTO {
+  id: number;
+  userId?: number | null;
+  title?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MessageDTO {
+  id: number;
+  conversationId: number;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  metadata?: unknown;
+  createdAt: string;
+}
+
+export interface ConversationDetailDTO extends ConversationDTO {
+  messages: MessageDTO[];
+}
+
+export async function fetchConversations(): Promise<ConversationDTO[]> {
+  const res = await request<{ items: ConversationDTO[] }>('/conversations', { cache: 'no-store' });
+  return res.items ?? [];
+}
+
+export async function fetchConversation(id: number): Promise<ConversationDetailDTO> {
+  return request<ConversationDetailDTO>(`/conversations/${id}`, { cache: 'no-store' });
 }

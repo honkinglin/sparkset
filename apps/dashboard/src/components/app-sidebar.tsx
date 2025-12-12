@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { Database, FileText, LayoutDashboard, MessageSquare, Play, Sparkles } from 'lucide-react';
+import { Database, FileText, MessageSquare, Play, Sparkles, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -29,6 +29,11 @@ const menuItems = [
     icon: Play,
   },
   {
+    title: 'Actions',
+    url: '/actions',
+    icon: Zap,
+  },
+  {
     title: '查询模板',
     url: '/templates',
     icon: FileText,
@@ -43,11 +48,6 @@ const menuItems = [
     url: '/ai-providers',
     icon: Sparkles,
   },
-  {
-    title: '仪表板',
-    url: '/dashboard',
-    icon: LayoutDashboard,
-  },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -61,8 +61,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <Database className="h-4 w-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold">Sparkline</span>
-            <span className="text-xs text-muted-foreground">AI 运营助手</span>
+            <span className="text-lg font-semibold">Sparkline</span>
           </div>
         </div>
       </SidebarHeader>

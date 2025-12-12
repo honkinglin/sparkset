@@ -8,8 +8,13 @@ export const datasourceCreateSchema = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
   database: z.string().min(1),
+  isDefault: z.boolean().optional(),
 });
 
 export const datasourceUpdateSchema = datasourceCreateSchema.partial().extend({
+  id: z.coerce.number().int().positive(),
+});
+
+export const setDefaultSchema = z.object({
   id: z.coerce.number().int().positive(),
 });

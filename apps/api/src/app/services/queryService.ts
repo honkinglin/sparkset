@@ -22,6 +22,8 @@ export interface QueryResponse {
   rows: QueryResultRow[];
   summary?: string;
   datasource?: DataSource;
+  datasourceId?: number;
+  conversationId?: number;
 }
 
 /**
@@ -82,12 +84,18 @@ export class QueryService {
     const aiClient = await this.createAIClient(input.aiProvider);
 
     // Plan
+    // 如果未指定数据源，使用默认数据源
+    const datasourceId =
+      input.datasource ??
+      (await this.deps.datasourceService.list()).find((d) => d.isDefault)?.id ??
+      null;
+
     const planner =
       this.deps.planner ??
       new QueryPlanner({
         chooseDatasource: async () => {
           const list = await this.deps.datasourceService.list();
-          return list[0]?.id ?? null;
+          return list.find((d) => d.isDefault)?.id ?? list[0]?.id ?? null;
         },
         getSchemas: async (datasourceId: number) => {
           return this.deps.schemaService.list(datasourceId);
@@ -96,7 +104,7 @@ export class QueryService {
         logger: this.deps.logger,
       });
 
-    const plan = await planner.plan(input.question, input.datasource, input.limit);
+    const plan = await planner.plan(input.question, datasourceId, input.limit);
 
     // If executor wired, run real queries
     if (this.deps.executor) {
@@ -105,6 +113,7 @@ export class QueryService {
         sql: plan.sql.map((s) => s.sql).join('\n'),
         rows: execResult.rows as QueryResultRow[],
         summary: execResult.summary,
+        datasourceId: datasourceId ?? undefined,
       };
     }
 
@@ -115,6 +124,7 @@ export class QueryService {
       sql: plan.sql.map((s) => s.sql).join('\n'),
       rows: limitedRows,
       summary: '查询执行器未配置。请确保已正确配置数据源和查询执行器。',
+      datasourceId: datasourceId ?? undefined,
     };
   }
 }

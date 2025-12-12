@@ -10,6 +10,7 @@ export interface DataSource {
   username: string;
   password: string;
   database: string;
+  isDefault?: boolean;
   lastSyncAt?: Date;
 }
 
@@ -33,6 +34,17 @@ export interface TableSchema {
 
 export type ActionType = 'sql' | 'api' | 'file' | string;
 
+export interface ActionInputSchema {
+  parameters: Array<{
+    name: string;
+    type: 'string' | 'number' | 'boolean';
+    required?: boolean;
+    default?: unknown;
+    description?: string;
+    label?: string;
+  }>;
+}
+
 export interface Action {
   id: number;
   name: string;
@@ -40,6 +52,7 @@ export interface Action {
   type: ActionType;
   payload: unknown;
   parameters?: unknown;
+  inputSchema?: ActionInputSchema;
   createdAt: Date;
   updatedAt: Date;
 }
