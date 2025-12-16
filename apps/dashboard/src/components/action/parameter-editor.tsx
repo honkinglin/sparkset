@@ -3,8 +3,9 @@
 import { Minus, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { type ActionInputSchema, type ParameterDefinition } from '../../lib/api';
+import { cn } from '../../lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -79,18 +80,18 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                     <span className="text-xs text-muted-foreground">({param.type})</span>
                     {param.required && <span className="text-xs text-destructive">*</span>}
                   </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
+                  <div
+                    className={cn(
+                      buttonVariants({ variant: 'ghost', size: 'sm' }),
+                      'h-6 w-6 p-0 cursor-pointer',
+                    )}
                     onClick={(e) => {
                       e.stopPropagation();
                       removeParameter(index);
                     }}
-                    className="h-6 w-6 p-0"
                   >
                     <Minus className="h-3 w-3" />
-                  </Button>
+                  </div>
                 </div>
               </AccordionTrigger>
               <AccordionContent>

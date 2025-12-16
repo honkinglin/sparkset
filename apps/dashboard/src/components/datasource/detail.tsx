@@ -18,8 +18,9 @@ import {
   updateDatasource,
   updateTableMetadata,
 } from '../../lib/api';
+import { cn } from '../../lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import {
   Dialog,
@@ -285,7 +286,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
         </Button>
       </div>
 
-      <Card>
+      <Card className="shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -355,7 +356,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -409,23 +410,25 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <span>{table.columns.length} 列</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        <div
+                          className={cn(
+                            buttonVariants({ variant: 'ghost', size: 'sm' }),
+                            'cursor-pointer',
+                          )}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleEditTable(table);
                           }}
                         >
                           <Edit2 className="h-4 w-4" />
-                        </Button>
+                        </div>
                       </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-4 pt-2">
                       {editingTable?.tableId === table.id ? (
-                        <Card>
+                        <Card className="shadow-none">
                           <CardContent className="pt-6">
                             <div className="space-y-4">
                               <div>
