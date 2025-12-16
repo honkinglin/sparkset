@@ -1,6 +1,6 @@
-# Sparkline
-
 <div align="center">
+
+# Sparkline
 
 > Transform natural language into SQL queries with AI-powered intelligence
 
@@ -41,7 +41,7 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/sparkline.git
+git clone https://github.com/overtrue/sparkline.git
 cd sparkline
 ```
 
@@ -464,8 +464,8 @@ Sparkline includes several security features to protect your data:
 
 If you discover a security vulnerability, please **do not** open a public issue. Instead:
 
-- Email security concerns to: `security@yourdomain.com`
-- Or open a [private security advisory](https://github.com/yourusername/sparkline/security/advisories/new)
+- Email security concerns to: `anzhengchao@gmail.com`
+- Or open a [private security advisory](https://github.com/overtrue/sparkline/security/advisories/new)
 
 We take security seriously and will respond promptly to all security reports.
 
@@ -482,16 +482,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📮 Support & Community
 
-- **🐛 Bug Reports**: [GitHub Issues](https://github.com/yourusername/sparkline/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/sparkline/discussions)
-- **📧 Email**: support@yourdomain.com
+- **🐛 Bug Reports**: [GitHub Issues](https://github.com/overtrue/sparkline/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/overtrue/sparkline/discussions)
+- **📧 Email**: anzhengchao@gmail.com
 - **📖 Documentation**: Check our [docs](README.dev.md) and [contributing guide](CONTRIBUTING.md)
 
 ### Getting Help
 
-- Check existing [Issues](https://github.com/yourusername/sparkline/issues) and [Discussions](https://github.com/yourusername/sparkline/discussions)
+- Check existing [Issues](https://github.com/overtrue/sparkline/issues) and [Discussions](https://github.com/overtrue/sparkline/discussions)
 - Read the [documentation](README.dev.md)
-- Ask questions in [GitHub Discussions](https://github.com/yourusername/sparkline/discussions)
+- Ask questions in [GitHub Discussions](https://github.com/overtrue/sparkline/discussions)
 
 ---
 
@@ -499,6 +499,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Made with ❤️ by the Sparkline team
 
-[⭐ Star us on GitHub](https://github.com/yourusername/sparkline) • [📖 Read the Docs](README.dev.md) • [🤝 Contribute](CONTRIBUTING.md)
+[⭐ Star us on GitHub](https://github.com/overtrue/sparkline) • [📖 Read the Docs](README.dev.md) • [🤝 Contribute](CONTRIBUTING.md)
 
 </div>

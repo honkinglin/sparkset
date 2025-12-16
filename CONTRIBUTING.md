@@ -26,12 +26,12 @@ By participating in this project, you agree to maintain a respectful and inclusi
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/yourusername/sparkline.git
+   git clone https://github.com/overtrue/sparkline.git
    cd sparkline
    ```
 3. **Add the upstream repository**:
    ```bash
-   git remote add upstream https://github.com/originalusername/sparkline.git
+   git remote add upstream https://github.com/overtrue/sparkline.git
    ```
 4. **Create a branch** for your changes:
    ```bash

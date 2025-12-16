@@ -1,6 +1,6 @@
-# Sparkline
-
 <div align="center">
+
+# Sparkline
 
 > 使用 AI 驱动的智能助手，将自然语言转换为 SQL 查询
 
@@ -41,7 +41,7 @@ Sparkline 是一个 AI 驱动的运营助手，帮助团队使用自然语言与
 1. **克隆仓库**
 
 ```bash
-git clone https://github.com/yourusername/sparkline.git
+git clone https://github.com/overtrue/sparkline.git
 cd sparkline
 ```
 
@@ -464,8 +464,8 @@ Sparkline 包含多项安全特性来保护你的数据：
 
 如果你发现了安全漏洞，请**不要**公开问题。相反：
 
-- 将安全问题发送至：`security@yourdomain.com`
-- 或创建[私有安全咨询](https://github.com/yourusername/sparkline/security/advisories/new)
+- 将安全问题发送至：`anzhengchao@gmail.com`
+- 或创建[私有安全咨询](https://github.com/overtrue/sparkline/security/advisories/new)
 
 我们非常重视安全，并将及时响应所有安全报告。
 
@@ -482,16 +482,16 @@ Sparkline 包含多项安全特性来保护你的数据：
 
 ## 📮 支持与社区
 
-- **🐛 错误报告**：[GitHub Issues](https://github.com/yourusername/sparkline/issues)
-- **💬 讨论区**：[GitHub Discussions](https://github.com/yourusername/sparkline/discussions)
-- **📧 邮箱**：support@yourdomain.com
+- **🐛 错误报告**：[GitHub Issues](https://github.com/overtrue/sparkline/issues)
+- **💬 讨论区**：[GitHub Discussions](https://github.com/overtrue/sparkline/discussions)
+- **📧 邮箱**：anzhengchao@gmail.com
 - **📖 文档**：查看我们的[文档](README.dev.md)和[贡献指南](CONTRIBUTING.md)
 
 ### 获取帮助
 
-- 查看现有的[问题](https://github.com/yourusername/sparkline/issues)和[讨论](https://github.com/yourusername/sparkline/discussions)
+- 查看现有的[问题](https://github.com/overtrue/sparkline/issues)和[讨论](https://github.com/overtrue/sparkline/discussions)
 - 阅读[文档](README.dev.md)
-- 在[GitHub Discussions](https://github.com/yourusername/sparkline/discussions)中提问
+- 在[GitHub Discussions](https://github.com/overtrue/sparkline/discussions)中提问
 
 ---
 
@@ -499,6 +499,6 @@ Sparkline 包含多项安全特性来保护你的数据：
 
 由 Sparkline 团队用 ❤️ 制作
 
-[⭐ 在 GitHub 上给我们 Star](https://github.com/yourusername/sparkline) • [📖 阅读文档](README.dev.md) • [🤝 参与贡献](CONTRIBUTING.md)
+[⭐ 在 GitHub 上给我们 Star](https://github.com/overtrue/sparkline) • [📖 阅读文档](README.dev.md) • [🤝 参与贡献](CONTRIBUTING.md)
 
 </div>
