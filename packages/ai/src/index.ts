@@ -440,5 +440,5 @@ export class StubAIClient implements AIClient {
 }
 
 // 导出提示词构建函数
-export { buildPrompt } from './prompt';
-export type { PromptOptions } from './prompt';
+export { buildActionPrompt, buildPrompt } from './prompt';
+export type { ActionPromptOptions, PromptOptions } from './prompt';

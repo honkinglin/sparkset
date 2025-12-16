@@ -3,6 +3,7 @@ import {
   ActionExecutor,
   ActionRegistry,
   QueryExecutor,
+  SqlActionExecutor,
   createEchoHandler,
   createSqlActionHandler,
 } from '@sparkline/core';
@@ -197,9 +198,25 @@ const getDBClient = async (datasourceId: number) => {
 // Build action executor registry
 if (queryExecutor) {
   const registry = new ActionRegistry();
+  // 使用 SqlActionExecutor 支持 DML 操作（INSERT/UPDATE/DELETE）
+  const sqlActionExecutor = new SqlActionExecutor({
+    getDBClient,
+    getDatasourceConfig: async (id: number) => {
+      const ds = (await datasourceService.list()).find((d) => d.id === id);
+      if (!ds) throw new Error('Datasource not found');
+      return {
+        id: ds.id,
+        host: ds.host,
+        port: ds.port,
+        username: ds.username,
+        password: ds.password,
+        database: ds.database,
+      };
+    },
+  });
   registry.register(
     createSqlActionHandler({
-      executor: queryExecutor,
+      executor: sqlActionExecutor,
       defaultDatasourceId: async () => {
         const list = await datasourceService.list();
         return list.find((d) => d.isDefault)?.id;

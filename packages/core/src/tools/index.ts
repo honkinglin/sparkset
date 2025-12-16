@@ -1,4 +1,4 @@
-import { QueryExecutor } from '../query/executor';
+import { QueryExecutor, SqlActionExecutor } from '../query/executor';
 import { SqlSnippet } from '../query/types';
 
 export type ActionType = 'sql' | 'api' | 'file' | string;
@@ -52,14 +52,46 @@ export interface SqlActionPayload {
   limit?: number;
 }
 
+/**
+ * 替换 SQL 中的命名参数（:paramName）为实际值
+ */
+function replaceParameters(sql: string, parameters: Record<string, unknown>): string {
+  let result = sql;
+  // 按参数名长度降序排序，避免短参数名被长参数名的一部分替换
+  const paramNames = Object.keys(parameters).sort((a, b) => b.length - a.length);
+
+  for (const paramName of paramNames) {
+    const value = parameters[paramName];
+    // 转义参数值，防止 SQL 注入
+    let escapedValue: string;
+    if (value === null || value === undefined) {
+      escapedValue = 'NULL';
+    } else if (typeof value === 'string') {
+      // 转义单引号并包裹在引号中
+      escapedValue = `'${value.replace(/'/g, "''")}'`;
+    } else if (typeof value === 'number' || typeof value === 'boolean') {
+      escapedValue = String(value);
+    } else {
+      // 其他类型转为 JSON 字符串
+      escapedValue = `'${JSON.stringify(value).replace(/'/g, "''")}'`;
+    }
+
+    // 使用单词边界确保只替换完整的参数名
+    const regex = new RegExp(`:${paramName}\\b`, 'g');
+    result = result.replace(regex, escapedValue);
+  }
+
+  return result;
+}
+
 export const createSqlActionHandler = (deps: {
-  executor: QueryExecutor;
+  executor: QueryExecutor | SqlActionExecutor;
   defaultDatasourceId?: number | (() => Promise<number | undefined>);
 }) => {
   const handler: ActionHandler = {
     type: 'sql',
-    async execute(ctx: ActionContext<SqlActionPayload>) {
-      const payload = ctx.payload;
+    async execute(ctx: ActionContext) {
+      const payload = ctx.payload as SqlActionPayload;
       let dsId = payload.datasourceId;
       if (!dsId) {
         if (typeof deps.defaultDatasourceId === 'function') {
@@ -71,11 +103,21 @@ export const createSqlActionHandler = (deps: {
       if (!dsId)
         return { success: false, error: new Error('Datasource is required for SQL action') };
 
-      const snippets: SqlSnippet[] = Array.isArray(payload.sql)
+      // 处理 SQL（可能是字符串或数组）
+      const sqlStrings = Array.isArray(payload.sql)
         ? typeof payload.sql[0] === 'string'
-          ? (payload.sql as string[]).map((s) => ({ sql: s, datasourceId: dsId }))
-          : ((payload.sql as SqlSnippet[]) ?? [])
-        : [{ sql: payload.sql, datasourceId: dsId }];
+          ? (payload.sql as string[])
+          : (payload.sql as SqlSnippet[]).map((s) => s.sql)
+        : [payload.sql];
+
+      // 替换参数
+      const parameters = (ctx.parameters as Record<string, unknown>) || {};
+      const replacedSqls = sqlStrings.map((sql) => replaceParameters(sql, parameters));
+
+      const snippets: SqlSnippet[] = replacedSqls.map((sql) => ({
+        sql,
+        datasourceId: dsId,
+      }));
 
       const execResult = await deps.executor.execute(snippets, { limit: payload.limit });
       return { success: true, data: execResult };

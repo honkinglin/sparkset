@@ -156,3 +156,56 @@ export class QueryExecutor {
     return { rows: allRows, sql: sqlSnippets, summary: `Executed ${sqlSnippets.length} query(s)` };
   }
 }
+
+/**
+ * SQL Action 执行器，支持 DML 操作（INSERT/UPDATE/DELETE）
+ * 与 QueryExecutor 的区别：不限制只读查询，允许执行修改操作
+ */
+export class SqlActionExecutor {
+  constructor(private deps: ExecutorDeps) {}
+
+  async execute(sqlSnippets: SqlSnippet[], opts: ExecuteOptions = {}): Promise<ExecutionResult> {
+    const allRows: unknown[] = [];
+
+    for (const snippet of sqlSnippets) {
+      try {
+        const client = await this.deps.getDBClient(snippet.datasourceId);
+        const cfg = await this.deps.getDatasourceConfig(snippet.datasourceId);
+        let sql = snippet.sql.trim().replace(/;+$/, '');
+
+        // 对于 DML 操作，不应用 LIMIT（LIMIT 只适用于 SELECT）
+        const isSelect = /^\s*select\b/i.test(sql);
+        if (isSelect && opts.limit) {
+          sql = applyLimit(sql, opts.limit);
+        }
+
+        // 仍然禁止 DDL 操作（CREATE/ALTER/DROP 等）
+        const trimmed = sql.trim();
+        const forbiddenDDL = /\b(drop|alter|truncate|create|grant|revoke)\b/i;
+        if (forbiddenDDL.test(trimmed)) {
+          throw new Error('DDL operations (CREATE/ALTER/DROP) are not allowed in Actions');
+        }
+
+        // 检查多语句（仍然禁止）
+        let cleaned = trimmed;
+        cleaned = cleaned.replace(/'([^'\\]|\\.)*'/g, '__STRING__');
+        cleaned = cleaned.replace(/"([^"\\]|\\.)*"/g, '__STRING__');
+        cleaned = cleaned.replace(/--[^\n]*/g, '');
+        cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '');
+        if (cleaned.includes(';')) {
+          throw new Error(
+            `Multi-statement queries are not allowed. SQL: ${sql.substring(0, 200)}${sql.length > 200 ? '...' : ''}`,
+          );
+        }
+
+        const result: QueryResult = await client.query(cfg, sql);
+        allRows.push(...result.rows);
+      } catch (error) {
+        // 解析数据库错误并抛出友好的错误信息
+        throw parseDatabaseError(error);
+      }
+    }
+
+    return { rows: allRows, sql: sqlSnippets, summary: `Executed ${sqlSnippets.length} query(s)` };
+  }
+}

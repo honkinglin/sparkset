@@ -87,24 +87,25 @@ export const registerRoutes = (app: FastifyInstance, deps: RouteDeps) => {
   const actionSvc = deps.actionService ?? actionsController['service'];
   const conversationSvc = deps.conversationService ?? conversationsController['service'];
 
-  app.get('/actions', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).index(req, reply),
+  // 创建 ActionsController 的辅助函数
+  const createActionsController = () =>
+    new ActionsController(
+      actionSvc,
+      deps.actionExecutor,
+      deps.schemaService,
+      deps.aiProviderService,
+    );
+
+  app.get('/actions', (req, reply) => createActionsController().index(req, reply));
+  app.get('/actions/:id', (req, reply) => createActionsController().show(req, reply));
+  app.post('/actions', (req, reply) => createActionsController().store(req, reply));
+  // 更具体的路由必须在更通用的路由之前注册
+  app.post('/actions/generate-sql', (req, reply) =>
+    createActionsController().generateSQL(req, reply),
   );
-  app.get('/actions/:id', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).show(req, reply),
-  );
-  app.post('/actions', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).store(req, reply),
-  );
-  app.put('/actions/:id', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).update(req, reply),
-  );
-  app.delete('/actions/:id', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).destroy(req, reply),
-  );
-  app.post('/actions/:id/execute', (req, reply) =>
-    new ActionsController(actionSvc, deps.actionExecutor).execute(req, reply),
-  );
+  app.put('/actions/:id', (req, reply) => createActionsController().update(req, reply));
+  app.delete('/actions/:id', (req, reply) => createActionsController().destroy(req, reply));
+  app.post('/actions/:id/execute', (req, reply) => createActionsController().execute(req, reply));
 
   app.post('/query', async (req, reply) => {
     try {

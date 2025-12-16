@@ -1,19 +1,23 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, Play, Plus, Trash2, X } from 'lucide-react';
+import { Edit, Loader2, Play, Plus, Sparkles, Trash2, X } from 'lucide-react';
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import {
   type ActionDTO,
   type CreateActionInput,
+  type DatasourceDTO,
   type UpdateActionInput,
   createAction,
   deleteAction,
   executeAction,
+  fetchDatasources,
+  generateActionSQL,
   updateAction,
 } from '../../lib/api';
+import { DatasourceSelector } from '../datasource-selector';
 import { Alert, AlertDescription } from '../ui/alert';
 import {
   AlertDialog,
@@ -83,10 +87,15 @@ export default function ActionManager({ initial }: ActionManagerProps) {
   const [payloadText, setPayloadText] = useState('');
   const [executeDialogOpen, setExecuteDialogOpen] = useState(false);
   const [pendingExecuteId, setPendingExecuteId] = useState<number | null>(null);
+  const [datasources, setDatasources] = useState<DatasourceDTO[]>([]);
+  const [selectedDatasourceId, setSelectedDatasourceId] = useState<number | undefined>(undefined);
+  const [generatingSQL, setGeneratingSQL] = useState(false);
 
   useEffect(() => {
     if (dialogOpen) {
       setPayloadText(getPayloadForEdit(form.payload, form.type));
+      // 加载数据源列表
+      void fetchDatasources().then(setDatasources);
     }
   }, [form.type, dialogOpen]);
 
@@ -134,10 +143,18 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         inputSchema: action.inputSchema || undefined,
       });
       setPayloadText(getPayloadForEdit(action.payload, action.type));
+      // 从 payload 中提取 datasourceId（如果是 SQL 类型）
+      if (action.type === 'sql') {
+        const sqlPayload = action.payload as { sql?: string; datasourceId?: number };
+        setSelectedDatasourceId(sqlPayload?.datasourceId);
+      } else {
+        setSelectedDatasourceId(undefined);
+      }
     } else {
       setEditingId(null);
       setForm(defaultForm);
       setPayloadText(getPayloadForEdit(defaultForm.payload, defaultForm.type));
+      setSelectedDatasourceId(undefined);
     }
     setDialogOpen(true);
   };
@@ -147,6 +164,8 @@ export default function ActionManager({ initial }: ActionManagerProps) {
     setEditingId(null);
     setForm(defaultForm);
     setPayloadText(getPayloadForEdit(defaultForm.payload, defaultForm.type));
+    setSelectedDatasourceId(undefined);
+    setGeneratingSQL(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -250,6 +269,57 @@ export default function ActionManager({ initial }: ActionManagerProps) {
     return JSON.stringify(payload, null, 2);
   };
 
+  const handleGenerateSQL = async () => {
+    if (!form.name.trim()) {
+      toast.error('请先输入 Action 名称');
+      return;
+    }
+
+    if (!selectedDatasourceId) {
+      toast.error('请先选择数据源');
+      return;
+    }
+
+    setGeneratingSQL(true);
+    try {
+      const result = await generateActionSQL({
+        name: form.name.trim(),
+        description: form.description.trim() || '',
+        datasourceId: selectedDatasourceId,
+      });
+
+      // 更新 payload（包含 datasourceId）
+      const newPayload = {
+        sql: result.sql,
+        ...(selectedDatasourceId && { datasourceId: selectedDatasourceId }),
+      };
+      setForm((prev) => ({
+        ...prev,
+        payload: newPayload,
+        inputSchema: result.inputSchema,
+      }));
+      setPayloadText(JSON.stringify(newPayload, null, 2));
+
+      toast.success('SQL 生成成功');
+    } catch (err) {
+      // 错误已经在后端返回了适当的 HTTP 状态码，这里直接显示错误消息
+      const errorMessage =
+        err instanceof Error ? err.message : '生成 SQL 失败，请检查数据源配置和 Schema 信息';
+      toast.error(errorMessage);
+    } finally {
+      setGeneratingSQL(false);
+    }
+  };
+
+  const canGenerateSQL = useMemo(() => {
+    return (
+      form.type === 'sql' &&
+      form.name.trim().length > 0 &&
+      selectedDatasourceId !== undefined &&
+      !generatingSQL
+    );
+  }, [form.type, form.name, selectedDatasourceId, generatingSQL]);
+
   const columns: ColumnDef<ActionDTO>[] = useMemo(
     () => [
       {
@@ -352,7 +422,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
 
       {/* 创建/编辑对话框 */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[1000px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingId ? '编辑 Action' : '新建 Action'}</DialogTitle>
             <DialogDescription>
@@ -360,69 +430,111 @@ export default function ActionManager({ initial }: ActionManagerProps) {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">名称 *</Label>
-                <Input
-                  id="name"
-                  value={form.name}
-                  onChange={onChange('name')}
-                  placeholder="如：查询用户列表"
-                  required
-                />
+            <div className="grid gap-4 py-4 sm:grid-cols-2">
+              {/* 左侧：基本信息 */}
+              <div className="space-y-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">名称 *</Label>
+                  <Input
+                    id="name"
+                    value={form.name}
+                    onChange={onChange('name')}
+                    placeholder="如：查询用户列表"
+                    required
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="description">描述</Label>
+                  <Textarea
+                    id="description"
+                    value={form.description}
+                    onChange={onChange('description')}
+                    placeholder="输入 Action 描述（可选）"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="type">类型 *</Label>
+                  <Select value={form.type} onValueChange={(value) => onChange('type')(value)}>
+                    <SelectTrigger id="type">
+                      <SelectValue placeholder="选择类型" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sql">SQL</SelectItem>
+                      <SelectItem value="api">API</SelectItem>
+                      <SelectItem value="file">File</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {form.type === 'sql' && (
+                  <div className="grid gap-2">
+                    <Label>数据源 *</Label>
+                    <DatasourceSelector
+                      datasources={datasources}
+                      value={selectedDatasourceId}
+                      onValueChange={setSelectedDatasourceId}
+                      disabled={submitting || generatingSQL}
+                    />
+                  </div>
+                )}
+
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="payload">
+                      Payload (JSON) *
+                      {form.type === 'sql' && (
+                        <span className="text-xs text-muted-foreground ml-2">
+                          格式: {`{"sql": "SELECT * FROM table"}`}
+                        </span>
+                      )}
+                    </Label>
+                    {form.type === 'sql' && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGenerateSQL}
+                        disabled={!canGenerateSQL}
+                        className="h-7 text-xs"
+                      >
+                        {generatingSQL ? (
+                          <>
+                            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                            生成中...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="mr-2 h-3 w-3" />
+                            AI 生成
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                  <Textarea
+                    id="payload"
+                    value={payloadText}
+                    onChange={(e) => handlePayloadChange(e.target.value)}
+                    placeholder={
+                      form.type === 'sql' ? '{"sql": "SELECT * FROM table"}' : '{"key": "value"}'
+                    }
+                    rows={8}
+                    className="font-mono text-sm"
+                  />
+                </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="description">描述</Label>
-                <Textarea
-                  id="description"
-                  value={form.description}
-                  onChange={onChange('description')}
-                  placeholder="输入 Action 描述（可选）"
-                  rows={2}
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="type">类型 *</Label>
-                <Select value={form.type} onValueChange={(value) => onChange('type')(value)}>
-                  <SelectTrigger id="type">
-                    <SelectValue placeholder="选择类型" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sql">SQL</SelectItem>
-                    <SelectItem value="api">API</SelectItem>
-                    <SelectItem value="file">File</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="payload">
-                  Payload (JSON) *
-                  {form.type === 'sql' && (
-                    <span className="text-xs text-muted-foreground ml-2">
-                      格式: {`{"sql": "SELECT * FROM table"}`}
-                    </span>
-                  )}
-                </Label>
-                <Textarea
-                  id="payload"
-                  value={payloadText}
-                  onChange={(e) => handlePayloadChange(e.target.value)}
-                  placeholder={
-                    form.type === 'sql' ? '{"sql": "SELECT * FROM table"}' : '{"key": "value"}'
-                  }
-                  rows={6}
-                  className="font-mono text-sm"
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <ParameterEditor
-                  value={form.inputSchema}
-                  onChange={(value) => setForm((prev) => ({ ...prev, inputSchema: value }))}
-                />
+              {/* 右侧：参数编辑器 */}
+              <div className="space-y-4">
+                <div className="grid gap-2">
+                  <ParameterEditor
+                    value={form.inputSchema}
+                    onChange={(value) => setForm((prev) => ({ ...prev, inputSchema: value }))}
+                  />
+                </div>
               </div>
             </div>
 

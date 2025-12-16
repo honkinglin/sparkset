@@ -205,6 +205,27 @@ export async function getAction(id: number): Promise<ActionDTO> {
   return request<ActionDTO>(`/actions/${id}`, { cache: 'no-store' });
 }
 
+export interface GenerateActionSQLInput {
+  name: string;
+  description: string;
+  datasourceId: number;
+  aiProviderId?: number;
+}
+
+export interface GenerateActionSQLResult {
+  sql: string;
+  inputSchema: ActionInputSchema;
+}
+
+export async function generateActionSQL(
+  input: GenerateActionSQLInput,
+): Promise<GenerateActionSQLResult> {
+  return request<GenerateActionSQLResult>('/actions/generate-sql', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
 // AI Providers
 export interface AIProviderDTO {
   id: number;
