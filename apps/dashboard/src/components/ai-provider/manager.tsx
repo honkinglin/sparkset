@@ -14,6 +14,9 @@ import {
   setDefaultAIProvider,
   updateAIProvider,
 } from '../../lib/api';
+import { DataTable } from '../data-table/data-table';
+import { DataTableColumnHeader } from '../data-table/data-table-column-header';
+import { DataTableRowActions, type RowAction } from '../data-table/data-table-row-actions';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import {
@@ -24,9 +27,6 @@ import {
   CommandItem,
   CommandList,
 } from '../ui/command';
-import { DataTable } from '../ui/data-table';
-import { DataTableColumnHeader } from '../ui/data-table-column-header';
-import { DataTableRowActions, type RowAction } from '../ui/data-table-row-actions';
 import {
   Dialog,
   DialogContent,

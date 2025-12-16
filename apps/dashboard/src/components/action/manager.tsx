@@ -17,6 +17,9 @@ import {
   generateActionSQL,
   updateAction,
 } from '../../lib/api';
+import { DataTable } from '../data-table/data-table';
+import { DataTableColumnHeader } from '../data-table/data-table-column-header';
+import { DataTableRowActions, type RowAction } from '../data-table/data-table-row-actions';
 import { DatasourceSelector } from '../datasource-selector';
 import { Alert, AlertDescription } from '../ui/alert';
 import {
@@ -32,9 +35,6 @@ import {
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { DataTable } from '../ui/data-table';
-import { DataTableColumnHeader } from '../ui/data-table-column-header';
-import { DataTableRowActions, type RowAction } from '../ui/data-table-row-actions';
 import {
   Dialog,
   DialogContent,

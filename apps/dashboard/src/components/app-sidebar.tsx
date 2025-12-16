@@ -96,11 +96,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     : { href: item.url };
 
                   return (
-                    <SidebarMenuItem key={item.url}>
+                    <SidebarMenuItem key={item.url + item.title}>
                       <SidebarMenuButton
                         asChild
                         isActive={isActive}
-                        className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
+                        className="group/menu-button font-medium gap-3 h-9 rounded-md bg-linear-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
                       >
                         <Link {...linkProps}>
                           <Icon

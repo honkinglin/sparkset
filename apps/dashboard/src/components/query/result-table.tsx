@@ -3,8 +3,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 
-import { DataTable } from '@/components/ui/data-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTable } from '@/components/data-table/data-table';
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
 
 interface ResultTableProps {
   rows: Record<string, unknown>[];

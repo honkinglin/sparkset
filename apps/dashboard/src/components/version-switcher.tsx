@@ -40,7 +40,7 @@ export function VersionSwitcher({
               <CaretSortIcon className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]" align="start">
+          <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width)" align="start">
             {versions.map((version) => (
               <DropdownMenuItem key={version} onSelect={() => setSelectedVersion(version)}>
                 v{version} {version === selectedVersion && <CheckIcon className="ml-auto" />}

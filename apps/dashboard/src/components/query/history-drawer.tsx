@@ -85,7 +85,7 @@ function SimpleMessageItem({ message, onRerun }: SimpleMessageItemProps) {
           </button>
         )}
       </div>
-      <p className="text-xs text-foreground/80 whitespace-pre-wrap break-words line-clamp-2">
+      <p className="text-xs text-foreground/80 whitespace-pre-wrap wrap-break-word line-clamp-2">
         {message.content}
       </p>
     </div>

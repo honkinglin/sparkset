@@ -85,7 +85,7 @@ export function MessageItem({ message }: MessageItemProps) {
               </span>
             </div>
 
-            <div className="text-sm text-foreground whitespace-pre-wrap break-words">
+            <div className="text-sm text-foreground whitespace-pre-wrap wrap-break-word">
               {message.content}
             </div>
 
