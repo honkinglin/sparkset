@@ -497,7 +497,7 @@ Sparkline 包含多项安全特性来保护你的数据：
 
 <div align="center">
 
-由 Sparkline 团队用 ❤️ 制作
+由 overtrue 用 ❤️ 制作
 
 [⭐ 在 GitHub 上给我们 Star](https://github.com/overtrue/sparkline) • [📖 阅读文档](README.dev.md) • [🤝 参与贡献](CONTRIBUTING.md)
 
