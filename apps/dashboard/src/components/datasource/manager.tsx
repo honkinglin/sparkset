@@ -277,7 +277,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
         emptyMessage="暂无数据源，点击右上角添加"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             添加数据源
           </Button>
         }
@@ -339,7 +339,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                     id="database"
                     value={form.database}
                     onChange={onChange('database')}
-                    placeholder="sparkset_demo"
+                    placeholder="sparkset"
                     required
                   />
                 </div>

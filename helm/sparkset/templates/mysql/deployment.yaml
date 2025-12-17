@@ -1,0 +1,80 @@
+{{- if .Values.mysql.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sparkset.fullname" . }}-mysql
+  labels:
+    {{- include "sparkset.mysql.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "sparkset.mysql.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sparkset.mysql.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: mysql
+        image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+        imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+        ports:
+        - name: mysql
+          containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "sparkset.fullname" . }}-mysql-secret
+              key: root-password
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mysql.auth.database | quote }}
+        - name: MYSQL_USER
+          value: {{ .Values.mysql.auth.username | quote }}
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "sparkset.fullname" . }}-mysql-secret
+              key: password
+        args:
+        - --default-authentication-plugin=mysql_native_password
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        resources:
+          {{- toYaml .Values.mysql.resources | nindent 10 }}
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD"
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: mysql-data
+        {{- if .Values.mysql.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ include "sparkset.fullname" . }}-mysql
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

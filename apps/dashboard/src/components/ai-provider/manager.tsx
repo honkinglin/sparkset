@@ -289,7 +289,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
         emptyMessage="暂无 Provider，点击右上角添加"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             添加 Provider
           </Button>
         }

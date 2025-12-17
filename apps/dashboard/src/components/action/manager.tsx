@@ -414,7 +414,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         emptyMessage="暂无 Action，点击右上角新建"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             新建 Action
           </Button>
         }

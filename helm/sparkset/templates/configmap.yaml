@@ -1,0 +1,38 @@
+{{- if .Values.api.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sparkset.fullname" . }}-api-config
+  labels:
+    {{- include "sparkset.api.labels" . | nindent 4 }}
+data:
+  PORT: {{ .Values.api.env.PORT | quote }}
+  HOST: {{ .Values.api.env.HOST | quote }}
+  SPARKSET_ENV: {{ .Values.api.env.SPARKSET_ENV | quote }}
+  LOG_LEVEL: {{ .Values.api.env.LOG_LEVEL | quote }}
+  DB_HOST: {{ .Values.api.env.DB_HOST | quote }}
+  DB_PORT: {{ .Values.api.env.DB_PORT | quote }}
+  DB_USER: {{ .Values.api.env.DB_USER | quote }}
+  DB_NAME: {{ .Values.api.env.DB_NAME | quote }}
+  AI_MODEL: {{ .Values.api.env.AI_MODEL | quote }}
+  AI_PROVIDER: {{ .Values.api.env.AI_PROVIDER | quote }}
+  {{- if .Values.api.env.AI_BASE_URL }}
+  AI_BASE_URL: {{ .Values.api.env.AI_BASE_URL | quote }}
+  {{- end }}
+  {{- if .Values.api.env.AI_FALLBACK_MODELS }}
+  AI_FALLBACK_MODELS: {{ .Values.api.env.AI_FALLBACK_MODELS | quote }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.dashboard.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sparkset.fullname" . }}-dashboard-config
+  labels:
+    {{- include "sparkset.dashboard.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.dashboard.env.NODE_ENV | quote }}
+  NEXT_PUBLIC_API_URL: {{ .Values.dashboard.env.NEXT_PUBLIC_API_URL | quote }}
+{{- end }}

@@ -335,13 +335,55 @@ vercel deploy
 
 Set `NEXT_PUBLIC_API_URL` to your API server URL.
 
-#### Option 3: Docker (Coming Soon)
+#### Option 3: Docker & Docker Compose
 
-Docker support is planned for future releases. This will include:
+Sparkset now supports Docker deployment with multi-stage builds and Docker Compose orchestration.
 
-- Multi-stage builds for optimized images
-- Docker Compose for local development
-- Production-ready Dockerfiles
+**Quick Start with Docker Compose:**
+
+```bash
+# Copy environment variables template
+cp .env.example .env
+
+# Edit .env file with your configuration
+# Then start all services
+docker-compose up -d
+
+# Run database migrations
+docker-compose exec api pnpm prisma:migrate:deploy
+
+# Access the application
+# Dashboard: http://localhost:3000
+# API: http://localhost:3333
+```
+
+**Build Docker Images:**
+
+```bash
+# Build API image
+docker build -f apps/api/Dockerfile -t sparkset/api:latest .
+
+# Build Dashboard image
+docker build -f apps/dashboard/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
+  -t sparkset/dashboard:latest .
+```
+
+For detailed Docker deployment instructions, see [Deployment Guide](docs/deployment.md).
+
+#### Option 4: Kubernetes (Helm)
+
+Deploy to Kubernetes using the provided Helm Chart:
+
+```bash
+# Install with default values
+helm install sparkset ./helm/sparkset
+
+# Or use custom values
+helm install sparkset ./helm/sparkset -f my-values.yaml
+```
+
+For detailed Helm deployment instructions, see [Deployment Guide](docs/deployment.md).
 
 ### Environment Variables for Production
 

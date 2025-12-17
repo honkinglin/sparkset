@@ -1,0 +1,155 @@
+# Default values for sparkset
+# This is a YAML-formatted file.
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+
+# MySQL configuration
+mysql:
+  enabled: true
+  image:
+    repository: mysql
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+
+  auth:
+    rootPassword: "sparkset_root_password"
+    database: "sparkset"
+    username: "sparkset"
+    password: "sparkset_password"
+
+  service:
+    type: ClusterIP
+    port: 3306
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+# API configuration
+api:
+  enabled: true
+  image:
+    repository: sparkset/api
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 3333
+
+  env:
+    PORT: "3333"
+    HOST: "0.0.0.0"
+    SPARKSET_ENV: "prod"
+    LOG_LEVEL: "info"
+    API_KEY: ""
+
+    # Database connection
+    DB_HOST: "sparkset-mysql"
+    DB_PORT: "3306"
+    DB_USER: "sparkset"
+    DB_PASSWORD: "sparkset_password"
+    DB_NAME: "sparkset"
+
+    # AI configuration
+    AI_MODEL: "gpt-4o-mini"
+    AI_PROVIDER: "openai"
+    AI_API_KEY: ""
+    AI_BASE_URL: ""
+    AI_FALLBACK_MODELS: ""
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 3333
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 3333
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Dashboard configuration
+dashboard:
+  enabled: true
+  image:
+    repository: sparkset/dashboard
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  env:
+    NODE_ENV: "production"
+    NEXT_PUBLIC_API_URL: "http://sparkset-api:3333"
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Ingress configuration (optional)
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: sparkset.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []

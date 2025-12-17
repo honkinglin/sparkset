@@ -1,0 +1,120 @@
+{{- if .Values.api.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sparkset.fullname" . }}-api
+  labels:
+    {{- include "sparkset.api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "sparkset.api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sparkset.api.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: api
+        image: "{{ .Values.global.imageRegistry }}{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 3333
+          protocol: TCP
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: PORT
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: HOST
+        - name: SPARKSET_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: SPARKSET_ENV
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: LOG_LEVEL
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: DB_PORT
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "sparkset.fullname" . }}-mysql-secret
+              key: password
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: DB_NAME
+        - name: AI_MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: AI_MODEL
+        - name: AI_PROVIDER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: AI_PROVIDER
+        {{- if .Values.api.env.AI_API_KEY }}
+        - name: AI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-secrets
+              key: ai-api-key
+        {{- end }}
+        {{- if .Values.api.env.AI_BASE_URL }}
+        - name: AI_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: AI_BASE_URL
+        {{- end }}
+        {{- if .Values.api.env.AI_FALLBACK_MODELS }}
+        - name: AI_FALLBACK_MODELS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-config
+              key: AI_FALLBACK_MODELS
+        {{- end }}
+        {{- if .Values.api.env.API_KEY }}
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "sparkset.fullname" . }}-api-secrets
+              key: api-key
+        {{- end }}
+        livenessProbe:
+          {{- toYaml .Values.api.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.api.readinessProbe | nindent 10 }}
+        resources:
+          {{- toYaml .Values.api.resources | nindent 10 }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

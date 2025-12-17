@@ -13,7 +13,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, Database, Github, Play, Sparkles, Zap } from 'lucide-react';
+import { BookOpen, Database, Github, Heart, Play, Sparkles, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -35,9 +35,9 @@ const menuGroups: MenuGroup[] = [
   {
     label: '功能模块',
     items: [
-      { title: '数据源', url: '/', icon: Database },
       { title: '查询', url: '/query', icon: Play },
       { title: 'Actions', url: '/actions', icon: Zap },
+      { title: '数据源', url: '/', icon: Database },
       { title: 'AI 配置', url: '/ai-providers', icon: Sparkles },
     ],
   },
@@ -54,6 +54,12 @@ const menuGroups: MenuGroup[] = [
         title: '使用文档',
         url: 'https://github.com/overtrue/sparkset',
         icon: BookOpen,
+        external: true,
+      },
+      {
+        title: '打赏支持',
+        url: 'https://github.com/sponsors/overtrue',
+        icon: Heart,
         external: true,
       },
     ],

@@ -25,8 +25,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
             <header className="flex h-16 shrink-0 items-center gap-2 border-b">
               <div className="flex flex-1 items-center gap-2 px-3">
                 <SidebarTrigger className="-ml-4" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                <div className="text-sm text-muted-foreground">Sparkset Dashboard</div>
+                <Separator orientation="vertical" className="mr-2 !h-4" />
+                <div className="text-sm text-muted-foreground">Sparkset</div>
               </div>
               <div className="flex gap-3 ml-auto">
                 <ThemeToggle />
