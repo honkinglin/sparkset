@@ -217,26 +217,6 @@ DB_NAME=sparkset
 
 #### AI Provider Configuration
 
-**OpenAI:**
-
-```bash
-OPENAI_API_KEY=sk-your-key
-OPENAI_BASE_URL=https://api.openai.com/v1  # Optional
-OPENAI_MODEL=gpt-4o-mini                     # Optional
-```
-
-**Anthropic:**
-
-```bash
-ANTHROPIC_API_KEY=sk-ant-your-key
-ANTHROPIC_BASE_URL=https://api.anthropic.com  # Optional
-ANTHROPIC_MODEL=claude-3-5-sonnet-20241022     # Optional
-```
-
-**Generic (single provider):**
-
-#### AI Provider Configuration
-
 AI providers are now configured **through the database** rather than environment variables:
 
 1. **Access Dashboard**: Navigate to `http://localhost:3000/ai-providers` (or your dashboard URL)

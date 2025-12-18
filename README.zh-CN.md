@@ -311,10 +311,11 @@ Docker 支持计划在未来的版本中推出。这将包括：
 确保设置所有必需的环境变量：
 
 - `DATABASE_URL` - 数据库连接字符串
-- `OPENAI_API_KEY` 或 `ANTHROPIC_API_KEY` - AI 提供商凭证
 - `NEXT_PUBLIC_API_URL` - API 服务器 URL（用于仪表板）
 - `PORT` - API 服务器端口（默认：3333）
 - `SPARKSET_ENV=prod` - 环境标识符
+
+**注意：** AI Provider 配置现在通过数据库完成，无需环境变量。
 
 ## 🧪 开发
 
