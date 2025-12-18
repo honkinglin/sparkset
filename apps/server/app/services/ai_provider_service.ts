@@ -35,13 +35,30 @@ export class AIProviderService {
   }
 
   async create(input: CreateAIProviderInput): Promise<AIProvider> {
-    if (this.repo) return this.repo.create(input);
+    if (this.repo) {
+      // 如果是第一个 provider（列表为空），自动设置为默认
+      const list = await this.repo.list();
+      if (list.length === 0) {
+        input.isDefault = true;
+      }
+      // 如果设置为默认，先取消其他 provider 的默认状态
+      if (input.isDefault) {
+        const existingDefaults = list.filter((p) => p.isDefault);
+        for (const provider of existingDefaults) {
+          await this.repo.update({ ...provider, isDefault: false });
+        }
+      }
+      return this.repo.create(input);
+    }
 
     const exists = Array.from(this.store.values()).some((item) => item.name === input.name);
     if (exists) throw new Error('AI Provider name already exists');
 
+    // 如果是第一个 provider，自动设置为默认
+    const isFirst = this.store.size === 0;
+
     // 如果设置为默认，先取消其他 provider 的默认状态
-    if (input.isDefault) {
+    if (input.isDefault || isFirst) {
       Array.from(this.store.values()).forEach((item) => {
         if (item.isDefault) {
           this.store.set(item.id, { ...item, isDefault: false });
@@ -56,7 +73,7 @@ export class AIProviderService {
       apiKey: input.apiKey,
       baseURL: input.baseURL,
       defaultModel: input.defaultModel,
-      isDefault: input.isDefault ?? false,
+      isDefault: isFirst || (input.isDefault ?? false),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

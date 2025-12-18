@@ -201,6 +201,10 @@ export default class ServicesProvider {
       });
       this.app.container.bind('executors/query', () => queryExecutor);
       this.app.container.bind('executors/action', () => actionExecutor);
+      // 注册 ActionExecutor 类型，以便依赖注入可以解析
+      if (actionExecutor) {
+        this.app.container.singleton(ActionExecutor, () => actionExecutor!);
+      }
       return;
     } else {
       datasourceService = new DatasourceService();
@@ -251,6 +255,10 @@ export default class ServicesProvider {
       });
       this.app.container.bind('executors/query', () => queryExecutor);
       this.app.container.bind('executors/action', () => actionExecutor);
+      // 注册 ActionExecutor 类型，以便依赖注入可以解析
+      if (actionExecutor) {
+        this.app.container.singleton(ActionExecutor, () => actionExecutor!);
+      }
     }
   }
 

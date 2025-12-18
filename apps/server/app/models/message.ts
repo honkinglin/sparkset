@@ -20,7 +20,12 @@ export default class Message extends BaseModel {
 
   @column({
     prepare: (value: unknown) => (value ? JSON.stringify(value) : null),
-    consume: (value: string | null) => (value ? JSON.parse(value) : null),
+    consume: (value: string | null | unknown) => {
+      if (value === null || value === undefined) return null;
+      if (typeof value === 'object') return value;
+      if (typeof value === 'string') return JSON.parse(value);
+      return value;
+    },
   })
   declare metadata: unknown | null;
 

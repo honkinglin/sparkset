@@ -84,7 +84,9 @@ export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps
                       <div className="flex-1 space-y-1">
                         <CardTitle className="flex items-center gap-2">
                           {todo.title}
-                          {todo.completed && <RiCheckboxCircleLine className="h-5 w-5 text-primary" />}
+                          {todo.completed && (
+                            <RiCheckboxCircleLine className="h-5 w-5 text-primary" />
+                          )}
                         </CardTitle>
                         <CardDescription>{todo.description}</CardDescription>
                       </div>

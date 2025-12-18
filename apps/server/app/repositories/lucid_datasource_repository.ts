@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import type { DatasourceRepository } from '../db/interfaces';
 import DataSourceModel from '../models/data_source.js';
 import type { DataSource } from '../models/types';
@@ -47,7 +48,8 @@ export class LucidDatasourceRepository implements DatasourceRepository {
       password: input.password,
       database: input.database,
       isDefault: input.isDefault,
-      lastSyncAt: input.lastSyncAt ? input.lastSyncAt : undefined,
+      // 将 Date 转换为 luxon.DateTime（Lucid 模型需要）
+      lastSyncAt: input.lastSyncAt ? DateTime.fromJSDate(input.lastSyncAt) : undefined,
     });
     await row.save();
     return this.mapRow(row);

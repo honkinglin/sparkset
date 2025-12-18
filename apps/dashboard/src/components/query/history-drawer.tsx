@@ -1,5 +1,12 @@
 'use client';
-import { RiArrowDownSLine, RiArrowRightSLine, RiChat3Line, RiPlayLine, RiRefreshLine, RiTimeLine } from '@remixicon/react';
+import {
+  RiArrowDownSLine,
+  RiArrowRightSLine,
+  RiChat3Line,
+  RiPlayLine,
+  RiRefreshLine,
+  RiTimeLine,
+} from '@remixicon/react';
 
 import { useState } from 'react';
 import {

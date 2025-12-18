@@ -18,20 +18,35 @@ export default class Action extends BaseModel {
 
   @column({
     prepare: (value: unknown) => JSON.stringify(value),
-    consume: (value: string) => JSON.parse(value),
+    consume: (value: string | unknown) => {
+      if (value === null || value === undefined) return value;
+      if (typeof value === 'object') return value;
+      if (typeof value === 'string') return JSON.parse(value);
+      return value;
+    },
   })
   declare payload: unknown;
 
   @column({
     prepare: (value: unknown) => (value ? JSON.stringify(value) : null),
-    consume: (value: string | null) => (value ? JSON.parse(value) : null),
+    consume: (value: string | null | unknown) => {
+      if (value === null || value === undefined) return null;
+      if (typeof value === 'object') return value;
+      if (typeof value === 'string') return JSON.parse(value);
+      return value;
+    },
   })
   declare parameters: unknown | null;
 
   @column({
     columnName: 'input_schema',
     prepare: (value: unknown) => (value ? JSON.stringify(value) : null),
-    consume: (value: string | null) => (value ? JSON.parse(value) : null),
+    consume: (value: string | null | unknown) => {
+      if (value === null || value === undefined) return null;
+      if (typeof value === 'object') return value;
+      if (typeof value === 'string') return JSON.parse(value);
+      return value;
+    },
   })
   declare inputSchema: unknown | null;
 

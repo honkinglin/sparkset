@@ -1,6 +1,15 @@
 'use client';
 
-import { RiArrowLeftLine, RiEditLine, RiEdit2Line, RiRefreshLine, RiSave3Line, RiSparkling2Line, RiDeleteBinLine, RiCloseLine } from '@remixicon/react';
+import {
+  RiArrowLeftLine,
+  RiEditLine,
+  RiEdit2Line,
+  RiRefreshLine,
+  RiSave3Line,
+  RiSparkling2Line,
+  RiDeleteBinLine,
+  RiCloseLine,
+} from '@remixicon/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, useMemo, useState } from 'react';

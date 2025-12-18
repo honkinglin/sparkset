@@ -122,6 +122,19 @@ export default class QueriesController {
         });
       }
 
+      // 检查是否是 API 限流错误（429 Too many requests）
+      if (
+        errorMessage.includes('429') ||
+        errorMessage.includes('Too many requests') ||
+        errorMessage.includes('rate limit')
+      ) {
+        return ctx.response.status(429).send({
+          error: 'Rate limit exceeded',
+          message:
+            'AI 服务请求过于频繁，已达到速率限制。请稍等片刻后重试，或考虑配置备用 AI 提供商。',
+        });
+      }
+
       return ctx.response.status(500).send({
         error: 'Internal server error',
         message: errorMessage,

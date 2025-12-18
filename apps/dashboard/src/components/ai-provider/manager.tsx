@@ -1,5 +1,12 @@
 'use client';
-import { RiAddLine, RiArrowDownSLine, RiCheckLine, RiDeleteBin2Line, RiEdit2Line, RiStarLine } from '@remixicon/react';
+import {
+  RiAddLine,
+  RiArrowDownSLine,
+  RiCheckLine,
+  RiDeleteBin2Line,
+  RiEdit2Line,
+  RiStarLine,
+} from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';

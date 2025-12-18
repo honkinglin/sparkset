@@ -1,5 +1,14 @@
 'use client';
-import { RiAddLine, RiCheckboxCircleLine, RiCloseCircleLine, RiDeleteBin2Line, RiEdit2Line, RiEyeLine, RiLoader4Line, RiRefreshLine } from '@remixicon/react';
+import {
+  RiAddLine,
+  RiCheckboxCircleLine,
+  RiCloseCircleLine,
+  RiDeleteBin2Line,
+  RiEdit2Line,
+  RiEyeLine,
+  RiLoader4Line,
+  RiRefreshLine,
+} from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { type ChangeEvent, useMemo, useState } from 'react';
@@ -74,18 +83,14 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
   const [isVerified, setIsVerified] = useState(false);
 
   const canTest = useMemo(() => {
-    // 测试需要完整的连接信息
+    // 测试需要完整的连接信息（密码可以为空）
     if (!form.host || !form.username || !form.database) {
       return false;
     }
 
-    if (editingId) {
-      // 编辑模式：可以测试，如果密码为空则使用存储的密码
-      return true;
-    }
-    // 创建模式：需要所有字段（包括密码）才能测试
-    return !!form.password;
-  }, [form, editingId]);
+    // 密码不是测试连通性的必要条件，可以为空
+    return true;
+  }, [form]);
 
   const shouldShowSubmit = useMemo(() => {
     // 必须验证通过，且所有基础字段完整
@@ -483,8 +488,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                     type="password"
                     value={form.password}
                     onChange={onChange('password')}
-                    placeholder={editingId ? '留空则不修改' : '测试连接时必须输入'}
-                    required={!editingId}
+                    placeholder={editingId ? '留空则不修改' : '留空则使用无密码连接'}
                   />
                 </div>
               </div>

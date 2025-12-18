@@ -1,15 +1,14 @@
 import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http';
+import { Database } from '@adonisjs/lucid/database';
+import { createLucidDBClientFactory } from '../db/lucid-db-client';
 import { DatasourceService } from '../services/datasource_service';
 import { SchemaService } from '../services/schema_service';
-import { DatasourceRepository } from '../db/interfaces';
 import {
   datasourceCreateSchema,
   datasourceUpdateSchema,
   setDefaultSchema,
 } from '../validators/datasource';
-import { createLucidDBClientFactory } from '../db/lucid-db-client';
-import { Database } from '@adonisjs/lucid/database';
 
 @inject()
 export default class DatasourcesController {
@@ -148,7 +147,7 @@ export default class DatasourcesController {
       const config = {
         id: datasource.id,
         name: datasource.name,
-        type: datasource.type as 'mysql' | 'postgres' | string,
+        type: datasource.type,
         host: datasource.host,
         port: datasource.port,
         username: datasource.username,
@@ -186,7 +185,7 @@ export default class DatasourcesController {
       host: string;
       port: number;
       username: string;
-      password: string;
+      password: string | null;
       database: string;
     };
 
@@ -194,10 +193,8 @@ export default class DatasourcesController {
       return response.badRequest({ message: '缺少必要的配置参数' });
     }
 
-    // 对于新创建的连接测试，密码是必需的
-    if (!body.password) {
-      return response.badRequest({ message: '连接测试需要提供密码' });
-    }
+    // 密码不是测试连通性的必要条件，可以为空
+    // body parser 会将空字符串转换为 null，需要处理这种情况
 
     try {
       // 创建数据库客户端工厂
@@ -207,11 +204,11 @@ export default class DatasourcesController {
       const config = {
         id: Date.now(), // 临时ID用于连接名称生成
         name: 'test-connection',
-        type: body.type as 'mysql' | 'postgres' | string,
+        type: body.type,
         host: body.host,
         port: body.port,
         username: body.username,
-        password: body.password,
+        password: body.password ?? '', // 处理 null 和 undefined，转换为空字符串
         database: body.database,
       };
 
