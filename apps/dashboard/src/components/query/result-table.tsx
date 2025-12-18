@@ -2,9 +2,17 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
+import { Database } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+} from '@/components/ui/empty';
 
 interface ResultTableProps {
   rows: Record<string, unknown>[];
@@ -32,8 +40,21 @@ export function ResultTable({ rows }: ResultTableProps) {
 
   if (rows.length === 0) {
     return (
-      <div className="py-12 text-center px-6">
-        <p className="text-sm text-muted-foreground">查询成功但无数据返回</p>
+      <div className="py-12 flex justify-center">
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Database className="h-8 w-8 text-gray-400" />
+            </EmptyMedia>
+            <EmptyDescription className="text-base font-semibold text-foreground mt-2">
+              查询成功但无数据返回
+            </EmptyDescription>
+            <p className="text-muted-foreground text-sm mt-1">数据表中暂无匹配记录</p>
+          </EmptyHeader>
+          <EmptyContent className="opacity-40">
+            <span className="text-xs tracking-widest">•••</span>
+          </EmptyContent>
+        </Empty>
       </div>
     );
   }

@@ -1,12 +1,12 @@
 'use client';
 
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, ZapOff } from 'lucide-react';
 import { useState } from 'react';
 import { AiProviderSelector } from '../../components/ai-provider-selector';
 import { DatasourceSelector } from '../../components/datasource-selector';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';

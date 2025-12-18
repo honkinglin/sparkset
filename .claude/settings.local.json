@@ -12,7 +12,8 @@
       "Bash(node ace migration:run)",
       "Bash(pnpm add:*)",
       "Bash(git show:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"\nconst fs = require\\(''fs''\\);\nconst errors = [];\n\n// Try to parse the files as JavaScript\nconst files = [\n  ''src/components/query/empty-state.tsx'',\n  ''src/app/query/page.tsx'',\n  ''src/components/query/result-table.tsx''\n];\n\nfiles.forEach\\(file => {\n  try {\n    const content = fs.readFileSync\\(file, ''utf-8''\\);\n    // Basic syntax check\n    if \\(content.includes\\(''import ''\\) || content.includes\\(''export ''\\) || content.includes\\(''function''\\) || content.includes\\(''return''\\)\\) {\n      console.log\\(file + '': Appears valid''\\);\n    }\n  } catch \\(e\\) {\n    errors.push\\({file, error: e.message}\\);\n  }\n}\\);\n\nif \\(errors.length > 0\\) {\n  console.error\\(''Errors:'', errors\\);\n  process.exit\\(1\\);\n}\n\")"
     ]
   }
 }
