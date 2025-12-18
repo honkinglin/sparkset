@@ -1,6 +1,12 @@
 'use client';
 
-import { ArrowRight, CheckCircle2, Circle, Database, Sparkles } from 'lucide-react';
+import {
+  RiArrowRightLine,
+  RiCheckboxCircleLine,
+  RiCheckboxBlankCircleLine,
+  RiDatabase2Line,
+  RiSparkling2Line,
+} from '@remixicon/react';
 import Link from 'next/link';
 
 import { Button } from './ui/button';
@@ -17,7 +23,7 @@ interface TodoItem {
   description: string;
   completed: boolean;
   href: string;
-  icon: typeof Database;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps) {
@@ -28,7 +34,7 @@ export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps
       description: '添加数据库连接，同步表结构信息',
       completed: datasourceCount > 0,
       href: '/',
-      icon: Database,
+      icon: RiDatabase2Line,
     },
     {
       id: 'ai-provider',
@@ -36,7 +42,7 @@ export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps
       description: '设置 AI 服务提供商，用于智能查询和语义理解',
       completed: aiProviderCount > 0,
       href: '/ai-providers',
-      icon: Sparkles,
+      icon: RiSparkling2Line,
     },
   ];
 
@@ -78,7 +84,7 @@ export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps
                       <div className="flex-1 space-y-1">
                         <CardTitle className="flex items-center gap-2">
                           {todo.title}
-                          {todo.completed && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                          {todo.completed && <RiCheckboxCircleLine className="h-5 w-5 text-primary" />}
                         </CardTitle>
                         <CardDescription>{todo.description}</CardDescription>
                       </div>
@@ -86,14 +92,14 @@ export function Onboarding({ datasourceCount, aiProviderCount }: OnboardingProps
                     <div className="flex items-center gap-2">
                       {todo.completed ? (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Circle className="h-4 w-4 fill-primary text-primary" />
+                          <RiCheckboxBlankCircleLine className="h-4 w-4 fill-primary text-primary" />
                           <span>已完成</span>
                         </div>
                       ) : (
                         <Button asChild variant="default">
                           <Link href={todo.href}>
                             去配置
-                            <ArrowRight className="h-4 w-4" />
+                            <RiArrowRightLine className="h-4 w-4" />
                           </Link>
                         </Button>
                       )}

@@ -1,6 +1,6 @@
 'use client';
+import { RiDatabase2Line, RiRefreshLine } from '@remixicon/react';
 
-import { Database, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchSchema, TableSchemaDTO } from '../../lib/api';
 import { Alert, AlertDescription } from '../ui/alert';
@@ -51,7 +51,7 @@ export function SchemaDrawer({ datasourceId, trigger, open, onOpenChange }: Sche
 
   const defaultTrigger = (
     <Button variant="outline" size="sm" className="gap-2 shrink-0">
-      <Database className="h-4 w-4" />
+      <RiDatabase2Line className="h-4 w-4" />
       查看 Schema
     </Button>
   );
@@ -64,7 +64,7 @@ export function SchemaDrawer({ datasourceId, trigger, open, onOpenChange }: Sche
           <div className="flex items-center justify-between pr-6">
             <div>
               <SheetTitle className="flex items-center gap-2">
-                <Database className="h-5 w-5" />
+                <RiDatabase2Line className="h-5 w-5" />
                 Schema 缓存
               </SheetTitle>
               <SheetDescription className="mt-2">
@@ -80,7 +80,7 @@ export function SchemaDrawer({ datasourceId, trigger, open, onOpenChange }: Sche
               }}
               disabled={loading}
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              <RiRefreshLine className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </SheetHeader>

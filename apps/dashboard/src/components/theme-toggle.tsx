@@ -1,6 +1,6 @@
 'use client';
 
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { RiComputerLine, RiMoonLine, RiSunFoggyLine } from '@remixicon/react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
@@ -25,7 +25,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" disabled>
-        <Sun className="h-4 w-4" />
+        <RiSunFoggyLine className="h-4 w-4" />
       </Button>
     );
   }
@@ -33,11 +33,11 @@ export function ThemeToggle() {
   const getIcon = () => {
     switch (theme) {
       case 'light':
-        return <Sun className="h-4 w-4" />;
+        return <RiSunFoggyLine className="h-4 w-4" />;
       case 'dark':
-        return <Moon className="h-4 w-4" />;
+        return <RiMoonLine className="h-4 w-4" />;
       default:
-        return <Monitor className="h-4 w-4" />;
+        return <RiComputerLine className="h-4 w-4" />;
     }
   };
 
@@ -52,15 +52,15 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuRadioGroup value={theme || 'system'} onValueChange={setTheme}>
           <DropdownMenuRadioItem value="light">
-            <Sun className="mr-2 h-4 w-4" />
+            <RiSunFoggyLine className="mr-2 h-4 w-4" />
             <span>亮色</span>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark">
-            <Moon className="mr-2 h-4 w-4" />
+            <RiMoonLine className="mr-2 h-4 w-4" />
             <span>暗色</span>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="system">
-            <Monitor className="mr-2 h-4 w-4" />
+            <RiComputerLine className="mr-2 h-4 w-4" />
             <span>跟随系统</span>
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>

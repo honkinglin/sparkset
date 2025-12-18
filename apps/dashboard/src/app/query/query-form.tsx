@@ -1,6 +1,5 @@
 'use client';
-
-import { RefreshCw, ZapOff } from 'lucide-react';
+import { RiRefreshLine } from '@remixicon/react';
 import { useState } from 'react';
 import { AiProviderSelector } from '../../components/ai-provider-selector';
 import { DatasourceSelector } from '../../components/datasource-selector';
@@ -139,7 +138,7 @@ const QueryForm = ({
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="mr-1.5 h-3 w-3 animate-spin" />
+                      <RiRefreshLine className="mr-1.5 h-3 w-3 animate-spin" />
                       查询中
                     </>
                   ) : (

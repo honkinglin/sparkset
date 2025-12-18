@@ -1,9 +1,8 @@
 'use client';
+import { RiDatabase2Line } from '@remixicon/react';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
-import { Database } from 'lucide-react';
-
 import { DataTable } from '@/components/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
 import {
@@ -44,7 +43,7 @@ export function ResultTable({ rows }: ResultTableProps) {
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <Database className="h-8 w-8 text-gray-400" />
+              <RiDatabase2Line className="h-8 w-8 text-gray-400" />
             </EmptyMedia>
             <EmptyDescription className="text-base font-semibold text-foreground mt-2">
               查询成功但无数据返回

@@ -1,6 +1,6 @@
 'use client';
+import { RiCodeSSlashLine, RiSave3Line, RiUserLine } from '@remixicon/react';
 
-import { Code, Save, User } from 'lucide-react';
 import { useState } from 'react';
 import { MessageDTO } from '../../lib/api';
 import { QueryResponse } from '../../lib/query';
@@ -73,7 +73,7 @@ export function MessageItem({ message }: MessageItemProps) {
                 : 'bg-secondary text-secondary-foreground'
             }`}
           >
-            {isUser ? <User className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+            {isUser ? <RiUserLine className="h-4 w-4" /> : <RiCodeSSlashLine className="h-4 w-4" />}
           </div>
           <div className="flex-1 min-w-0 space-y-3">
             <div className="flex items-center justify-between">
@@ -99,7 +99,7 @@ export function MessageItem({ message }: MessageItemProps) {
                       onOpenChange={setSqlViewerOpen}
                       trigger={
                         <Button variant="outline" size="sm" className="gap-2">
-                          <Code className="h-4 w-4" />
+                          <RiCodeSSlashLine className="h-4 w-4" />
                           查看 SQL
                         </Button>
                       }
@@ -111,7 +111,7 @@ export function MessageItem({ message }: MessageItemProps) {
                         className="gap-2"
                         onClick={() => setSaveDialogOpen(true)}
                       >
-                        <Save className="h-4 w-4" />
+                        <RiSave3Line className="h-4 w-4" />
                         保存为 Action
                       </Button>
                     </div>

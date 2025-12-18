@@ -1,6 +1,6 @@
 'use client';
+import { RiFileTextLine, RiSave3Line } from '@remixicon/react';
 
-import { FileText, Save } from 'lucide-react';
 import { useState } from 'react';
 import { QueryResponse } from '../../lib/query';
 import { SaveActionDialog } from '../action/save-dialog';
@@ -28,7 +28,7 @@ export function QueryResult({ result, datasourceId, question }: QueryResultProps
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+                <RiFileTextLine className="h-5 w-5" />
                 查询结果
               </CardTitle>
               <CardDescription>
@@ -43,7 +43,7 @@ export function QueryResult({ result, datasourceId, question }: QueryResultProps
                 className="gap-2"
                 onClick={() => setSaveDialogOpen(true)}
               >
-                <Save className="h-4 w-4" />
+                <RiSave3Line className="h-4 w-4" />
                 保存为 Action
               </Button>
               <SqlViewer sql={result.sql} open={sqlDrawerOpen} onOpenChange={setSqlDrawerOpen} />

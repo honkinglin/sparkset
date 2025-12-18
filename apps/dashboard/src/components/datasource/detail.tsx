@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, Edit, Edit2, RefreshCw, Save, Sparkles, Trash2, X } from 'lucide-react';
+import { RiArrowLeftLine, RiEditLine, RiEdit2Line, RiRefreshLine, RiSave3Line, RiSparkling2Line, RiDeleteBinLine, RiCloseLine } from '@remixicon/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, useMemo, useState } from 'react';
@@ -280,7 +280,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <RiArrowLeftLine className="mr-2 h-4 w-4" />
             返回列表
           </Link>
         </Button>
@@ -300,7 +300,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                 onClick={handleOpenEditDialog}
                 disabled={syncing || deleting || generating}
               >
-                <Edit className="mr-2 h-4 w-4" />
+                <RiEditLine className="mr-2 h-4 w-4" />
                 编辑
               </Button>
               <Button
@@ -309,7 +309,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                 onClick={handleSync}
                 disabled={syncing || deleting || generating}
               >
-                <RefreshCw className={`mr-2 h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
+                <RiRefreshLine className={`mr-2 h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
                 {syncing ? '同步中...' : '同步'}
               </Button>
               <Button
@@ -318,7 +318,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                 onClick={handleDelete}
                 disabled={syncing || deleting || generating}
               >
-                <Trash2 className="mr-2 h-4 w-4" />
+                <RiDeleteBinLine className="mr-2 h-4 w-4" />
                 {deleting ? '删除中...' : '删除'}
               </Button>
             </div>
@@ -372,7 +372,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
               onClick={handleGenerateSemantic}
               disabled={syncing || deleting || generating}
             >
-              <Sparkles className={`mr-2 h-4 w-4 ${generating ? 'animate-spin' : ''}`} />
+              <RiSparkling2Line className={`mr-2 h-4 w-4 ${generating ? 'animate-spin' : ''}`} />
               {generating ? '生成中...' : '补充语义描述'}
             </Button>
           </div>
@@ -420,7 +420,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                             handleEditTable(table);
                           }}
                         >
-                          <Edit2 className="h-4 w-4" />
+                          <RiEdit2Line className="h-4 w-4" />
                         </div>
                       </div>
                     </div>
@@ -462,7 +462,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                               </div>
                               <div className="flex gap-2">
                                 <Button size="sm" onClick={handleSaveTable} disabled={saving}>
-                                  <Save className="mr-2 h-4 w-4" />
+                                  <RiSave3Line className="mr-2 h-4 w-4" />
                                   保存
                                 </Button>
                                 <Button
@@ -471,7 +471,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                   onClick={handleCancelTable}
                                   disabled={saving}
                                 >
-                                  <X className="mr-2 h-4 w-4" />
+                                  <RiCloseLine className="mr-2 h-4 w-4" />
                                   取消
                                 </Button>
                               </div>
@@ -562,7 +562,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                         onClick={handleSaveColumn}
                                         disabled={saving}
                                       >
-                                        <Save className="h-4 w-4" />
+                                        <RiSave3Line className="h-4 w-4" />
                                       </Button>
                                       <Button
                                         size="sm"
@@ -570,7 +570,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                         onClick={handleCancelColumn}
                                         disabled={saving}
                                       >
-                                        <X className="h-4 w-4" />
+                                        <RiCloseLine className="h-4 w-4" />
                                       </Button>
                                     </div>
                                   ) : (
@@ -580,7 +580,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                       onClick={() => handleEditColumn(table.id, column)}
                                       disabled={!column.id || editingColumn !== null}
                                     >
-                                      <Edit2 className="h-4 w-4" />
+                                      <RiEdit2Line className="h-4 w-4" />
                                     </Button>
                                   )}
                                 </TableCell>

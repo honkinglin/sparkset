@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { DayPicker, getDefaultClassNames, type DayButton } from 'react-day-picker';
+import { RiArrowDownSLine, RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
 
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -113,14 +113,14 @@ function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
-            return <ChevronLeftIcon className={cn('size-4', className)} {...props} />;
+            return <RiArrowLeftSLine className={cn('size-4', className)} {...props} />;
           }
 
           if (orientation === 'right') {
-            return <ChevronRightIcon className={cn('size-4', className)} {...props} />;
+            return <RiArrowRightSLine className={cn('size-4', className)} {...props} />;
           }
 
-          return <ChevronDownIcon className={cn('size-4', className)} {...props} />;
+          return <RiArrowDownSLine className={cn('size-4', className)} {...props} />;
         },
         DayButton: CalendarDayButton,
         WeekNumber: ({ children, ...props }) => {

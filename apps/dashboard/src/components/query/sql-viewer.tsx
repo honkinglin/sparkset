@@ -1,6 +1,6 @@
 'use client';
+import { RiCodeSSlashLine, RiAlignJustify, RiAlignLeft } from '@remixicon/react';
 
-import { AlignJustify, AlignLeft, Code } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { format } from 'sql-formatter';
 import { CodeViewer } from '../code-viewer';
@@ -47,7 +47,7 @@ export function SqlViewer({ sql, trigger, open, onOpenChange }: SqlViewerProps) 
 
   const defaultTrigger = (
     <Button variant="outline" size="sm" className="gap-2">
-      <Code className="h-4 w-4" />
+      <RiCodeSSlashLine className="h-4 w-4" />
       查看 SQL
     </Button>
   );
@@ -60,7 +60,7 @@ export function SqlViewer({ sql, trigger, open, onOpenChange }: SqlViewerProps) 
           <div className="flex items-center justify-between">
             <div>
               <SheetTitle className="flex items-center gap-2">
-                <Code className="h-5 w-5" />
+                <RiCodeSSlashLine className="h-5 w-5" />
                 SQL 语句
               </SheetTitle>
               <SheetDescription className="mt-2">AI 生成的 SQL 查询语句</SheetDescription>
@@ -74,12 +74,12 @@ export function SqlViewer({ sql, trigger, open, onOpenChange }: SqlViewerProps) 
             >
               {isMultiLine ? (
                 <>
-                  <AlignJustify className="h-4 w-4" />
+                  <RiAlignJustify className="h-4 w-4" />
                   多行
                 </>
               ) : (
                 <>
-                  <AlignLeft className="h-4 w-4" />
+                  <RiAlignLeft className="h-4 w-4" />
                   单行
                 </>
               )}

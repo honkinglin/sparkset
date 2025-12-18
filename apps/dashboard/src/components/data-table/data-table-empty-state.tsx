@@ -1,6 +1,6 @@
 'use client';
+import { RiAddLine, RiDatabase2Line, RiFlashlightLine, RiSearch2Line } from '@remixicon/react';
 
-import { Database, Zap, Search, Plus } from 'lucide-react';
 import {
   Empty,
   EmptyContent,
@@ -31,13 +31,13 @@ export function DataTableEmptyState({ message = '暂无数据', icon }: DataTabl
     // Auto-select appropriate icon based on item type
     if (!selectedIcon) {
       if (itemType.includes('Action') || itemType.includes('Provider')) {
-        selectedIcon = <Zap className="h-6 w-6 text-yellow-500" />;
+        selectedIcon = <RiFlashlightLine className="h-6 w-6 text-yellow-500" />;
       } else if (itemType.includes('数据源')) {
-        selectedIcon = <Database className="h-6 w-6 text-blue-500" />;
+        selectedIcon = <RiDatabase2Line className="h-6 w-6 text-blue-500" />;
       } else if (itemType.includes('数据')) {
-        selectedIcon = <Database className="h-6 w-6 text-gray-500" />;
+        selectedIcon = <RiDatabase2Line className="h-6 w-6 text-gray-500" />;
       } else {
-        selectedIcon = <Plus className="h-6 w-6 text-primary" />;
+        selectedIcon = <RiAddLine className="h-6 w-6 text-primary" />;
       }
     }
   }
@@ -45,17 +45,17 @@ export function DataTableEmptyState({ message = '暂无数据', icon }: DataTabl
   else if (message.includes('无匹配结果')) {
     primaryText = '未找到匹配结果';
     instructionText = '尝试更换搜索词或清除过滤器';
-    selectedIcon = selectedIcon || <Search className="h-6 w-6 text-purple-500" />;
+    selectedIcon = selectedIcon || <RiSearch2Line className="h-6 w-6 text-purple-500" />;
   }
   // Pattern: "暂无数据" - Generic empty
   else if (message === '暂无数据') {
     primaryText = '暂无数据';
     instructionText = '点击右上角按钮开始';
-    selectedIcon = selectedIcon || <Database className="h-6 w-6" />;
+    selectedIcon = selectedIcon || <RiDatabase2Line className="h-6 w-6" />;
   }
   // Fallback for any other message
   else {
-    selectedIcon = selectedIcon || <Database className="h-6 w-6" />;
+    selectedIcon = selectedIcon || <RiDatabase2Line className="h-6 w-6" />;
     // If message contains action instruction, extract it
     if (message.includes('点击')) {
       const actionMatch = message.match(/点击(.+)/);

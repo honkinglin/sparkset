@@ -12,8 +12,16 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import type { LucideIcon } from 'lucide-react';
-import { BookOpen, Database, Github, Heart, Play, Sparkles, Zap } from 'lucide-react';
+import {
+  RiBookOpenLine,
+  RiDatabase2Line,
+  RiGithubLine,
+  RiHeart2Line,
+  RiPlayLine,
+  RiSparkling2Line,
+  RiFlashlightLine,
+} from '@remixicon/react';
+import type { ComponentType } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -22,7 +30,7 @@ import { SearchForm } from './search-form';
 interface MenuItem {
   title: string;
   url: string;
-  icon: LucideIcon;
+  icon: ComponentType<{ className?: string }>;
   external?: boolean;
 }
 
@@ -35,10 +43,10 @@ const menuGroups: MenuGroup[] = [
   {
     label: '功能模块',
     items: [
-      { title: '查询', url: '/query', icon: Play },
-      { title: 'Actions', url: '/actions', icon: Zap },
-      { title: '数据源', url: '/', icon: Database },
-      { title: 'AI 配置', url: '/ai-providers', icon: Sparkles },
+      { title: '查询', url: '/query', icon: RiPlayLine },
+      { title: 'Actions', url: '/actions', icon: RiFlashlightLine },
+      { title: '数据源', url: '/', icon: RiDatabase2Line },
+      { title: 'AI 配置', url: '/ai-providers', icon: RiSparkling2Line },
     ],
   },
   {
@@ -47,19 +55,19 @@ const menuGroups: MenuGroup[] = [
       {
         title: '代码仓库',
         url: 'https://github.com/overtrue/sparkset',
-        icon: Github,
+        icon: RiGithubLine,
         external: true,
       },
       {
         title: '使用文档',
         url: 'https://github.com/overtrue/sparkset',
-        icon: BookOpen,
+        icon: RiBookOpenLine,
         external: true,
       },
       {
         title: '打赏支持',
         url: 'https://github.com/sponsors/overtrue',
-        icon: Heart,
+        icon: RiHeart2Line,
         external: true,
       },
     ],
@@ -74,7 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
+            <RiSparkling2Line className="h-4 w-4" />
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-semibold">Sparkset</span>

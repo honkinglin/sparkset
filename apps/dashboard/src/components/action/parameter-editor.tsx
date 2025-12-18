@@ -1,6 +1,6 @@
 'use client';
 
-import { Minus, Plus } from 'lucide-react';
+import { RiSubtractLine, RiAddLine } from '@remixicon/react';
 import { useEffect, useState } from 'react';
 import { type ActionInputSchema, type ParameterDefinition } from '../../lib/api';
 import { cn } from '../../lib/utils';
@@ -58,7 +58,7 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
       <div className="flex items-center justify-between">
         <Label>输入参数定义</Label>
         <Button type="button" variant="outline" size="sm" onClick={addParameter}>
-          <Plus className="mr-2 h-4 w-4" />
+          <RiAddLine className="mr-2 h-4 w-4" />
           添加参数
         </Button>
       </div>
@@ -90,7 +90,7 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                       removeParameter(index);
                     }}
                   >
-                    <Minus className="h-3 w-3" />
+                    <RiSubtractLine className="h-3 w-3" />
                   </div>
                 </div>
               </AccordionTrigger>

@@ -1,6 +1,6 @@
 'use client';
+import { RiArrowDownSLine, RiArrowRightSLine, RiChat3Line } from '@remixicon/react';
 
-import { ChevronDown, ChevronRight, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 import { ConversationDTO, ConversationDetailDTO, fetchConversation } from '../../lib/api';
 import { Badge } from '../ui/badge';
@@ -73,7 +73,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
     return (
       <Card className="shadow-none">
         <CardContent className="py-12 text-center">
-          <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+          <RiChat3Line className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
           <p className="text-sm text-muted-foreground">暂无会话记录</p>
         </CardContent>
       </Card>
@@ -100,9 +100,9 @@ export function ConversationList({ conversations }: ConversationListProps) {
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <div className="mt-0.5">
                         {isExpanded ? (
-                          <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+                          <RiArrowDownSLine className="h-4 w-4 text-muted-foreground shrink-0" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                          <RiArrowRightSLine className="h-4 w-4 text-muted-foreground shrink-0" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">

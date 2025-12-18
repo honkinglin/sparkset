@@ -1,6 +1,5 @@
 'use client';
-
-import { MoreHorizontal } from 'lucide-react';
+import { RiMore2Line } from '@remixicon/react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -37,7 +36,7 @@ export function DataTableRowActions({ actions }: DataTableRowActionsProps) {
             className="h-8 w-8 shadow-none text-muted-foreground/40 hover:text-muted-foreground"
             aria-label="操作菜单"
           >
-            <MoreHorizontal className="h-5 w-5" aria-hidden="true" />
+            <RiMore2Line className="h-5 w-5" aria-hidden="true" />
           </Button>
         </div>
       </DropdownMenuTrigger>

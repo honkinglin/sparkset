@@ -1,6 +1,6 @@
 'use client';
+import { RiArrowRightLine, RiDatabase2Line, RiFlashlightLine } from '@remixicon/react';
 
-import { Database, Zap, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import {
   Empty,
@@ -28,9 +28,9 @@ export function QueryEmptyState({
 }: QueryEmptyStateProps) {
   const icon =
     type === 'datasource' ? (
-      <Database className="h-8 w-8 text-blue-500" />
+      <RiDatabase2Line className="h-8 w-8 text-blue-500" />
     ) : (
-      <Zap className="h-8 w-8 text-yellow-500" />
+      <RiFlashlightLine className="h-8 w-8 text-yellow-500" />
     );
 
   return (
@@ -48,13 +48,11 @@ export function QueryEmptyState({
         </EmptyContent>
       </Empty>
       <div className="mt-6">
-        <Link href={actionLink} passHref legacyBehavior>
-          <a>
-            <Button className="gap-2">
-              {actionText}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </a>
+        <Link href={actionLink} className="no-underline">
+          <Button className="gap-2">
+            {actionText}
+            <RiArrowRightLine className="h-4 w-4" />
+          </Button>
         </Link>
       </div>
     </div>

@@ -1,7 +1,6 @@
 'use client';
-
+import { RiAddLine, RiArrowDownSLine, RiCheckLine, RiDeleteBin2Line, RiEdit2Line, RiStarLine } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, ChevronDown, Edit, Plus, Star, Trash2 } from 'lucide-react';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -222,12 +221,12 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
         cell: ({ row }) =>
           row.getValue('isDefault') ? (
             <Badge variant="default" className="gap-1">
-              <Star className="h-3 w-3 fill-current" />
+              <RiStarLine className="h-3 w-3 fill-current" />
               默认
             </Badge>
           ) : (
             <Badge variant="outline" className="gap-1">
-              <Check className="h-3 w-3" />
+              <RiCheckLine className="h-3 w-3" />
               已配置
             </Badge>
           ),
@@ -255,7 +254,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
           if (!provider.isDefault) {
             actions.push({
               label: '设为默认',
-              icon: <Star className="h-4 w-4" />,
+              icon: <RiStarLine className="h-4 w-4" />,
               onClick: () => handleSetDefault(provider.id),
               disabled: isLoading,
             });
@@ -264,13 +263,13 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
           actions.push(
             {
               label: '编辑',
-              icon: <Edit className="h-4 w-4" />,
+              icon: <RiEdit2Line className="h-4 w-4" />,
               onClick: () => handleOpenDialog(provider),
               disabled: isLoading,
             },
             {
               label: '删除',
-              icon: <Trash2 className="h-4 w-4" />,
+              icon: <RiDeleteBin2Line className="h-4 w-4" />,
               onClick: () => handleRemoveClick(provider.id),
               variant: 'destructive',
               disabled: isLoading,
@@ -301,7 +300,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
         emptyMessage="暂无 Provider，点击右上角添加"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="h-4 w-4" />
+            <RiAddLine className="h-4 w-4" />
             添加 Provider
           </Button>
         }
@@ -352,7 +351,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
                       ) : (
                         <span className="text-muted-foreground">选择 Provider 类型</span>
                       )}
-                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <RiArrowDownSLine className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[400px] p-0" align="start">
@@ -382,7 +381,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
                                 )}
                               </div>
                               {form.type === providerType.value && (
-                                <Check className="ml-auto h-4 w-4 shrink-0" />
+                                <RiCheckLine className="ml-auto h-4 w-4 shrink-0" />
                               )}
                             </CommandItem>
                           ))}

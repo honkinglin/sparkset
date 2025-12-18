@@ -1,6 +1,5 @@
 'use client';
-
-import { Check, ChevronDown } from 'lucide-react';
+import { RiArrowDownSLine, RiCheckLine } from '@remixicon/react';
 import { useState } from 'react';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
@@ -67,7 +66,7 @@ export function AiProviderSelector({
             {selectedProvider
               ? `${selectedProvider.name}${selectedProvider.isDefault ? ' (默认)' : ''}`
               : '选择 AI Provider'}
-            <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
+            <RiArrowDownSLine className="ml-2 h-3 w-3 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[240px] p-0" align="start">
@@ -86,7 +85,7 @@ export function AiProviderSelector({
                     }}
                     className="py-1.5"
                   >
-                    <Check
+                    <RiCheckLine
                       className={cn(
                         'mr-2 h-3 w-3 shrink-0',
                         value === provider.id ? 'opacity-100' : 'opacity-0',

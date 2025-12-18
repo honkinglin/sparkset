@@ -1,8 +1,7 @@
 'use client';
+import { RiArrowUpDownLine, RiCheckLine, RiGalleryView2 } from '@remixicon/react';
 
 import * as React from 'react';
-import { GalleryVerticalEnd } from 'lucide-react';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +9,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
-
 export function VersionSwitcher({
   versions,
   defaultVersion,
@@ -31,19 +28,19 @@ export function VersionSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <GalleryVerticalEnd className="size-4" />
+                <RiGalleryView2 className="size-4" />
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
                 <span className="font-semibold">Documentation</span>
                 <span className="">v{selectedVersion}</span>
               </div>
-              <CaretSortIcon className="ml-auto" />
+              <RiArrowUpDownLine className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width)" align="start">
             {versions.map((version) => (
               <DropdownMenuItem key={version} onSelect={() => setSelectedVersion(version)}>
-                v{version} {version === selectedVersion && <CheckIcon className="ml-auto" />}
+                v{version} {version === selectedVersion && <RiCheckLine className="ml-auto" />}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

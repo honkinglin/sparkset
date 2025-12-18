@@ -1,6 +1,6 @@
 'use client';
+import { RiArrowDownSLine, RiArrowRightSLine, RiChat3Line, RiPlayLine, RiRefreshLine, RiTimeLine } from '@remixicon/react';
 
-import { ChevronDown, ChevronRight, History, MessageSquare, Play, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import {
   ConversationDetailDTO,
@@ -80,7 +80,7 @@ function SimpleMessageItem({ message, onRerun }: SimpleMessageItemProps) {
             onClick={() => onRerun(message.content)}
             className="ml-auto flex items-center gap-1 text-[11px] text-primary hover:text-primary/80 transition-colors"
           >
-            <Play className="h-3 w-3" />
+            <RiPlayLine className="h-3 w-3" />
             重新执行
           </button>
         )}
@@ -155,7 +155,7 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
 
   const defaultTrigger = (
     <Button variant="outline" size="sm" className="gap-2">
-      <History className="h-4 w-4" />
+      <RiTimeLine className="h-4 w-4" />
       会话历史
     </Button>
   );
@@ -168,7 +168,7 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
           <div className="flex items-center justify-between pr-6">
             <div>
               <SheetTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
+                <RiTimeLine className="h-5 w-5" />
                 会话历史
               </SheetTitle>
               <SheetDescription className="mt-2">查看之前的查询会话记录</SheetDescription>
@@ -182,7 +182,7 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
               }}
               disabled={loading}
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              <RiRefreshLine className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </SheetHeader>
@@ -202,7 +202,7 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
             </div>
           ) : conversations.length === 0 ? (
             <div className="py-12 text-center">
-              <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+              <RiChat3Line className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
               <p className="text-sm text-muted-foreground">暂无会话记录</p>
               <p className="text-xs text-muted-foreground mt-1">执行查询后会自动保存会话</p>
             </div>
@@ -223,9 +223,9 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
                     >
                       <div className="shrink-0">
                         {isExpanded ? (
-                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                          <RiArrowDownSLine className="h-4 w-4 text-muted-foreground" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          <RiArrowRightSLine className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0 flex items-center gap-2">

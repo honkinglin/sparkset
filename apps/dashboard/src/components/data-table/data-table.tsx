@@ -1,4 +1,5 @@
 'use client';
+import { RiCloseLine, RiDeleteBin2Line, RiSearch2Line } from '@remixicon/react';
 
 import {
   ColumnDef,
@@ -12,7 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Search, Trash2, X } from 'lucide-react';
 import { useId, useRef, useState } from 'react';
 
 import {
@@ -181,7 +181,7 @@ export function DataTable<TData, TValue>({
                 aria-label={searchPlaceholder}
               />
               <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-muted-foreground/40 peer-disabled:opacity-50">
-                <Search className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                <RiSearch2Line className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
               </div>
               {Boolean(searchValue) && (
                 <button
@@ -196,7 +196,7 @@ export function DataTable<TData, TValue>({
                     inputRef.current?.focus();
                   }}
                 >
-                  <X className="h-4 w-4" aria-hidden="true" />
+                  <RiCloseLine className="h-4 w-4" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -216,7 +216,7 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center gap-3">
           {enableRowSelection && selectedRows.length > 0 && onDeleteSelected && (
             <Button variant="outline" onClick={() => setDeleteDialogOpen(true)}>
-              <Trash2 className="-ms-1 opacity-60" size={16} aria-hidden="true" />
+              <RiDeleteBin2Line className="-ms-1 opacity-60" size={16} aria-hidden="true" />
               删除
               <span className="-me-1 ms-1 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
                 {selectedRows.length}

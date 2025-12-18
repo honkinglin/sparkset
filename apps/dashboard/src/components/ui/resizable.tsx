@@ -1,7 +1,7 @@
 'use client';
+import { RiDragMove2Line } from '@remixicon/react';
 
 import * as React from 'react';
-import { GripVerticalIcon } from 'lucide-react';
 import * as ResizablePrimitive from 'react-resizable-panels';
 
 import { cn } from '@/lib/utils';
@@ -41,7 +41,7 @@ function ResizableHandle({
     >
       {withHandle && (
         <div className="bg-border z-10 flex h-4 w-3 items-center justify-center rounded-xs border">
-          <GripVerticalIcon className="size-2.5" />
+          <RiDragMove2Line className="size-2.5" />
         </div>
       )}
     </ResizablePrimitive.PanelResizeHandle>

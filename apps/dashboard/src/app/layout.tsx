@@ -1,4 +1,4 @@
-import { BellIcon } from '@radix-ui/react-icons';
+import { RiNotification3Line } from '@remixicon/react';
 import type { Metadata } from 'next';
 import type React from 'react';
 import { AppSidebar } from '../components/app-sidebar';
@@ -31,7 +31,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
               <div className="flex gap-3 ml-auto">
                 <ThemeToggle />
                 <Button variant="ghost" size="icon">
-                  <BellIcon className="h-4 w-4" />
+                  <RiNotification3Line className="h-4 w-4" />
                 </Button>
               </div>
             </header>

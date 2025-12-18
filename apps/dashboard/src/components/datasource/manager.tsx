@@ -1,12 +1,10 @@
 'use client';
-
+import { RiAddLine, RiCheckboxCircleLine, RiCloseCircleLine, RiDeleteBin2Line, RiEdit2Line, RiEyeLine, RiLoader4Line, RiRefreshLine } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, Eye, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import {
   createDatasource,
   type CreateDatasourceInput,
@@ -337,26 +335,26 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
           const actions: RowAction[] = [
             {
               label: '查看详情',
-              icon: <Eye className="h-4 w-4" />,
+              icon: <RiEyeLine className="h-4 w-4" />,
               onClick: () => {
                 window.location.href = `/datasources/${ds.id}`;
               },
             },
             {
               label: '编辑',
-              icon: <Edit className="h-4 w-4" />,
+              icon: <RiEdit2Line className="h-4 w-4" />,
               onClick: () => handleOpenDialog(ds),
               disabled: isLoading,
             },
             {
               label: isLoading ? '同步中...' : '同步',
-              icon: <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />,
+              icon: <RiRefreshLine className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />,
               onClick: () => handleSync(ds.id),
               disabled: isLoading,
             },
             {
               label: '删除',
-              icon: <Trash2 className="h-4 w-4" />,
+              icon: <RiDeleteBin2Line className="h-4 w-4" />,
               onClick: () => handleRemoveClick(ds.id),
               variant: 'destructive',
               disabled: isLoading,
@@ -387,7 +385,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
         emptyMessage="暂无数据源，点击右上角添加"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="h-4 w-4" />
+            <RiAddLine className="h-4 w-4" />
             添加数据源
           </Button>
         }
@@ -497,19 +495,19 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                   <div className="flex items-center gap-2 font-medium">
                     {testing && (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                        <RiLoader4Line className="h-4 w-4 animate-spin text-blue-500" />
                         <span className="text-blue-600">正在验证数据库连接...</span>
                       </>
                     )}
                     {testResult?.success && !testing && (
                       <>
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <RiCheckboxCircleLine className="h-4 w-4 text-green-500" />
                         <span className="text-green-600">连接验证成功</span>
                       </>
                     )}
                     {testResult?.success === false && !testing && (
                       <>
-                        <XCircle className="h-4 w-4 text-red-500" />
+                        <RiCloseCircleLine className="h-4 w-4 text-red-500" />
                         <span className="text-red-600">连接验证失败</span>
                       </>
                     )}

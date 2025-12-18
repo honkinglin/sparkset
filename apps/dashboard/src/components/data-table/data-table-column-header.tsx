@@ -1,8 +1,7 @@
 'use client';
+import { RiArrowDownLine, RiArrowUpLine, RiExpandVerticalLine } from '@remixicon/react';
 
 import { Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -30,11 +29,11 @@ export function DataTableColumnHeader<TData, TValue>({
       >
         <span>{title}</span>
         {column.getIsSorted() === 'desc' ? (
-          <ArrowDown className="ml-2 h-4 w-4" />
+          <RiArrowDownLine className="ml-2 h-4 w-4" />
         ) : column.getIsSorted() === 'asc' ? (
-          <ArrowUp className="ml-2 h-4 w-4" />
+          <RiArrowUpLine className="ml-2 h-4 w-4" />
         ) : (
-          <ChevronsUpDown className="ml-2 h-4 w-4" />
+          <RiExpandVerticalLine className="ml-2 h-4 w-4" />
         )}
       </Button>
     </div>

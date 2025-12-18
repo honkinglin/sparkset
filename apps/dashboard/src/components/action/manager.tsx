@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, Loader2, Play, Plus, Sparkles, Trash2, X } from 'lucide-react';
+import { RiEditLine, RiLoader4Line, RiPlayLine, RiAddLine, RiSparkling2Line, RiDeleteBinLine, RiCloseLine } from '@remixicon/react';
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -360,19 +360,19 @@ export default function ActionManager({ initial }: ActionManagerProps) {
           const rowActions: RowAction[] = [
             {
               label: isExecuting ? '执行中...' : '执行',
-              icon: <Play className={`h-4 w-4 ${isExecuting ? 'animate-spin' : ''}`} />,
+              icon: <RiPlayLine className={`h-4 w-4 ${isExecuting ? 'animate-spin' : ''}`} />,
               onClick: () => handleExecuteClick(action.id),
               disabled: isExecuting,
             },
             {
               label: '编辑',
-              icon: <Edit className="h-4 w-4" />,
+              icon: <RiEditLine className="h-4 w-4" />,
               onClick: () => handleOpenDialog(action),
               disabled: isDeleting,
             },
             {
               label: '删除',
-              icon: <Trash2 className="h-4 w-4" />,
+              icon: <RiDeleteBinLine className="h-4 w-4" />,
               onClick: () => {
                 setDeletingId(action.id);
                 setDeleteDialogOpen(true);
@@ -406,7 +406,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         emptyMessage="暂无 Action，点击右上角新建"
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
-            <Plus className="h-4 w-4" />
+            <RiAddLine className="h-4 w-4" />
             新建 Action
           </Button>
         }
@@ -494,12 +494,12 @@ export default function ActionManager({ initial }: ActionManagerProps) {
                       >
                         {generatingSQL ? (
                           <>
-                            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                            <RiLoader4Line className="mr-2 h-3 w-3 animate-spin" />
                             生成中...
                           </>
                         ) : (
                           <>
-                            <Sparkles className="mr-2 h-3 w-3" />
+                            <RiSparkling2Line className="mr-2 h-3 w-3" />
                             AI 生成
                           </>
                         )}
@@ -592,7 +592,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
                   setExecutionError(null);
                 }}
               >
-                <X className="mr-2 h-4 w-4" />
+                <RiCloseLine className="mr-2 h-4 w-4" />
                 清除
               </Button>
             </div>
