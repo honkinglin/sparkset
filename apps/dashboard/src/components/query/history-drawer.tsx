@@ -8,15 +8,7 @@ import {
   RiTimeLine,
 } from '@remixicon/react';
 
-import { useState } from 'react';
-import {
-  ConversationDetailDTO,
-  ConversationDTO,
-  fetchConversation,
-  fetchConversations,
-  MessageDTO,
-} from '../../lib/api';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -24,8 +16,16 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '../ui/sheet';
-import { Skeleton } from '../ui/skeleton';
+} from '@/components/ui/sheet';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  ConversationDetailDTO,
+  ConversationDTO,
+  fetchConversation,
+  fetchConversations,
+  MessageDTO,
+} from '@/lib/api';
+import { useState } from 'react';
 
 interface HistoryDrawerProps {
   trigger?: React.ReactNode;
@@ -194,7 +194,7 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
           </div>
         </SheetHeader>
 
-        <div className="mt-6">
+        <div className="mt-6 px-4">
           {error && (
             <div className="mb-4 p-3 rounded-md bg-destructive/10 text-destructive text-sm">
               {error}

@@ -6,6 +6,7 @@ import {
   aiProviderUpdateSchema,
   setDefaultSchema,
 } from '../validators/aiProvider';
+import { toId } from '../utils/validation.js';
 
 @inject()
 export default class AIProvidersController {
@@ -29,14 +30,21 @@ export default class AIProvidersController {
   }
 
   async destroy({ params, response }: HttpContext) {
-    const id = Number(params.id);
+    const id = toId(params.id);
+    if (!id) {
+      return response.badRequest({ message: 'Invalid provider ID' });
+    }
     await this.service.remove(id);
     return response.noContent();
   }
 
   async setDefault({ params, response }: HttpContext) {
     const parsed = setDefaultSchema.parse(params);
-    await this.service.setDefault(parsed.id);
+    const id = toId(parsed.id);
+    if (!id) {
+      return response.badRequest({ message: 'Invalid provider ID' });
+    }
+    await this.service.setDefault(id);
     return response.ok({ success: true });
   }
 
@@ -44,7 +52,10 @@ export default class AIProvidersController {
    * 测试现有 Provider 的连通性
    */
   async testConnection({ params, response }: HttpContext) {
-    const id = Number(params.id);
+    const id = toId(params.id);
+    if (!id) {
+      return response.badRequest({ message: 'Invalid provider ID' });
+    }
     const result = await this.service.testConnectionById(id);
 
     if (result.success) {
