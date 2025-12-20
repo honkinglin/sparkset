@@ -3,6 +3,7 @@ import {
   RiArrowDownSLine,
   RiArrowRightSLine,
   RiChat3Line,
+  RiCheckboxCircleLine,
   RiPlayLine,
   RiRefreshLine,
   RiTimeLine,
@@ -25,6 +26,7 @@ import {
   fetchConversations,
   MessageDTO,
 } from '@/lib/api';
+import { QueryResponse } from '@/lib/query';
 import { useState } from 'react';
 
 interface HistoryDrawerProps {
@@ -61,42 +63,77 @@ function getConversationTitle(conversation: ConversationDTO): string {
   return `会话 ${conversation.id}`;
 }
 
-interface SimpleMessageItemProps {
-  message: MessageDTO;
+function isQueryResponse(obj: unknown): obj is QueryResponse {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'sql' in obj &&
+    'rows' in obj &&
+    Array.isArray((obj as QueryResponse).rows)
+  );
+}
+
+function getResultRowCount(metadata: unknown): number | null {
+  if (!metadata || typeof metadata !== 'object') {
+    return null;
+  }
+
+  const meta = metadata as Record<string, unknown>;
+  if (isQueryResponse(meta.result)) {
+    return meta.result.rows.length;
+  }
+
+  return null;
+}
+
+interface MessageListProps {
+  messages: MessageDTO[];
   onRerun?: (question: string) => void;
 }
 
-function SimpleMessageItem({ message, onRerun }: SimpleMessageItemProps) {
-  const isUser = message.role === 'user';
+function MessageList({ messages, onRerun }: MessageListProps) {
+  const items: React.ReactNode[] = [];
 
-  return (
-    <div className={`py-1.5 ${isUser ? '' : 'pl-3 border-l-2 border-primary/30'}`}>
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <span className="text-[11px] font-medium text-muted-foreground">
-          {isUser ? '用户' : '助手'}
-        </span>
-        <span className="text-[11px] text-muted-foreground/50">
-          {new Date(message.createdAt).toLocaleTimeString('zh-CN', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </span>
-        {isUser && onRerun && (
-          <button
-            type="button"
-            onClick={() => onRerun(message.content)}
-            className="ml-auto flex items-center gap-1 text-[11px] text-primary hover:text-primary/80 transition-colors"
-          >
-            <RiPlayLine className="h-3 w-3" />
-            重新执行
-          </button>
-        )}
-      </div>
-      <p className="text-xs text-foreground/80 whitespace-pre-wrap wrap-break-word line-clamp-2">
-        {message.content}
-      </p>
-    </div>
-  );
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+    const isUser = message.role === 'user';
+
+    if (isUser) {
+      // 查找下一个助手消息的结果状态
+      let rowCount: number | null = null;
+      if (i + 1 < messages.length && messages[i + 1].role === 'assistant') {
+        rowCount = getResultRowCount(messages[i + 1].metadata);
+      }
+
+      // 只显示有结果状态的用户消息
+      if (rowCount !== null) {
+        items.push(
+          <div key={message.id} className="flex items-center gap-3 py-2 px-0">
+            <RiCheckboxCircleLine className="h-3.5 w-3.5 text-green-500 shrink-0" />
+            <span className="text-xs text-muted-foreground whitespace-nowrap flex-1">
+              {rowCount === 0 ? '无数据' : `返回 ${rowCount} 行数据`}
+            </span>
+            {onRerun && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRerun(message.content);
+                }}
+                className="shrink-0 flex items-center gap-1.5 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded-md transition-colors"
+                title="重新执行"
+              >
+                <RiPlayLine className="h-3.5 w-3.5" />
+                重新执行
+              </button>
+            )}
+          </div>,
+        );
+      }
+    }
+  }
+
+  return <>{items}</>;
 }
 
 export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryDrawerProps) {
@@ -214,18 +251,21 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
               <p className="text-xs text-muted-foreground mt-1">执行查询后会自动保存会话</p>
             </div>
           ) : (
-            <div className="divide-y divide-border">
+            <div className="space-y-1">
               {conversations.map((conversation) => {
                 const isExpanded = expandedId === conversation.id;
                 const isLoadingDetail = loadingDetailId === conversation.id;
                 const detail = details.get(conversation.id);
 
                 return (
-                  <div key={conversation.id}>
+                  <div
+                    key={conversation.id}
+                    className="border border-border/50 rounded-lg overflow-hidden hover:border-border transition-colors"
+                  >
                     {/* 会话头部 - 可点击展开 */}
                     <button
                       type="button"
-                      className="w-full py-2 flex items-center gap-2 hover:bg-muted/30 transition-colors text-left -mx-1 px-1 rounded"
+                      className="w-full py-3 px-3 flex items-center gap-3 hover:bg-muted/30 transition-colors text-left"
                       onClick={() => void handleToggle(conversation.id)}
                     >
                       <div className="shrink-0">
@@ -235,45 +275,44 @@ export function HistoryDrawer({ trigger, open, onOpenChange, onRerun }: HistoryD
                           <RiArrowRightSLine className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
-                      <div className="flex-1 min-w-0 flex items-center gap-2">
-                        <span className="font-medium text-sm truncate flex-1">
-                          {getConversationTitle(conversation)}
-                        </span>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
-                          {detail ? `${detail.messages.length} 条` : ''}
-                        </span>
-                        <span className="text-xs text-muted-foreground/60 whitespace-nowrap">
-                          {formatDate(conversation.createdAt)}
-                        </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-medium text-sm text-foreground truncate flex-1">
+                            {getConversationTitle(conversation)}
+                          </span>
+                          {detail && (
+                            <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                              {detail.messages.length} 条
+                            </span>
+                          )}
+                          <span className="text-[10px] text-muted-foreground/70">
+                            {formatDate(conversation.createdAt)}
+                          </span>
+                        </div>
                       </div>
                     </button>
 
                     {/* 展开的消息列表 */}
                     {isExpanded && (
-                      <div className="pl-6 pb-2">
+                      <div className="px-3 pb-3 pt-2">
                         {isLoadingDetail ? (
-                          <div className="py-2 text-center text-xs text-muted-foreground">
+                          <div className="py-4 text-center text-xs text-muted-foreground">
                             加载中...
                           </div>
                         ) : detail?.messages?.length ? (
-                          <div className="space-y-1">
-                            {detail.messages.map((msg) => (
-                              <SimpleMessageItem
-                                key={msg.id}
-                                message={msg}
-                                onRerun={
-                                  onRerun
-                                    ? (question) => {
-                                        handleOpenChange(false);
-                                        onRerun(question);
-                                      }
-                                    : undefined
-                                }
-                              />
-                            ))}
-                          </div>
+                          <MessageList
+                            messages={detail.messages}
+                            onRerun={
+                              onRerun
+                                ? (question) => {
+                                    handleOpenChange(false);
+                                    onRerun(question);
+                                  }
+                                : undefined
+                            }
+                          />
                         ) : (
-                          <div className="py-2 text-center text-xs text-muted-foreground">
+                          <div className="py-4 text-center text-xs text-muted-foreground">
                             {detail ? '该会话暂无消息' : '加载失败，请重试'}
                           </div>
                         )}
