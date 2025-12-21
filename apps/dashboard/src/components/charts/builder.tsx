@@ -586,10 +586,10 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                   chartType={chartType}
                   data={previewData}
                   config={previewConfig}
-                  className="aspect-video"
+                  className="w-full"
                 />
               ) : (
-                <div className="flex items-center justify-center aspect-video border-2 border-dashed rounded-lg text-muted-foreground">
+                <div className="flex items-center justify-center h-[350px] border-2 border-dashed rounded-lg text-muted-foreground">
                   <div className="text-center">
                     <RiMagicLine className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>配置图表并生成预览</p>

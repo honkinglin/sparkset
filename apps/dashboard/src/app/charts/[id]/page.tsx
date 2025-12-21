@@ -268,7 +268,7 @@ export default function ChartDetailPage({ params }: Props) {
             chartType={chartData.chartType}
             data={previewData}
             config={previewConfig}
-            className="aspect-video"
+            className="w-full"
           />
         </CardContent>
       </Card>

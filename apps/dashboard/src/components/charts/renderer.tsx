@@ -16,7 +16,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from 'recharts';
 import {
   ChartContainer,
@@ -135,35 +134,33 @@ export function ChartRenderer({
 
     return (
       <ChartContainer config={config} className={className}>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart data={chartDataArray} margin={margin} {...restProps}>
-            <Tooltip content={<ChartTooltipContent hideLabel />} />
-            <Legend
-              content={({ payload }) => {
-                if (!payload) return null;
-                // Merge our custom payload with the one from Recharts
-                const mergedPayload = legendPayload.map((item, index) => ({
-                  ...payload[index],
-                  ...item,
-                }));
-                return <ChartLegendContent payload={mergedPayload} />;
-              }}
-            />
-            <Pie
-              data={chartDataArray}
-              dataKey={pieProps.dataKey || valueKey}
-              nameKey={pieProps.nameKey || nameKey}
-              innerRadius={pieProps.innerRadius ?? 60}
-              outerRadius={pieProps.outerRadius ?? 80}
-              paddingAngle={pieProps.paddingAngle ?? 5}
-              cx="50%"
-              cy="50%"
-              isAnimationActive={pieProps.isAnimationActive ?? true}
-            >
-              {cells}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
+        <PieChart data={chartDataArray} margin={margin} {...restProps}>
+          <Tooltip content={<ChartTooltipContent hideLabel />} />
+          <Legend
+            content={({ payload }) => {
+              if (!payload) return null;
+              // Merge our custom payload with the one from Recharts
+              const mergedPayload = legendPayload.map((item, index) => ({
+                ...payload[index],
+                ...item,
+              }));
+              return <ChartLegendContent payload={mergedPayload} />;
+            }}
+          />
+          <Pie
+            data={chartDataArray}
+            dataKey={pieProps.dataKey || valueKey}
+            nameKey={pieProps.nameKey || nameKey}
+            innerRadius={pieProps.innerRadius ?? 60}
+            outerRadius={pieProps.outerRadius ?? 80}
+            paddingAngle={pieProps.paddingAngle ?? 5}
+            cx="50%"
+            cy="50%"
+            isAnimationActive={pieProps.isAnimationActive ?? true}
+          >
+            {cells}
+          </Pie>
+        </PieChart>
       </ChartContainer>
     );
   }
@@ -174,68 +171,66 @@ export function ChartRenderer({
 
   return (
     <ChartContainer config={config} className={className}>
-      <ResponsiveContainer width="100%" height="100%">
-        {chartType === 'line' ? (
-          <LineChart data={chartData} {...rechartsProps}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip content={<ChartTooltipContent />} />
-            <Legend content={<ChartLegendContent />} />
-            {yKeys.map((key, idx) => (
-              <Line
-                key={key}
-                type="monotone"
-                dataKey={key}
-                stroke={config[key]?.color || `hsl(var(--primary))`}
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4 }}
-                name={String(config[key]?.label || key)}
-                {...rechartsProps}
-              />
-            ))}
-          </LineChart>
-        ) : chartType === 'bar' ? (
-          <BarChart data={chartData} {...rechartsProps}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip content={<ChartTooltipContent />} />
-            <Legend content={<ChartLegendContent />} />
-            {yKeys.map((key, idx) => (
-              <Bar
-                key={key}
-                dataKey={key}
-                fill={config[key]?.color || `hsl(var(--primary))`}
-                radius={[4, 4, 0, 0]}
-                name={String(config[key]?.label || key)}
-                {...rechartsProps}
-              />
-            ))}
-          </BarChart>
-        ) : (
-          <AreaChart data={chartData} {...rechartsProps}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip content={<ChartTooltipContent />} />
-            <Legend content={<ChartLegendContent />} />
-            {yKeys.map((key, idx) => (
-              <Area
-                key={key}
-                type="monotone"
-                dataKey={key}
-                fill={config[key]?.color || `hsl(var(--primary))`}
-                stroke={config[key]?.color || `hsl(var(--primary))`}
-                fillOpacity={0.3}
-                name={String(config[key]?.label || key)}
-                {...rechartsProps}
-              />
-            ))}
-          </AreaChart>
-        )}
-      </ResponsiveContainer>
+      {chartType === 'line' ? (
+        <LineChart data={chartData} {...rechartsProps}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+          <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip content={<ChartTooltipContent />} />
+          <Legend content={<ChartLegendContent />} />
+          {yKeys.map((key, idx) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={config[key]?.color || `hsl(var(--primary))`}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
+              name={String(config[key]?.label || key)}
+              {...rechartsProps}
+            />
+          ))}
+        </LineChart>
+      ) : chartType === 'bar' ? (
+        <BarChart data={chartData} {...rechartsProps}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+          <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip content={<ChartTooltipContent />} />
+          <Legend content={<ChartLegendContent />} />
+          {yKeys.map((key, idx) => (
+            <Bar
+              key={key}
+              dataKey={key}
+              fill={config[key]?.color || `hsl(var(--primary))`}
+              radius={[4, 4, 0, 0]}
+              name={String(config[key]?.label || key)}
+              {...rechartsProps}
+            />
+          ))}
+        </BarChart>
+      ) : (
+        <AreaChart data={chartData} {...rechartsProps}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+          <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip content={<ChartTooltipContent />} />
+          <Legend content={<ChartLegendContent />} />
+          {yKeys.map((key, idx) => (
+            <Area
+              key={key}
+              type="monotone"
+              dataKey={key}
+              fill={config[key]?.color || `hsl(var(--primary))`}
+              stroke={config[key]?.color || `hsl(var(--primary))`}
+              fillOpacity={0.3}
+              name={String(config[key]?.label || key)}
+              {...rechartsProps}
+            />
+          ))}
+        </AreaChart>
+      )}
     </ChartContainer>
   );
 }
