@@ -188,7 +188,7 @@ export default function ChartsPage() {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('Created At')} />,
       cell: ({ row }) => (
-        <span className="text-muted-foreground text-xs">
+        <span className="text-muted-foreground">
           {formatDate(row.getValue('createdAt'))}
         </span>
       ),
@@ -344,7 +344,7 @@ export default function ChartsPage() {
         onDeleteSelected={handleDeleteSelected}
         deleteConfirmTitle={t('Delete Chart')}
         deleteConfirmDescription={(count) =>
-          t('Are you sure to delete the selected {count} chart(s)? This action cannot be undone.', {
+          t('Are you sure to delete the selected {count} chart(s)? This action cannot be undone', {
             count,
           })
         }
@@ -355,7 +355,7 @@ export default function ChartsPage() {
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
         title={t('Delete Chart')}
-        description={t('Are you sure to delete chart \"{title}\"? This action cannot be undone.', {
+        description={t(`Are you sure to delete chart '{title}'? This action cannot be undone`, {
           title: chartToDelete?.title || '',
         })}
         onConfirm={confirmDelete}

@@ -343,7 +343,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         accessorKey: 'type',
         header: ({ column }) => <DataTableColumnHeader column={column} title={t('Type')} />,
         cell: ({ row }) => (
-          <Badge variant="outline" className="uppercase text-xs">
+          <Badge variant="outline" className="uppercase">
             {row.getValue('type')}
           </Badge>
         ),
@@ -362,7 +362,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         accessorFn: (row) => row.updatedAt || row.createdAt,
         header: ({ column }) => <DataTableColumnHeader column={column} title={t('Last Updated')} />,
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-xs">
+          <span className="text-muted-foreground">
             {formatDate(row.getValue('updatedAt'))}
           </span>
         ),
@@ -419,7 +419,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         enableRowSelection
         onDeleteSelected={handleDeleteSelected}
         deleteConfirmTitle={t('Delete Action')}
-        deleteConfirmDescription={(count) => t('confirmDeleteSelectedActions', { count })}
+        deleteConfirmDescription={(count) => t('Are you sure to delete the selected {count} Action(s)? This action cannot be undone', { count })}
         emptyMessage={t('No Actions yet, click Create New in the top right')}
         toolbar={
           <Button onClick={() => handleOpenDialog()}>
@@ -571,7 +571,7 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title={t('Confirm Delete')}
-        description={t('confirmDeleteAction')}
+        description={t('Are you sure to delete this Action? This action cannot be undone')}
         confirmText={t('Delete')}
         cancelText={t('Cancel')}
         onConfirm={handleConfirmDelete}

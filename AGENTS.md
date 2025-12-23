@@ -240,6 +240,7 @@ When multiple valid approaches exist, choose based on:
 - Delete code just to make compilation pass
 - Use TODO or placeholders to bypass implementation
 - Modify correct business logic to match wrong code
+- **Make syntax errors** - Every change must be syntactically correct
 
 **ALWAYS**:
 
@@ -250,6 +251,69 @@ When multiple valid approaches exist, choose based on:
 - Fix compilation errors from root cause
 - Understand why errors occur before fixing
 - Ensure implementation is complete and functional
+- **Verify syntax before applying changes** - Check that your edits will produce valid code
+
+### Syntax Error Prevention
+
+**CRITICAL RULE**: Any modification must not cause syntax errors.
+
+**Before applying any change, verify**:
+
+1. **String literals**: Are quotes properly matched and escaped?
+   - Single quotes in code: `'text'`
+   - Double quotes in JSON: `"key": "value"`
+   - Backticks for template literals: `` `text ${variable}` ``
+
+2. **Parentheses/Brackets**: Are all opening/closing pairs matched?
+   - `()`, `{}`, `[]`, `<>` must all be closed
+
+3. **Template strings**: When using backticks with variables:
+   - `` t(`text ${variable}`) `` - correct
+   - `t('text ${variable}')` - wrong (won't interpolate)
+
+4. **JSON format**: JSON files must be valid
+   - No trailing commas on last items
+   - All strings properly escaped
+   - Valid JSON structure
+
+**If you're unsure about syntax**:
+- Test the change in isolation first
+- Use a linter or syntax checker
+- Ask for clarification rather than risking errors
+
+**Example of what NOT to do**:
+```tsx
+// ❌ Wrong - syntax error
+t('Are you sure to delete "{name}"?', { name: 'test' })
+// Result: Missing closing quote, causes parse error
+
+// ❌ Wrong - JSON syntax error
+{
+  "key": "value with "quotes""
+}
+// Result: Unescaped quotes in JSON
+
+// ❌ Wrong - mismatched parentheses
+t('text', {
+  name: 'test'
+// Missing closing )
+```
+
+**Example of correct approach**:
+```tsx
+// ✅ Correct
+t(`Are you sure to delete '{name}'?`, { name: 'test' })
+
+// ✅ Correct JSON
+{
+  "key": "value with \"quotes\""
+}
+
+// ✅ Correct - all parentheses matched
+t('text', {
+  name: 'test'
+})
+```
 
 ---
 
@@ -498,3 +562,30 @@ Before committing i18n changes:
 - [ ] Both `en.json` and `zh-CN.json` have matching keys
 - [ ] Components use `useTranslations` with proper namespaces
 - [ ] No hardcoded text in components (except code comments)
+
+### Quote Handling Rules
+
+**IMPORTANT**: When translation keys contain quotes:
+
+1. **In language files**: Use single quotes instead of double quotes
+   - ❌ **Wrong**: `"Dataset \"{name}\" created": "Dataset \"{name}\" created"`
+   - ✅ **Correct**: `"Dataset '{name}' created": "Dataset '{name}' created"`
+
+2. **In code**: Use backticks for the t() function
+   - ❌ **Wrong**: `t('Dataset "{name}" created', { name: 'test' })`
+   - ✅ **Correct**: `t(\`Dataset '{name}' created\`, { name: 'test' })`
+
+3. **Why**: This avoids escaping issues and makes the code cleaner
+
+**Example**:
+```tsx
+// Language file
+{
+  "Dataset '{name}' created": "Dataset '{name}' created",
+  "Are you sure to delete '{name}'? This cannot be undone": "Are you sure to delete '{name}'? This cannot be undone"
+}
+
+// Code
+t(\`Dataset '{name}' created\`, { name: dataset.name })
+t(\`Are you sure to delete '{name}'? This cannot be undone\`, { name: dataset.name })
+```

@@ -301,7 +301,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
         accessorKey: 'type',
         header: ({ column }) => <DataTableColumnHeader column={column} title={t('Type')} />,
         cell: ({ row }) => (
-          <Badge variant="outline" className="uppercase text-xs">
+          <Badge variant="outline" className="uppercase">
             {row.getValue('type')}
           </Badge>
         ),
@@ -326,7 +326,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
         accessorKey: 'lastSyncAt',
         header: ({ column }) => <DataTableColumnHeader column={column} title={t('Last Synced')} />,
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-xs">
+          <span className="text-muted-foreground">
             {formatDate(row.getValue('lastSyncAt'))}
           </span>
         ),

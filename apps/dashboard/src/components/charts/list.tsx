@@ -223,7 +223,7 @@ export function ChartList({ charts, datasets, onRefresh }: ChartListProps) {
         title={t('Delete Chart')}
         description={
           chartToDelete
-            ? t('Are you sure to delete chart "{title}"? This action cannot be undone.', {
+            ? t(`Are you sure to delete chart '{title}'? This action cannot be undone`, {
                 title: chartToDelete.title,
               })
             : t('Are you sure to delete this chart?')

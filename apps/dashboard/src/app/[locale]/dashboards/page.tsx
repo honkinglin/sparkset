@@ -89,7 +89,7 @@ export default function DashboardsPage() {
         return (
           <Button
             variant="link"
-            className="h-auto p-0 text-foreground font-medium"
+            className="h-auto p-0 text-primary font-medium"
             onClick={() => router.push(`/dashboards/${dashboard.id}`)}
           >
             {row.getValue('title')}
@@ -102,7 +102,7 @@ export default function DashboardsPage() {
       accessorKey: 'description',
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('Description')} />,
       cell: ({ row }) => (
-        <span className="text-xs text-muted-foreground">{row.getValue('description') || '-'}</span>
+        <span className="text-muted-foreground">{row.getValue('description') || '-'}</span>
       ),
       size: 250,
     },
@@ -110,7 +110,7 @@ export default function DashboardsPage() {
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('Created At')} />,
       cell: ({ row }) => (
-        <span className="text-muted-foreground text-xs">
+        <span className="text-muted-foreground">
           {formatDate(row.getValue('createdAt'))}
         </span>
       ),
@@ -212,7 +212,7 @@ export default function DashboardsPage() {
         deleteConfirmTitle={t('Delete Dashboard')}
         deleteConfirmDescription={(count) =>
           t(
-            'Are you sure to delete the selected {count} dashboard(s)? This action cannot be undone.',
+            'Are you sure to delete the selected {count} dashboard(s)? This action cannot be undone',
             { count },
           )
         }
@@ -223,7 +223,7 @@ export default function DashboardsPage() {
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
         title={t('Delete Dashboard')}
-        description={t('Are you sure to delete this dashboard? This action cannot be undone.')}
+        description={t('Are you sure to delete this dashboard? This action cannot be undone')}
         onConfirm={confirmDelete}
         confirmText={t('Delete')}
         cancelText={t('Cancel')}

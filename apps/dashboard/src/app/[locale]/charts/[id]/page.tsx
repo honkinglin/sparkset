@@ -282,7 +282,7 @@ export default function ChartDetailPage({ params }: Props) {
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
         title={t('Delete Chart')}
-        description={t('Are you sure to delete chart "{title}"? This action cannot be undone.', {
+        description={t(`Are you sure to delete chart '{title}'? This action cannot be undone`, {
           title: chartData.title,
         })}
         confirmText={t('Delete')}

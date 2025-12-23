@@ -348,7 +348,7 @@ export default function DatasetDetailPage() {
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
         title={t('Delete Dataset')}
-        description={t('Are you sure to delete "{name}"? This cannot be undone.', {
+        description={t(`Are you sure to delete '{name}'? This cannot be undone`, {
           name: dataset.name,
         })}
         onConfirm={handleDelete}
