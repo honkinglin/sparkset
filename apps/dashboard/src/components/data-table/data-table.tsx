@@ -279,7 +279,7 @@ export function DataTable<TData, TValue>({
                   ? deleteConfirmDescription(selectedRows.length)
                   : deleteConfirmDescription
                 : t(
-                    'Are you sure to delete the selected {count} datasource(s)? This action cannot be undone.',
+                    'Are you sure to delete the selected {count} datasource(s)? This action cannot be undone',
                     { count: selectedRows.length },
                   )}
             </AlertDialogDescription>

@@ -16,7 +16,6 @@ import {
   RiAddLine,
   RiArrowLeftLine,
   RiDeleteBinLine,
-  RiEyeOffLine,
   RiPlayLine,
   RiSaveLine,
 } from '@remixicon/react';
@@ -157,14 +156,6 @@ export default function DatasetDetailPage() {
     }
   };
 
-  const handleToggleQueryResult = () => {
-    if (queryResult) {
-      setQueryResult(null);
-    } else {
-      handleExecuteQuery();
-    }
-  };
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -260,19 +251,13 @@ export default function DatasetDetailPage() {
                 className="font-mono text-xs"
               />
               <div className="flex gap-2 mt-4">
-                <Button size="sm" onClick={handleToggleQueryResult} disabled={queryLoading}>
+                <Button size="sm" onClick={handleExecuteQuery} disabled={queryLoading}>
                   {queryLoading ? (
                     <RiPlayLine className="h-4 w-4 mr-2 animate-spin" />
-                  ) : queryResult ? (
-                    <RiEyeOffLine className="h-4 w-4 mr-2" />
                   ) : (
                     <RiPlayLine className="h-4 w-4 mr-2" />
                   )}
-                  {queryLoading
-                    ? t('Executing…')
-                    : queryResult
-                      ? t('Hide Results')
-                      : t('Execute Query')}
+                  {queryLoading ? t('Executing…') : t('Execute Query')}
                 </Button>
                 <Button
                   variant="outline"
@@ -284,10 +269,7 @@ export default function DatasetDetailPage() {
                 </Button>
               </div>
               {queryResult && (
-                <div className="mt-4 space-y-2">
-                  <div className="text-sm text-muted-foreground">
-                    {t('{count} rows', { count: queryResult.rowCount })}
-                  </div>
+                <div className="mt-4 space-y-2 border-t pt-4">
                   <ResultTable rows={queryResult.rows} />
                 </div>
               )}

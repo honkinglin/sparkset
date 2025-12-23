@@ -7,10 +7,7 @@ export const metadata: Metadata = {
   description: 'AI Operations Assistant',
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html suppressHydrationWarning>
-    <body>{children}</body>
-  </html>
-);
-
-export default RootLayout;
+// Root layout for next-intl: HTML and body are rendered in [locale]/layout.tsx
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return children;
+}
