@@ -1,6 +1,7 @@
 'use client';
 
 import { AddWidgetDialog } from '@/components/dashboard/add-widget-dialog';
+import { DashboardEmptyState } from '@/components/dashboard/empty-state';
 import { EditDialog } from '@/components/dashboard/edit-dialog';
 import { EditTitleDialog } from '@/components/dashboard/edit-title-dialog';
 import { DashboardGrid } from '@/components/dashboard/grid';
@@ -223,16 +224,20 @@ export default function DashboardDetailPage() {
       />
 
       <div className="min-h-[600px]">
-        <DashboardGrid
-          widgets={widgets}
-          widgetRefreshKeys={widgetRefreshKeys}
-          charts={charts}
-          datasets={datasets}
-          onLayoutChange={handleLayoutChange}
-          onRefresh={handleRefreshWidget}
-          onEdit={handleEditWidget}
-          onRemove={handleRemoveWidget}
-        />
+        {widgets.length === 0 ? (
+          <DashboardEmptyState onAddWidget={() => setAddWidgetOpen(true)} />
+        ) : (
+          <DashboardGrid
+            widgets={widgets}
+            widgetRefreshKeys={widgetRefreshKeys}
+            charts={charts}
+            datasets={datasets}
+            onLayoutChange={handleLayoutChange}
+            onRefresh={handleRefreshWidget}
+            onEdit={handleEditWidget}
+            onRemove={handleRemoveWidget}
+          />
+        )}
       </div>
 
       <AddWidgetDialog

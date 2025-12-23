@@ -293,6 +293,8 @@
   "Chart updated successfully": "Chart updated successfully",
   "Failed to update chart": "Failed to update chart",
   "Add Widget": "Add Widget",
+  "No Widgets": "No Widgets",
+  "Add your first widget to start visualizing data": "Add your first widget to start visualizing data",
   "Select widget(s) to add (multiple selection supported)": "Select widget(s) to add (multiple selection supported)",
   "Chart": "Chart",
   "Text": "Text",

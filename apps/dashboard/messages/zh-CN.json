@@ -292,6 +292,8 @@
   "Chart updated successfully": "图表更新成功",
   "Failed to update chart": "更新图表失败",
   "Add Widget": "添加 Widget",
+  "No Widgets": "暂无 Widget",
+  "Add your first widget to start visualizing data": "添加您的第一个 Widget 来开始数据可视化",
   "Select widget(s) to add (multiple selection supported)": "选择要添加的 Widget（支持多选）",
   "Chart": "图表",
   "Text": "文本",
