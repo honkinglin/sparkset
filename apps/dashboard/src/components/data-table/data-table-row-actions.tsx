@@ -24,7 +24,7 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ actions }: DataTableRowActionsProps) {
-  const t = useTranslations('DataTableRowActions');
+  const t = useTranslations();
   const regularActions = actions.filter((a) => a.variant !== 'destructive');
   const destructiveActions = actions.filter((a) => a.variant === 'destructive');
 
@@ -36,7 +36,7 @@ export function DataTableRowActions({ actions }: DataTableRowActionsProps) {
             size="icon"
             variant="ghost"
             className="h-8 w-8 shadow-none text-muted-foreground/40 hover:text-muted-foreground"
-            aria-label={t('menu')}
+            aria-label={t('Actions menu')}
           >
             <RiMore2Line className="h-5 w-5" aria-hidden="true" />
           </Button>
