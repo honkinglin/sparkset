@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  RiArrowLeftLine,
   RiCloseLine,
   RiDeleteBinLine,
   RiEdit2Line,
@@ -11,7 +10,6 @@ import {
   RiSparkling2Line,
 } from '@remixicon/react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -29,9 +27,10 @@ import {
   updateTableMetadata,
 } from '../../lib/api';
 import { cn } from '../../lib/utils';
+import { PageHeader } from '../page-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { Button, buttonVariants } from '../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import {
   Dialog,
   DialogContent,
@@ -289,53 +288,44 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/">
-            <RiArrowLeftLine className="h-4 w-4" />
-            {t('Back to list')}
-          </Link>
-        </Button>
-      </div>
+      <PageHeader
+        title={t('Datasource Info')}
+        description={t('Basic connection information')}
+        backButton="/"
+        action={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleOpenEditDialog}
+              disabled={syncing || deleting || generating}
+            >
+              <RiEditLine className="h-4 w-4" />
+              {t('Edit')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSync}
+              disabled={syncing || deleting || generating}
+            >
+              <RiRefreshLine className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
+              {syncing ? t('Syncing') : t('Sync')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDelete}
+              disabled={syncing || deleting || generating}
+            >
+              <RiDeleteBinLine className="h-4 w-4" />
+              {deleting ? t('Deleting') : t('Delete')}
+            </Button>
+          </div>
+        }
+      />
 
       <Card className="shadow-none">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>{t('Datasource Info')}</CardTitle>
-              <CardDescription>{t('Basic connection information')}</CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleOpenEditDialog}
-                disabled={syncing || deleting || generating}
-              >
-                <RiEditLine className="h-4 w-4" />
-                {t('Edit')}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSync}
-                disabled={syncing || deleting || generating}
-              >
-                <RiRefreshLine className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
-                {syncing ? t('Syncing') : t('Sync')}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDelete}
-                disabled={syncing || deleting || generating}
-              >
-                <RiDeleteBinLine className="h-4 w-4" />
-                {deleting ? t('Deleting') : t('Delete')}
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
             <div>

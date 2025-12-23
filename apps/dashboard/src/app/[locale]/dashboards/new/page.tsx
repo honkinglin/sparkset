@@ -1,6 +1,5 @@
 'use client';
 
-import { RiArrowLeftLine } from '@remixicon/react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -48,12 +47,7 @@ export default function NewDashboardPage() {
       <PageHeader
         title={t('Create Dashboard')}
         description={t('Create a new data visualization dashboard')}
-        action={
-          <Button variant="outline" onClick={() => router.back()}>
-            <RiArrowLeftLine className="h-4 w-4" />
-            {t('Back')}
-          </Button>
-        }
+        backButton={{ useRouter: true }}
       />
 
       <Card>

@@ -13,7 +13,7 @@ import { dashboardsApi } from '@/lib/api/dashboards';
 import { datasetsApi } from '@/lib/api/datasets';
 import type { Chart, Dataset } from '@/types/chart';
 import type { Dashboard, DashboardWidget, TextWidgetConfig } from '@/types/dashboard';
-import { RiAddLine, RiArrowLeftLine } from '@remixicon/react';
+import { RiAddLine } from '@remixicon/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -209,17 +209,12 @@ export default function DashboardDetailPage() {
       <PageHeader
         title={dashboard.title}
         description={dashboard.description || ''}
+        backButton={{ useRouter: true }}
         action={
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => router.back()}>
-              <RiArrowLeftLine className="h-4 w-4" />
-              {t('Back')}
-            </Button>
-            <Button onClick={() => setAddWidgetOpen(true)}>
-              <RiAddLine className="h-4 w-4" />
-              {t('Add Widget')}
-            </Button>
-          </div>
+          <Button onClick={() => setAddWidgetOpen(true)}>
+            <RiAddLine className="h-4 w-4" />
+            {t('Add Widget')}
+          </Button>
         }
       />
 

@@ -4,9 +4,8 @@ import { ChartBuilderClient } from '@/components/charts/builder-client';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import type { ChartSpec, Dataset } from '@/types/chart';
-import { RiArrowLeftLine, RiSaveLine } from '@remixicon/react';
+import { RiSaveLine } from '@remixicon/react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import * as React from 'react';
 import { useCallback, useRef, useState } from 'react';
 
@@ -90,32 +89,23 @@ export function ChartFormWrapper({
       ? t('Create a new data visualization chart')
       : t('Modify chart configuration');
   const backLink = mode === 'create' ? '/charts' : `/charts/${chartId}`;
-  const backLabel = mode === 'create' ? t('Back to list') : t('Back to details');
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={title}
         description={description}
+        backButton={backLink}
         action={
-          <div className="flex gap-2">
-            {/* Both create and edit modes show save button in header */}
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={isSaving || !isFormValid}
-              title={!isFormValid ? t('Please fill in complete chart configuration') : ''}
-            >
-              <RiSaveLine className="h-4 w-4" />
-              {isSaving ? t('Saving') : t('Save')}
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <Link href={backLink}>
-                <RiArrowLeftLine className="h-4 w-4" />
-                {backLabel}
-              </Link>
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={isSaving || !isFormValid}
+            title={!isFormValid ? t('Please fill in complete chart configuration') : ''}
+          >
+            <RiSaveLine className="h-4 w-4" />
+            {isSaving ? t('Saving') : t('Save')}
+          </Button>
         }
       />
 

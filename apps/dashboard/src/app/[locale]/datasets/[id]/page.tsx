@@ -12,13 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from '@/i18n/routing';
 import { datasetsApi } from '@/lib/api/datasets';
 import type { Dataset, ResultSet } from '@/types/chart';
-import {
-  RiAddLine,
-  RiArrowLeftLine,
-  RiDeleteBinLine,
-  RiPlayLine,
-  RiSaveLine,
-} from '@remixicon/react';
+import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiSaveLine } from '@remixicon/react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -191,6 +185,7 @@ export default function DatasetDetailPage() {
       {/* Page Header */}
       <PageHeader
         title={name}
+        backButton="/datasets"
         action={
           <div className="flex gap-2">
             <Button size="sm" onClick={handleSave} disabled={!hasChanges() || saving}>
@@ -205,10 +200,6 @@ export default function DatasetDetailPage() {
             >
               <RiSaveLine className="h-4 w-4" />
               {saving ? t('Saving…') : t('Save and Query')}
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => router.push('/datasets')}>
-              <RiArrowLeftLine className="h-4 w-4" />
-              {t('Back')}
             </Button>
             <Button variant="destructive" size="sm" onClick={() => setDeleteConfirmOpen(true)}>
               <RiDeleteBinLine className="h-4 w-4" />

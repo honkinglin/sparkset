@@ -211,14 +211,9 @@ export default function ChartDetailPage({ params }: Props) {
     <div className="space-y-6">
       <PageHeader
         title={chartData.title}
+        backButton="/charts"
         action={
           <div className="flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/charts">
-                <RiArrowLeftLine className="h-4 w-4" />
-                {t('Back')}
-              </Link>
-            </Button>
             <Button variant="outline" asChild>
               <Link href={`/charts/${id}/edit`}>
                 <RiEditLine className="h-4 w-4" />
