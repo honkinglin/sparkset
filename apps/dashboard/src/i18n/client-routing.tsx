@@ -64,9 +64,15 @@ export function useRouter() {
       const hrefWithLocale = href.startsWith('/') ? addLocaleToPathname(href, currentLocale) : href;
       return router.replace(hrefWithLocale);
     },
-    back: router.back,
-    forward: router.forward,
-    refresh: router.refresh,
+    back: () => {
+      router.back();
+    },
+    forward: () => {
+      router.forward();
+    },
+    refresh: () => {
+      router.refresh();
+    },
   };
 }
 

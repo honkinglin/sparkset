@@ -10,7 +10,7 @@ export interface Dataset {
   name: string;
   description?: string;
   querySql: string;
-  schemaJson: Array<{ name: string; type: string }>;
+  schemaJson: { name: string; type: string }[];
   schemaHash: string;
   ownerId: number;
   createdAt: string;
@@ -34,16 +34,16 @@ export interface ChartSpec {
   chartType: 'line' | 'bar' | 'area' | 'pie' | 'table';
   encoding: {
     x?: { field: string; type: string; label?: string };
-    y?: Array<{
+    y?: {
       field: string;
       type: 'quantitative';
       agg: 'sum' | 'avg' | 'min' | 'max' | 'count';
       label?: string;
       color?: string;
-    }>;
+    }[];
     series?: { field: string; type: string };
   };
-  transform?: Array<{ op: string; [key: string]: unknown }>;
+  transform?: { op: string; [key: string]: unknown }[];
   style?: {
     showLegend?: boolean;
     showTooltip?: boolean;
@@ -63,17 +63,18 @@ export interface ChartRenderResult {
   warnings?: string[];
 }
 
-export interface ChartConfig {
-  [key: string]: {
+export type ChartConfig = Record<
+  string,
+  {
     label: string;
     color?: string;
     theme?: { light: string; dark: string };
-  };
-}
+  }
+>;
 
 export interface ResultSet {
   schema: {
-    columns: Array<{ name: string; type: string }>;
+    columns: { name: string; type: string }[];
   };
   rows: Record<string, unknown>[];
   rowCount: number;

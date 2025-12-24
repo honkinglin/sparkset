@@ -30,9 +30,23 @@ export function ResultTable({ rows }: ResultTableProps) {
       header: ({ column }) => <DataTableColumnHeader column={column} title={key} />,
       cell: ({ getValue }) => {
         const value = getValue();
+        let displayStr: string;
+        if (value === null || value === undefined) {
+          displayStr = '';
+        } else if (typeof value === 'object') {
+          displayStr = JSON.stringify(value);
+        } else if (
+          typeof value === 'string' ||
+          typeof value === 'number' ||
+          typeof value === 'boolean'
+        ) {
+          displayStr = String(value);
+        } else {
+          displayStr = JSON.stringify(value);
+        }
         return (
-          <div className="max-w-full truncate" title={String(value ?? '')}>
-            {String(value ?? '')}
+          <div className="max-w-full truncate" title={displayStr}>
+            {displayStr}
           </div>
         );
       },

@@ -354,7 +354,9 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
             {
               label: isLoading ? t('Syncing') : t('Sync'),
               icon: <RiRefreshLine className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />,
-              onClick: () => handleSync(ds.id),
+              onClick: () => {
+                void handleSync(ds.id);
+              },
               disabled: isLoading,
             },
             {
@@ -382,7 +384,9 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
         searchKey="name"
         searchPlaceholder={t('Search datasource')}
         enableRowSelection
-        onDeleteSelected={handleDeleteSelected}
+        onDeleteSelected={() => {
+          void handleDeleteSelected();
+        }}
         deleteConfirmTitle={t('Delete Datasource')}
         deleteConfirmDescription={(count) =>
           t(
@@ -413,7 +417,11 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                   )}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+          >
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">{t('Name')}</Label>
@@ -555,7 +563,9 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={handleTestConnection}
+                      onClick={() => {
+                        void handleTestConnection();
+                      }}
                       disabled={!canTest || testing}
                       className="w-full sm:w-auto"
                       title={t('Verify Connection')}

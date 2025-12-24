@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { type Locale, locales } from './config';
+import { type Locale } from './config';
 
 const dictionaries = {
   en: () => import('../../messages/en.json').then((module) => module.default),
@@ -11,6 +11,7 @@ export const hasLocale = (locale: string): locale is Locale => locale in diction
 
 export const getDictionary = async (locale: Locale): Promise<Record<string, string>> => {
   if (!hasLocale(locale)) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`Locale "${locale}" is not supported`);
   }
   return dictionaries[locale]();

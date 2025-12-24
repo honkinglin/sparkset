@@ -16,8 +16,9 @@ async function request<T = unknown>(path: string, init: RequestInit = {}): Promi
   const json = text ? (JSON.parse(text) as unknown) : undefined;
   if (!res.ok) {
     const message =
-      typeof json === 'object' && json && 'message' in (json as any)
-        ? (json as any).message
+      typeof json === 'object' && json && 'message' in json
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (json as any).message
         : `API error ${res.status}`;
     throw new Error(message);
   }
@@ -200,14 +201,14 @@ export async function executeAction(id: number, parameters?: unknown) {
   });
 }
 
-export type CreateActionInput = {
+export interface CreateActionInput {
   name: string;
   description?: string;
   type: string;
   payload: unknown;
   parameters?: unknown;
   inputSchema?: ActionInputSchema;
-};
+}
 
 export type UpdateActionInput = Partial<CreateActionInput> & {
   id: number;

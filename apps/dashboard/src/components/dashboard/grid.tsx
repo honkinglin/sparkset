@@ -16,9 +16,7 @@ interface DashboardGridProps {
   widgetRefreshKeys?: Map<number, number>; // widgetId -> refreshKey
   charts?: Chart[]; // 图表列表，用于获取标题
   datasets?: Dataset[]; // 数据集列表，用于获取标题
-  onLayoutChange?: (
-    layouts: Array<{ id: number; x: number; y: number; w: number; h: number }>,
-  ) => void;
+  onLayoutChange?: (layouts: { id: number; x: number; y: number; w: number; h: number }[]) => void;
   onRefresh?: (widgetId: number) => void;
   onEdit?: (widget: DashboardWidget) => void;
   onRemove?: (widgetId: number) => void;
@@ -89,10 +87,10 @@ export function DashboardGrid({
           })
           .map((layoutItem) => ({
             id: Number(layoutItem.i),
-            x: layoutItem.x!,
-            y: layoutItem.y!,
-            w: layoutItem.w!,
-            h: layoutItem.h!,
+            x: layoutItem.x,
+            y: layoutItem.y,
+            w: layoutItem.w,
+            h: layoutItem.h,
           }));
         onLayoutChange(layouts);
       }

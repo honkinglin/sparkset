@@ -10,7 +10,7 @@ export interface CreateDatasetDto {
   name: string;
   description?: string;
   querySql: string;
-  schemaJson: Array<{ name: string; type: string }>;
+  schemaJson: { name: string; type: string }[];
 }
 
 export const datasetsApi = {

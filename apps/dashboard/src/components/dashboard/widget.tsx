@@ -42,10 +42,13 @@ export function Widget({
   const renderContent = () => {
     switch (widget.type) {
       case 'chart':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <ChartWidget config={widget.config as any} refreshKey={refreshKey} />;
       case 'dataset':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <DatasetWidget config={widget.config as any} refreshKey={refreshKey} />;
       case 'text':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <TextWidget config={widget.config as any} />;
       default:
         return <div className="p-4 text-muted-foreground">未知的 Widget 类型</div>;
