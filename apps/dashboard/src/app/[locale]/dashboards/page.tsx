@@ -27,7 +27,7 @@ export default function DashboardsPage() {
   const [dashboardToDelete, setDashboardToDelete] = useState<Dashboard | null>(null);
 
   useEffect(() => {
-    loadDashboards();
+    void loadDashboards();
   }, []);
 
   const loadDashboards = async () => {
@@ -35,7 +35,7 @@ export default function DashboardsPage() {
       setLoading(true);
       const result = await dashboardsApi.list();
       setDashboards(result.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load dashboards'));
     } finally {
       setLoading(false);
@@ -53,8 +53,8 @@ export default function DashboardsPage() {
     try {
       await dashboardsApi.delete(dashboardToDelete.id);
       toast.success(t('Dashboard deleted'));
-      loadDashboards();
-    } catch (error) {
+      void loadDashboards();
+    } catch {
       toast.error(t('Failed to delete dashboard'));
     } finally {
       setDeleteConfirmOpen(false);
@@ -66,7 +66,7 @@ export default function DashboardsPage() {
     for (const row of rows) {
       try {
         await dashboardsApi.delete(row.id);
-      } catch (err) {
+      } catch {
         toast.error(`${t('Delete failed')}: ${row.title}`);
       }
     }

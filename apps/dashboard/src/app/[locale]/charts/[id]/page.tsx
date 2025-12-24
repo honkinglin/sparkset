@@ -9,7 +9,7 @@ import type { ChartConfig } from '@/components/ui/chart';
 import { Link, useRouter } from '@/i18n/routing';
 import { chartsApi } from '@/lib/api/charts';
 import { datasetsApi } from '@/lib/api/datasets';
-import type { ChartSpec, Dataset } from '@/types/chart';
+import type { ChartSpec } from '@/types/chart';
 import { RiArrowLeftLine, RiDeleteBin2Line, RiEditLine, RiRefreshLine } from '@remixicon/react';
 import { useTranslations } from '@/i18n/use-translations';
 import { use, useEffect, useState } from 'react';
@@ -123,8 +123,8 @@ export default function ChartDetailPage({ params }: Props) {
   const id = Number(unwrappedParams.id);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [chartData, setChartData] = useState<any>(null);
-  const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [previewData, setPreviewData] = useState<unknown[]>([]);
   const [previewConfig, setPreviewConfig] = useState<ChartConfig>({});
   const [error, setError] = useState<string | null>(null);
@@ -133,12 +133,8 @@ export default function ChartDetailPage({ params }: Props) {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [chartResult, datasetsResult] = await Promise.all([
-          chartsApi.get(id),
-          datasetsApi.list(),
-        ]);
+        const chartResult = await chartsApi.get(id);
         setChartData(chartResult);
-        setDatasets(datasetsResult.items);
 
         // Generate preview using same logic as ChartBuilder
         if (chartResult.specJson && chartResult.datasetId) {
@@ -153,12 +149,12 @@ export default function ChartDetailPage({ params }: Props) {
           setPreviewData(transformedData);
           setPreviewConfig(config);
         }
-      } catch (err) {
+      } catch {
         setError(t('Chart not found or inaccessible'));
       }
     };
 
-    loadData();
+    void loadData();
   }, [id, t]);
 
   const handleDelete = async () => {
@@ -167,7 +163,7 @@ export default function ChartDetailPage({ params }: Props) {
       await chartsApi.delete(id);
       toast.success(t('Chart deleted'));
       router.push('/charts');
-    } catch (error) {
+    } catch {
       toast.error(t('Delete failed'));
     } finally {
       setIsDeleting(false);

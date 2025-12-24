@@ -46,11 +46,12 @@ export default function DashboardDetailPage() {
       ]);
       setDashboard(data);
       // 从关联数据中获取 widgets
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const widgetsData = (data as any).widgets || [];
       setWidgets(widgetsData);
       setCharts(chartsResult.items);
       setDatasets(datasetsResult.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load dashboard'));
       router.push('/dashboards');
     } finally {
@@ -60,17 +61,16 @@ export default function DashboardDetailPage() {
 
   useEffect(() => {
     if (dashboardId) {
-      loadDashboard();
+      void loadDashboard();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dashboardId]); // 只在 dashboardId 变化时重新加载
+  }, [dashboardId, loadDashboard]); // 只在 dashboardId 变化时重新加载
 
   // 防抖处理布局变更
   const debouncedLayoutChange = useDebounceCallback(
-    async (layouts: Array<{ id: number; x: number; y: number; w: number; h: number }>) => {
+    async (layouts: { id: number; x: number; y: number; w: number; h: number }[]) => {
       try {
         await dashboardsApi.updateLayout(dashboardId, { layouts });
-      } catch (error) {
+      } catch {
         toast.error(t('Failed to save layout'));
       }
     },
@@ -78,22 +78,23 @@ export default function DashboardDetailPage() {
   );
 
   const handleLayoutChange = useCallback(
-    (layouts: Array<{ id: number; x: number; y: number; w: number; h: number }>) => {
+    (layouts: { id: number; x: number; y: number; w: number; h: number }[]) => {
       debouncedLayoutChange(layouts);
     },
     [debouncedLayoutChange],
   );
 
   const handleAddWidget = async (
-    widgetsData: Array<{
+    widgetsData: {
       title: string;
       type: 'chart' | 'dataset' | 'text';
       x: number;
       y: number;
       w: number;
       h: number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       config: any;
-    }>,
+    }[],
   ) => {
     try {
       // 计算新 widget 的位置：找到所有现有 widgets 的最底部，然后放在底部下方
@@ -126,7 +127,7 @@ export default function DashboardDetailPage() {
 
       setWidgets((prev) => [...prev, ...newWidgets]);
       toast.success(t('Successfully added {count} widget(s)', { count: newWidgets.length }));
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to add widget'));
     }
   };
@@ -140,7 +141,7 @@ export default function DashboardDetailPage() {
         newMap.set(widgetId, (prev.get(widgetId) || 0) + 1);
         return newMap;
       });
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to refresh widget'));
     }
   };
@@ -166,7 +167,7 @@ export default function DashboardDetailPage() {
       await dashboardsApi.updateWidget(dashboardId, widgetId, { config });
       setWidgets((prev) => prev.map((w) => (w.id === widgetId ? { ...w, config: config } : w)));
       toast.success(t('Saved successfully'));
-    } catch (error) {
+    } catch {
       toast.error(t('Save failed'));
     }
   };
@@ -176,7 +177,7 @@ export default function DashboardDetailPage() {
       await dashboardsApi.updateWidget(dashboardId, widgetId, { title });
       setWidgets((prev) => prev.map((w) => (w.id === widgetId ? { ...w, title } : w)));
       toast.success(t('Title saved successfully'));
-    } catch (error) {
+    } catch {
       toast.error(t('Save failed'));
     }
   };
@@ -186,7 +187,7 @@ export default function DashboardDetailPage() {
       await dashboardsApi.deleteWidget(dashboardId, widgetId);
       setWidgets((prev) => prev.filter((w) => w.id !== widgetId));
       toast.success(t('Widget removed'));
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to remove widget'));
     }
   };

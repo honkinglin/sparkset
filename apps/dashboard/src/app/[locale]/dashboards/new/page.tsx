@@ -35,7 +35,7 @@ export default function NewDashboardPage() {
       });
       toast.success(t('Dashboard created successfully'));
       router.push(`/dashboards/${dashboard.id}`);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to create dashboard'));
     } finally {
       setLoading(false);
@@ -80,7 +80,13 @@ export default function NewDashboardPage() {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  router.back();
+                }}
+              >
                 {t('Cancel')}
               </Button>
               <Button type="submit" disabled={loading}>

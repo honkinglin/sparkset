@@ -3,7 +3,7 @@ import { datasetsApi } from '@/lib/api/datasets';
 import { chartsApi } from '@/lib/api/charts';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import type { Dataset, ChartSpec } from '@/types/chart';
+// ChartSpec and Dataset types are used in ChartFormWrapper component
 import { getDictionary, hasLocale } from '@/i18n/dictionaries';
 
 export const dynamic = 'force-dynamic';

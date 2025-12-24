@@ -40,7 +40,7 @@ export default function ChartsPage() {
   const [selectedChartForDashboard, setSelectedChartForDashboard] = useState<number | null>(null);
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, []);
 
   const loadData = async () => {
@@ -52,7 +52,7 @@ export default function ChartsPage() {
       ]);
       setDatasets(datasetsResult.items);
       setCharts(chartsResult.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load data'));
     } finally {
       setLoading(false);
@@ -113,8 +113,8 @@ export default function ChartsPage() {
       toast.success(t('Chart deleted'));
       setDeleteConfirmOpen(false);
       setChartToDelete(null);
-      loadData();
-    } catch (error) {
+      void loadData();
+    } catch {
       toast.error(t('Delete failed'));
     }
   };
@@ -123,7 +123,7 @@ export default function ChartsPage() {
     for (const row of rows) {
       try {
         await chartsApi.delete(row.id);
-      } catch (err) {
+      } catch {
         toast.error(`${t('Delete failed')}: ${row.title}`);
       }
     }
@@ -171,7 +171,7 @@ export default function ChartsPage() {
           <Button
             variant="link"
             className="h-auto p-0 text-primary truncate max-w-[150px] block text-left"
-            onClick={() => router.push(`/datasets/${datasetId}`)}
+            onClick={() => router.push(`/datasets/${String(datasetId)}`)}
           >
             {dataset?.name || t('Unknown Dataset')}
           </Button>
