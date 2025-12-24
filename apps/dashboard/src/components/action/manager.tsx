@@ -78,7 +78,6 @@ export default function ActionManager({ initial }: ActionManagerProps) {
   const [form, setForm] = useState<CreateActionInput>(defaultForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [actionId, setActionId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -415,7 +414,9 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         searchKey="name"
         searchPlaceholder={t('Search Actions')}
         enableRowSelection
-        onDeleteSelected={handleDeleteSelected}
+        onDeleteSelected={(rows) => {
+          void handleDeleteSelected(rows);
+        }}
         deleteConfirmTitle={t('Delete Action')}
         deleteConfirmDescription={(count) =>
           t('Are you sure to delete the selected {count} Action(s)? This action cannot be undone', {
@@ -424,7 +425,12 @@ export default function ActionManager({ initial }: ActionManagerProps) {
         }
         emptyMessage={t('No Actions yet, click Create New in the top right')}
         toolbar={
-          <Button onClick={() => handleOpenDialog()}>
+          <Button
+            onClick={() => {
+               
+              handleOpenDialog();
+            }}
+          >
             <RiAddLine className="h-4 w-4" />
             {t('Create Action')}
           </Button>
@@ -442,7 +448,11 @@ export default function ActionManager({ initial }: ActionManagerProps) {
                 : t('Fill in the information to create a new Action')}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+          >
             <div className="grid gap-4 py-4 sm:grid-cols-2">
               {/* 左侧：基本信息 */}
               <div className="space-y-4">
@@ -509,7 +519,9 @@ export default function ActionManager({ initial }: ActionManagerProps) {
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={handleGenerateSQL}
+                        onClick={() => {
+                          void handleGenerateSQL();
+                        }}
                         disabled={!canGenerateSQL}
                         className="h-7 text-xs"
                       >

@@ -44,4 +44,7 @@ void new Ignitor(APP_ROOT, { importer: IMPORTER })
   .catch((error) => {
     process.exitCode = 1;
     prettyPrintError(error);
+  })
+  .then(() => {
+    // Promise handled
   });

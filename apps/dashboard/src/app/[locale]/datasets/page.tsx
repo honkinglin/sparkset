@@ -28,7 +28,7 @@ export default function DatasetsPage() {
   const [datasetToDelete, setDatasetToDelete] = useState<Dataset | null>(null);
 
   useEffect(() => {
-    loadDatasets();
+    void loadDatasets();
   }, []);
 
   const loadDatasets = async () => {
@@ -36,7 +36,7 @@ export default function DatasetsPage() {
       setLoading(true);
       const result = await datasetsApi.list();
       setDatasets(result.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load datasets'));
     } finally {
       setLoading(false);
@@ -54,8 +54,8 @@ export default function DatasetsPage() {
     try {
       await datasetsApi.delete(datasetToDelete.id);
       toast.success(t('Dataset deleted'));
-      loadDatasets();
-    } catch (error) {
+      void loadDatasets();
+    } catch {
       toast.error(t('Failed to delete dataset'));
     } finally {
       setDeleteConfirmOpen(false);
@@ -71,7 +71,7 @@ export default function DatasetsPage() {
     for (const row of rows) {
       try {
         await datasetsApi.delete(row.id);
-      } catch (err) {
+      } catch {
         toast.error(`${t('Delete failed')}: ${row.name}`);
       }
     }

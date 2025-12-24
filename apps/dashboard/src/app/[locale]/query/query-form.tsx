@@ -58,7 +58,7 @@ const QueryForm = ({
     const body = { question, datasource, limit, ...(aiProvider && { aiProvider }) };
     try {
       if (onSubmit) {
-        await onSubmit(body);
+        void onSubmit(body);
       } else {
         const res = await runQuery(body);
         onResult(res);
@@ -72,7 +72,12 @@ const QueryForm = ({
   return (
     <Card className="shadow-lg border-border/50 overflow-hidden rounded-xl p-0">
       <CardContent className="p-0">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-0">
+        <form
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+          className="flex flex-col gap-0"
+        >
           {/* 主要输入区域 */}
           <div className="bg-background rounded-t-xl">
             <Textarea

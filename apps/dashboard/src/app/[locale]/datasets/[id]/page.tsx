@@ -36,7 +36,7 @@ export default function DatasetDetailPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    loadDataset();
+    void loadDataset();
   }, [id]);
 
   const loadDataset = async () => {
@@ -47,7 +47,7 @@ export default function DatasetDetailPage() {
       setName(data.name);
       setDescription(data.description || '');
       setCurrentSql(data.querySql);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load dataset'));
       router.push('/datasets');
     } finally {
@@ -76,7 +76,7 @@ export default function DatasetDetailPage() {
       });
       toast.success(t('Dataset updated'));
       await loadDataset();
-    } catch (error) {
+    } catch {
       toast.error(t('Update failed'));
     } finally {
       setSaving(false);
@@ -95,15 +95,15 @@ export default function DatasetDetailPage() {
       });
       toast.success(t('Dataset updated'));
       await loadDataset();
-      await handleExecuteQueryWithSql(currentSql);
-    } catch (error) {
+      await handleExecuteQueryWithSql();
+    } catch {
       toast.error(t('Update failed'));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleExecuteQueryWithSql = async (sql: string) => {
+  const handleExecuteQueryWithSql = async () => {
     if (!dataset) return;
 
     try {
@@ -127,7 +127,7 @@ export default function DatasetDetailPage() {
       await datasetsApi.delete(dataset.id);
       toast.success(t('Dataset deleted'));
       router.push('/datasets');
-    } catch (error) {
+    } catch {
       toast.error(t('Delete failed'));
     } finally {
       setDeleteConfirmOpen(false);
@@ -279,15 +279,18 @@ export default function DatasetDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {dataset.schemaJson?.map((field: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between text-sm p-2 bg-muted rounded"
-                  >
-                    <span className="font-medium">{field.name}</span>
-                    <Badge variant="secondary">{field.type}</Badge>
-                  </div>
-                ))}
+                {dataset.schemaJson?.map(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (field: any, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-sm p-2 bg-muted rounded"
+                    >
+                      <span className="font-medium">{field.name}</span>
+                      <Badge variant="secondary">{field.type}</Badge>
+                    </div>
+                  ),
+                )}
               </div>
             </CardContent>
           </Card>
