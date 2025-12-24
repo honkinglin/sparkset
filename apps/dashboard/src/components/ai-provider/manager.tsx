@@ -319,7 +319,9 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
             actions.push({
               label: t('Set as Default'),
               icon: <RiStarLine className="h-4 w-4" />,
-              onClick: () => handleSetDefault(provider.id),
+              onClick: () => {
+                void handleSetDefault(provider.id);
+              },
               disabled: isLoading,
             });
           }
@@ -356,7 +358,9 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
         searchKey="name"
         searchPlaceholder={t('Search Provider')}
         enableRowSelection
-        onDeleteSelected={handleDeleteSelected}
+        onDeleteSelected={(rows) => {
+          void handleDeleteSelected(rows);
+        }}
         deleteConfirmTitle={t('Delete Provider')}
         deleteConfirmDescription={(count) =>
           t(
@@ -385,7 +389,11 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
                 : t('Fill in the information below and verify the connection to create a provider')}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+          >
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">{t('Name')}</Label>
@@ -526,7 +534,9 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={handleTestConnection}
+                      onClick={() => {
+                        void handleTestConnection();
+                      }}
                       disabled={!canTest || testing}
                       className="w-full sm:w-auto"
                     >

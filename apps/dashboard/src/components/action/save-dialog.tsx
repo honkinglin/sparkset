@@ -90,7 +90,11 @@ export function SaveActionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+        >
           <DialogHeader>
             <DialogTitle>{t('Save query as Action')}</DialogTitle>
             <DialogDescription>{t('Save current query as reusable Action')}</DialogDescription>

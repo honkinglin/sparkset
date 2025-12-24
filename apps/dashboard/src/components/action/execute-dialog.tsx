@@ -92,7 +92,11 @@ export function ExecuteDialog({
       } else if (param.type === 'boolean') {
         parameters[param.name] = Boolean(value);
       } else {
-        parameters[param.name] = String(value);
+        parameters[param.name] =
+          typeof value === 'object' && value !== null
+            ? JSON.stringify(value)
+            : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              String(value);
       }
     });
 
@@ -171,18 +175,44 @@ export function ExecuteDialog({
                   <Input
                     id={param.name}
                     type="number"
-                    value={formData[param.name] === '' ? '' : String(formData[param.name])}
+                    value={
+                      formData[param.name] === ''
+                        ? ''
+                        : typeof formData[param.name] === 'object'
+                          ? JSON.stringify(formData[param.name])
+                          : String(formData[param.name])
+                    }
                     onChange={(e) => handleChange(param.name, e.target.value)}
-                    placeholder={param.default !== undefined ? String(param.default) : undefined}
+                    placeholder={
+                      param.default !== undefined
+                        ? typeof param.default === 'object'
+                          ? JSON.stringify(param.default)
+                          : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                            String(param.default)
+                        : undefined
+                    }
                     disabled={executing}
                   />
                 ) : (
                   <Input
                     id={param.name}
                     type="text"
-                    value={String(formData[param.name] || '')}
+                    value={
+                      formData[param.name]
+                        ? typeof formData[param.name] === 'object'
+                          ? JSON.stringify(formData[param.name])
+                          : String(formData[param.name])
+                        : ''
+                    }
                     onChange={(e) => handleChange(param.name, e.target.value)}
-                    placeholder={param.default !== undefined ? String(param.default) : undefined}
+                    placeholder={
+                      param.default !== undefined
+                        ? typeof param.default === 'object'
+                          ? JSON.stringify(param.default)
+                          : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                            String(param.default)
+                        : undefined
+                    }
                     disabled={executing}
                   />
                 )}

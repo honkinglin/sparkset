@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Page = async ({ params }: Props) => {
-  const { locale } = await params;
+  await params;
 
   const datasources = await fetchDatasources().catch(() => []);
 

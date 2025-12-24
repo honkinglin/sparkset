@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 const Page = async ({ params }: PageProps) => {
-  const { id, locale } = await params;
+  const { id } = await params;
 
   const datasourceId = Number(id);
 

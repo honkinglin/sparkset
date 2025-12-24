@@ -6,7 +6,7 @@ interface PageProps {
 }
 
 const OnboardingPage = async ({ params }: PageProps) => {
-  const { locale } = await params;
+  await params;
 
   const [datasources, aiProviders] = await Promise.all([
     fetchDatasources().catch(() => []),

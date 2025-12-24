@@ -64,13 +64,16 @@ export function ChartRenderer({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {chartData.map((row, idx) => (
-              <TableRow key={idx}>
+            {chartData.map((row, rowIdx) => (
+              <TableRow key={rowIdx}>
                 {columns.map((col) => (
                   <TableCell key={col}>
                     {typeof row[col] === 'number'
                       ? row[col].toLocaleString()
-                      : String(row[col] ?? '-')}
+                      : typeof row[col] === 'object' && row[col] !== null
+                        ? JSON.stringify(row[col])
+                        : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                          String(row[col] ?? '-')}
                   </TableCell>
                 ))}
               </TableRow>
@@ -84,6 +87,7 @@ export function ChartRenderer({
   // Render pie chart
   if (chartType === 'pie') {
     // Extract pie-specific props from rechartsProps
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     const { pieConfig, data, margin, showLegend, ...restProps } = rechartsProps as any;
     const pieProps = pieConfig || {};
 
@@ -173,7 +177,7 @@ export function ChartRenderer({
           <YAxis tick={{ fontSize: 12 }} />
           <Tooltip content={<ChartTooltipContent />} />
           <Legend content={<ChartLegendContent />} />
-          {yKeys.map((key, idx) => (
+          {yKeys.map((key) => (
             <Line
               key={key}
               type="monotone"
@@ -194,7 +198,7 @@ export function ChartRenderer({
           <YAxis tick={{ fontSize: 12 }} />
           <Tooltip content={<ChartTooltipContent />} />
           <Legend content={<ChartLegendContent />} />
-          {yKeys.map((key, idx) => (
+          {yKeys.map((key) => (
             <Bar
               key={key}
               dataKey={key}
@@ -212,7 +216,7 @@ export function ChartRenderer({
           <YAxis tick={{ fontSize: 12 }} />
           <Tooltip content={<ChartTooltipContent />} />
           <Legend content={<ChartLegendContent />} />
-          {yKeys.map((key, idx) => (
+          {yKeys.map((key) => (
             <Area
               key={key}
               type="monotone"

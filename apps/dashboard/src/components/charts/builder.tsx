@@ -107,7 +107,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
       handleSubmit,
       watch,
       setValue,
-      formState: { errors, isSubmitting, isValid },
+      formState: { errors, isSubmitting },
     } = useForm<FormData>({
       mode: 'onChange', // Real-time validation
       resolver: zodResolver(formSchema),
@@ -215,13 +215,13 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
       () => ({
         submitForm: async () => {
           return new Promise<void>((resolve, reject) => {
-            handleSubmit(
+            void handleSubmit(
               async (data) => {
                 try {
                   await onSubmit(data);
                   resolve();
                 } catch (error) {
-                  reject(error);
+                  reject(error instanceof Error ? error : new Error(String(error)));
                 }
               },
               (errors) => {
@@ -275,7 +275,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
       if (autoPreview && initialDatasetId && initialSpec) {
         // Small delay to ensure form is initialized
         setTimeout(() => {
-          generatePreview();
+          void generatePreview();
         }, 100);
       }
     }, [autoPreview, initialDatasetId, initialSpec]);
@@ -294,7 +294,8 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
       setValue('yFields', [...current, { field: '', agg: 'sum', label: '', color: nextColor }]);
     };
 
-    // Remove Y field
+    // Remove Y field (unused but kept for potential future use)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const removeYField = (index: number) => {
       const current = watch('yFields');
       if (current.length <= 1) return;
@@ -347,7 +348,13 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                ref={formRef}
+                onSubmit={(e) => {
+                  void handleSubmit(onSubmit)(e);
+                }}
+                className="space-y-4"
+              >
                 {/* Dataset Selection */}
                 <div className="space-y-2">
                   <Label>{t('Dataset')}</Label>
@@ -518,6 +525,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                                     const updated = [...field.value];
                                     updated[index] = {
                                       ...updated[index],
+                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                       agg: e.target.value as any,
                                     };
                                     field.onChange(updated);
@@ -716,7 +724,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                   onClick={async () => {
                     try {
                       await handleSubmit(onSubmit)();
-                    } catch (error) {
+                    } catch {
                       // Error handling is done in handleSubmit
                     }
                   }}

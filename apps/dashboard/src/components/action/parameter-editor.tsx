@@ -176,7 +176,14 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                       </Label>
                       {param.type === 'boolean' ? (
                         <Select
-                          value={param.default === undefined ? '' : String(param.default)}
+                          value={
+                            param.default === undefined
+                              ? ''
+                              : typeof param.default === 'object'
+                                ? JSON.stringify(param.default)
+                                : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                                  String(param.default)
+                          }
                           onValueChange={(value) =>
                             updateParameter(index, {
                               default: value === '' ? undefined : value === 'true',
@@ -196,7 +203,14 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                         <Input
                           id={`param-default-${index}`}
                           type={param.type === 'number' ? 'number' : 'text'}
-                          value={param.default === undefined ? '' : String(param.default)}
+                          value={
+                            param.default === undefined
+                              ? ''
+                              : typeof param.default === 'object'
+                                ? JSON.stringify(param.default)
+                                : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                                  String(param.default)
+                          }
                           onChange={(e) => {
                             const value = e.target.value;
                             if (value === '') {
