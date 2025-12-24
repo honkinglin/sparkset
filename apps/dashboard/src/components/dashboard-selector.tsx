@@ -1,6 +1,6 @@
 'use client';
 import { RiArrowDownSLine, RiCheckLine, RiDashboardLine, RiLoader4Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -202,7 +202,7 @@ export function DashboardSelector({
             {adding ? (
               <>
                 <RiLoader4Line className="h-4 w-4 animate-spin" />
-                {t('Adding…')}
+                {t('Adding...')}
               </>
             ) : (
               <>
@@ -254,7 +254,7 @@ export function DashboardSelector({
                         {adding ? (
                           <>
                             <RiLoader4Line className="h-4 w-4 animate-spin" />
-                            {t('Adding…')}
+                            {t('Adding...')}
                           </>
                         ) : (
                           <>
@@ -346,7 +346,7 @@ export function DashboardSelector({
           {adding ? (
             <>
               <RiLoader4Line className="h-4 w-4 animate-spin" />
-              {t('Adding…')}
+              {t('Adding...')}
             </>
           ) : (
             t('Add')

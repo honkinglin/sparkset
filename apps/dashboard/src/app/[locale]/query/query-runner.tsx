@@ -9,7 +9,7 @@ import { QueryResponse, runQuery } from '@/lib/query';
 import { RiChat3Line } from '@remixicon/react';
 import { useEffect, useState } from 'react';
 import QueryForm from './query-form';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 interface Props {
   datasources: { id: number; name: string; isDefault?: boolean }[];

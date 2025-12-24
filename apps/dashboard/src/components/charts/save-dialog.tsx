@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { chartsApi } from '@/lib/api/charts';
 import { datasetsApi } from '@/lib/api/datasets';
 import { RiArrowRightLine, RiLoader4Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -146,7 +146,7 @@ export function SaveChartDialog({
             <div className="space-y-2">
               <Label>{t('Dataset Name')}</Label>
               <Input
-                placeholder={t('eg: Last 30 days sales data')}
+                placeholder={t('e.g.: Last 30 days sales data')}
                 value={datasetName}
                 onChange={(e) => setDatasetName(e.target.value)}
               />
@@ -190,7 +190,7 @@ export function SaveChartDialog({
             <div className="space-y-2">
               <Label>{t('Chart Title')}</Label>
               <Input
-                placeholder={t('eg: Regional Sales Trend')}
+                placeholder={t('e.g.: Regional Sales Trend')}
                 value={chartTitle}
                 onChange={(e) => setChartTitle(e.target.value)}
               />

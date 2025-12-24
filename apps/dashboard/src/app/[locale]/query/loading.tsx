@@ -1,6 +1,8 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
 
-export default async function Loading() {
-  const t = await getTranslations();
-  return <div className="p-6 text-foreground">{t('Loading')}</div>;
+import { useTranslations } from '@/i18n/use-translations';
+
+export default function Loading() {
+  const t = useTranslations();
+  return <div className="p-6 text-foreground">{t('Loading') || 'Loading'}</div>;
 }

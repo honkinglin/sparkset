@@ -1,5 +1,5 @@
 import { RiSearch2Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useId } from 'react';
 import { SidebarGroup, SidebarGroupContent, SidebarInput } from '@/components/ui/sidebar';
 

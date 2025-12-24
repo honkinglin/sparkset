@@ -1,7 +1,7 @@
 'use client';
 
 import { RiArrowLeftLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { Link, useRouter } from '@/i18n/routing';
 import type React from 'react';
 

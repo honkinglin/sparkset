@@ -2,7 +2,7 @@
 
 import { RiComputerLine, RiMoonLine, RiSunFoggyLine } from '@remixicon/react';
 import { useTheme } from 'next-themes';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';

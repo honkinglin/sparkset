@@ -11,10 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from '@/i18n/routing';
+import { useTranslations } from '@/i18n/use-translations';
 import { datasetsApi } from '@/lib/api/datasets';
 import type { Dataset, ResultSet } from '@/types/chart';
 import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiSaveLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -192,7 +192,7 @@ export default function DatasetDetailPage() {
             {dataset && <DashboardSelector type="dataset" contentId={dataset.id} size="sm" />}
             <Button size="sm" onClick={handleSave} disabled={!hasChanges() || saving}>
               <RiSaveLine className="h-4 w-4" />
-              {saving ? t('Saving…') : t('Save')}
+              {saving ? t('Saving...') : t('Save')}
             </Button>
             <Button
               size="sm"
@@ -201,7 +201,7 @@ export default function DatasetDetailPage() {
               disabled={!hasChanges() || saving}
             >
               <RiSaveLine className="h-4 w-4" />
-              {saving ? t('Saving…') : t('Save and Query')}
+              {saving ? t('Saving...') : t('Save and Query')}
             </Button>
             <Button variant="destructive" size="sm" onClick={() => setDeleteConfirmOpen(true)}>
               <RiDeleteBinLine className="h-4 w-4" />
@@ -250,7 +250,7 @@ export default function DatasetDetailPage() {
                   ) : (
                     <RiPlayLine className="h-4 w-4" />
                   )}
-                  {queryLoading ? t('Executing…') : t('Execute Query')}
+                  {queryLoading ? t('Executing...') : t('Execute Query')}
                 </Button>
                 <Button
                   variant="outline"

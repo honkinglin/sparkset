@@ -1,4 +1,3 @@
-import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 import DatasourceDetail from '@/components/datasource/detail';
@@ -10,7 +9,6 @@ interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
   const { id, locale } = await params;
-  setRequestLocale(locale);
 
   const datasourceId = Number(id);
 

@@ -9,7 +9,7 @@ import {
   RiSave3Line,
   RiSparkling2Line,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -629,7 +629,7 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                   id="edit-name"
                   value={editForm.name}
                   onChange={onEditFormChange('name')}
-                  placeholder={t('eg production-mysql')}
+                  placeholder={t('e.g. production-mysql')}
                   required
                 />
               </div>

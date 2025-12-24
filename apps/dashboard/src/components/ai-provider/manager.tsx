@@ -11,7 +11,7 @@ import {
   RiStarLine,
 } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -393,7 +393,7 @@ export default function AIProviderManager({ initial }: AIProviderManagerProps) {
                   id="name"
                   value={form.name}
                   onChange={onChange('name')}
-                  placeholder={t('eg my-openai')}
+                  placeholder={t('e.g. my-openai')}
                   required
                 />
               </div>

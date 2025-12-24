@@ -1,6 +1,4 @@
 import { RiNotification3Line } from '@remixicon/react';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type React from 'react';
 
@@ -12,7 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
-import { routing } from '@/i18n/routing';
+import { getDictionary, hasLocale } from '@/i18n/dictionaries';
+import { routing } from '@/i18n/routing-config';
+import { TranslationsProvider } from '@/i18n/translations-context';
 
 interface Props {
   children: React.ReactNode;
@@ -27,20 +27,17 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
+  if (!hasLocale(locale)) {
     notFound();
   }
 
-  // Enable static rendering
-  setRequestLocale(locale);
-
-  // Providing all messages to the client side
-  const messages = await getMessages();
+  // Load dictionary for the locale
+  const dictionary = await getDictionary(locale);
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider messages={messages}>
+        <TranslationsProvider translations={dictionary}>
           <ThemeProvider>
             <SidebarProvider>
               <AppSidebar />
@@ -64,7 +61,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             </SidebarProvider>
             <Toaster />
           </ThemeProvider>
-        </NextIntlClientProvider>
+        </TranslationsProvider>
       </body>
     </html>
   );

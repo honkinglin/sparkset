@@ -11,7 +11,7 @@ import { chartsApi } from '@/lib/api/charts';
 import { datasetsApi } from '@/lib/api/datasets';
 import type { ChartSpec, Dataset } from '@/types/chart';
 import { RiArrowLeftLine, RiDeleteBin2Line, RiEditLine, RiRefreshLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { use, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -202,7 +202,7 @@ export default function ChartDetailPage({ params }: Props) {
   if (!chartData || previewData.length === 0) {
     return (
       <div className="space-y-6">
-        <PageHeader title={t('Loading…')} description="" />
+        <PageHeader title={t('Loading...')} description="" />
       </div>
     );
   }

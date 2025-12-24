@@ -193,11 +193,10 @@ sparkset/
 
 ### 关键目录
 
-- **`apps/server`**：基于 AdonisJS 的服务器，包含控制器、服务和验证器，包含 Repository 接口定义
+- **`apps/server`**：基于 AdonisJS 的服务器，包含控制器、服务和验证器，包含 Repository 接口定义和 AI 客户端实现
 - **`apps/dashboard`**：使用 shadcn/ui 组件的 Next.js 应用
 - **`apps/cli`**：用于自动化的命令行工具
 - **`packages/core`**：核心查询执行和动作处理逻辑，包含 DBClient 接口定义
-- **`packages/ai`**：AI 提供商抽象和提示词管理
 
 ## ⚙️ 配置说明
 

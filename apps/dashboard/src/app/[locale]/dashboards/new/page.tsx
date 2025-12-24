@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useState } from 'react';
 
 import { PageHeader } from '@/components/page-header';

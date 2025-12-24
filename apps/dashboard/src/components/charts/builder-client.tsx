@@ -2,7 +2,7 @@
 
 import { chartsApi } from '@/lib/api/charts';
 import type { ChartSpec, Dataset } from '@/types/chart';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';

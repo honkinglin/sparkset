@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { runQuery } from '@/lib/query';
 import { RiRefreshLine } from '@remixicon/react';
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 interface Props {
   datasources: { id: number; name: string; isDefault?: boolean }[];

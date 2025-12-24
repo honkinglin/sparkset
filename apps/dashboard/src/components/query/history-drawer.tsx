@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from '@/i18n/use-translations';
 import {
   RiArrowDownSLine,
   RiArrowRightSLine,
@@ -8,7 +9,6 @@ import {
   RiRefreshLine,
   RiTimeLine,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {

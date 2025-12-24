@@ -16,7 +16,7 @@ import {
   RiMore2Line,
   RiRefreshLine,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useRouter } from 'next/navigation';
 
 interface WidgetMenuProps {

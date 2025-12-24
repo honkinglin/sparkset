@@ -1,6 +1,6 @@
 'use client';
 import { RiAddLine, RiDatabase2Line, RiFlashlightLine, RiSearch2Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 import {
   Empty,

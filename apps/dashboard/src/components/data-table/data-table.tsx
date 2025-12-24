@@ -1,6 +1,6 @@
 'use client';
 import { RiCloseLine, RiDeleteBin2Line, RiSearch2Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 import {
   ColumnDef,
@@ -177,9 +177,9 @@ export function DataTable<TData, TValue>({
                     table.getColumn(searchKey)?.setFilterValue(e.target.value);
                   }
                 }}
-                placeholder={searchPlaceholder || t('Search…')}
+                placeholder={searchPlaceholder || t('Search...')}
                 type="text"
-                aria-label={searchPlaceholder || t('Search…')}
+                aria-label={searchPlaceholder || t('Search...')}
               />
               <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-muted-foreground/40 peer-disabled:opacity-50">
                 <RiSearch2Line className="h-4 w-4 text-muted-foreground" aria-hidden="true" />

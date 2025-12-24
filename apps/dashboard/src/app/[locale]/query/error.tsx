@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 export default function ErrorBoundary({ error }: { error: Error }) {
   const t = useTranslations();

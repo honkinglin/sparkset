@@ -1,7 +1,7 @@
 'use client';
 
 import { RiTranslate2 } from '@remixicon/react';
-import { useLocale } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -11,15 +11,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { localeNames, locales, type Locale } from '@/i18n/config';
-import { usePathname, useRouter } from '@/i18n/routing';
+import { useLocale } from '@/i18n/use-locale';
 
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale;
-  const router = useRouter();
-  const pathname = usePathname();
+  const fullPathname = usePathname(); // Get full pathname including locale
 
   const switchLocale = (newLocale: Locale) => {
-    router.replace(pathname, { locale: newLocale });
+    // Remove current locale from pathname
+    const segments = fullPathname.split('/').filter(Boolean);
+    const pathWithoutLocale =
+      segments.length > 0 && locales.includes(segments[0] as Locale)
+        ? '/' + segments.slice(1).join('/')
+        : fullPathname;
+
+    // Build new path with new locale
+    const newPath =
+      pathWithoutLocale === '/' ? `/${newLocale}` : `/${newLocale}${pathWithoutLocale}`;
+
+    // Use window.location for immediate navigation
+    window.location.href = newPath;
   };
 
   return (

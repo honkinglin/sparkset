@@ -1,5 +1,3 @@
-import { setRequestLocale } from 'next-intl/server';
-
 import { Onboarding } from '@/components/onboarding';
 import { fetchAIProviders, fetchDatasources } from '@/lib/api';
 
@@ -9,7 +7,6 @@ interface PageProps {
 
 const OnboardingPage = async ({ params }: PageProps) => {
   const { locale } = await params;
-  setRequestLocale(locale);
 
   const [datasources, aiProviders] = await Promise.all([
     fetchDatasources().catch(() => []),

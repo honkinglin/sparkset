@@ -1,6 +1,6 @@
 'use client';
 import { RiArrowDownSLine, RiArrowRightSLine, RiChat3Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 import { useState } from 'react';
 import { ConversationDTO, ConversationDetailDTO, fetchConversation } from '../../lib/api';
@@ -119,7 +119,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
                             {formatDate(conversation.createdAt, t)}
                           </span>
                           {detail && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary">
                               {t('{count} messages', { count: detail.messages.length })}
                             </Badge>
                           )}

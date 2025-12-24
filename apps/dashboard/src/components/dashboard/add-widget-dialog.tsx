@@ -21,7 +21,7 @@ import type {
   TextWidgetConfig,
   WidgetType,
 } from '@/types/dashboard';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 

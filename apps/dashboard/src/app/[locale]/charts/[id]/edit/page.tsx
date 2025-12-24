@@ -4,13 +4,14 @@ import { chartsApi } from '@/lib/api/charts';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import type { Dataset, ChartSpec } from '@/types/chart';
-import { getTranslations } from 'next-intl/server';
+import { getDictionary, hasLocale } from '@/i18n/dictionaries';
 
 export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{
     id: string;
+    locale: string;
   }>;
 }
 
@@ -56,9 +57,17 @@ async function EditChartContent({ params }: Props) {
 }
 
 export default async function EditChartPage({ params }: Props) {
-  const t = await getTranslations();
+  const { locale } = await params;
+  if (!hasLocale(locale)) {
+    return (
+      <Suspense fallback={<div className="space-y-6">Loading</div>}>
+        <EditChartContent params={params} />
+      </Suspense>
+    );
+  }
+  const dict = await getDictionary(locale);
   return (
-    <Suspense fallback={<div className="space-y-6">{t('Loading')}</div>}>
+    <Suspense fallback={<div className="space-y-6">{dict['Loading'] || 'Loading'}</div>}>
       <EditChartContent params={params} />
     </Suspense>
   );

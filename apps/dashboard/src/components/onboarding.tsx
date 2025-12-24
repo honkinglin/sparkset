@@ -7,7 +7,7 @@ import {
   RiDatabase2Line,
   RiSparkling2Line,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import Link from 'next/link';
 
 import { Button } from './ui/button';

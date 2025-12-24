@@ -1,6 +1,6 @@
 'use client';
+import { useTranslations } from '@/i18n/use-translations';
 import { RiDatabase2Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
 
 import { DataTable } from '@/components/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';

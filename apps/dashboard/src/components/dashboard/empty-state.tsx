@@ -10,7 +10,7 @@ import {
   EmptyMedia,
 } from '@/components/ui/empty';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 interface DashboardEmptyStateProps {
   onAddWidget: () => void;

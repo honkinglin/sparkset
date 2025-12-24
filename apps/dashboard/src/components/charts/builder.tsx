@@ -19,7 +19,7 @@ import { datasetsApi } from '@/lib/api/datasets';
 import type { ChartSpec, Dataset } from '@/types/chart';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiAddLine, RiDeleteBinLine, RiMagicLine, RiPlayLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import * as React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -387,7 +387,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                       <div className="space-y-1">
                         <Input
                           {...field}
-                          placeholder={t('eg: Sales Trend Analysis')}
+                          placeholder={t('e.g.: Sales Trend Analysis')}
                           maxLength={128}
                         />
                         <div className="flex justify-between items-center">
@@ -447,7 +447,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                     <Label className="text-xs text-muted-foreground">{t('Available Fields')}</Label>
                     <div className="flex flex-wrap gap-1">
                       {selectedDataset.schemaJson.map((field) => (
-                        <Badge key={field.name} variant="secondary" className="text-xs">
+                        <Badge key={field.name} variant="secondary">
                           {field.name} ({field.type})
                         </Badge>
                       ))}
@@ -689,7 +689,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                 disabled={isPreviewLoading}
               >
                 <RiPlayLine className="h-4 w-4" />
-                {isPreviewLoading ? t('Executing…') : t('Generate Preview')}
+                {isPreviewLoading ? t('Executing...') : t('Generate Preview')}
               </Button>
             </CardHeader>
             <CardContent>
@@ -724,7 +724,7 @@ export const ChartBuilder = React.forwardRef<ChartBuilderHandle, ChartBuilderPro
                   className="flex-1"
                 >
                   <RiMagicLine className="h-4 w-4" />
-                  {isSubmitting ? t('Saving…') : t('Save Chart')}
+                  {isSubmitting ? t('Saving...') : t('Save Chart')}
                 </Button>
               </div>
             )}

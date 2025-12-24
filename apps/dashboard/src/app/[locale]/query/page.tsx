@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getDictionary, hasLocale } from '@/i18n/dictionaries';
 
 import { PageHeader } from '@/components/page-header';
 import { QueryEmptyState } from '@/components/query/empty-state';
@@ -11,8 +11,11 @@ interface PageProps {
 
 const QueryPage = async ({ params }: PageProps) => {
   const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations();
+  if (!hasLocale(locale)) {
+    throw new Error(`Invalid locale: ${locale}`);
+  }
+  const dict = await getDictionary(locale);
+  const t = (key: string) => dict[key] || key;
 
   const datasources = await fetchDatasources().catch(() => []);
   const aiProviders = await fetchAIProviders().catch(() => []);

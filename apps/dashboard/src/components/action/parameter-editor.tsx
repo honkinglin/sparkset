@@ -1,7 +1,7 @@
 'use client';
 
 import { RiAddLine, RiSubtractLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { type ActionInputSchema, type ParameterDefinition } from '../../lib/api';
 import { cn } from '../../lib/utils';
@@ -109,7 +109,7 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                         id={`param-name-${index}`}
                         value={param.name}
                         onChange={(e) => updateParameter(index, { name: e.target.value })}
-                        placeholder={t('eg limit')}
+                        placeholder={t('e.g. limit')}
                         className="h-8"
                       />
                     </div>
@@ -148,7 +148,7 @@ export function ParameterEditor({ value, onChange }: ParameterEditorProps) {
                       onChange={(e) =>
                         updateParameter(index, { label: e.target.value || undefined })
                       }
-                      placeholder={t('eg Quantity limit (optional, defaults to parameter name)')}
+                      placeholder={t('e.g. Quantity limit (optional, defaults to parameter name)')}
                       className="h-8"
                     />
                   </div>

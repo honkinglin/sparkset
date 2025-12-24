@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import type { ChartSpec, Dataset } from '@/types/chart';
 import { RiSaveLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import * as React from 'react';
 import { useCallback, useRef, useState } from 'react';
 

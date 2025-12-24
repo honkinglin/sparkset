@@ -24,9 +24,8 @@ import {
   RiPlayLine,
   RiSparkling2Line,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from '@/i18n/use-translations';
+import { Link, usePathname } from '@/i18n/client-routing';
 import type { ComponentType } from 'react';
 import * as React from 'react';
 import { SearchForm } from './search-form';

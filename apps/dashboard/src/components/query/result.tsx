@@ -1,6 +1,6 @@
 'use client';
+import { useTranslations } from '@/i18n/use-translations';
 import { RiBarChartLine, RiFileTextLine, RiSave3Line } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
 
 import { SaveActionDialog } from '@/components/action/save-dialog';
 import { SaveChartDialog } from '@/components/charts/save-dialog';

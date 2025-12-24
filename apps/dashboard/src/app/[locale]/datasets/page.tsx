@@ -15,7 +15,7 @@ import { datasetsApi } from '@/lib/api/datasets';
 import type { Dataset } from '@/types/chart';
 import { RiAddLine, RiDatabaseLine } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -194,7 +194,7 @@ export default function DatasetsPage() {
             </Button>
           }
         />
-        <div className="text-center py-12 text-muted-foreground">{t('Loading…')}</div>
+        <div className="text-center py-12 text-muted-foreground">{t('Loading...')}</div>
       </div>
     );
   }
@@ -246,7 +246,7 @@ export default function DatasetsPage() {
         columns={columns}
         data={datasets}
         searchKey="name"
-        searchPlaceholder={t('Search datasets…')}
+        searchPlaceholder={t('Search datasets...')}
         enableRowSelection
         onDeleteSelected={handleDeleteSelected}
         deleteConfirmTitle={t('Delete Dataset')}

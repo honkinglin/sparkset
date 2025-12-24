@@ -1,6 +1,6 @@
 'use client';
 import { RiDatabase2Line, RiRefreshLine } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { fetchSchema, TableSchemaDTO } from '@/lib/api';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -109,13 +109,13 @@ export function SchemaDrawer({ datasourceId, trigger, open, onOpenChange }: Sche
                   <CardContent className="pt-4 pb-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="font-medium text-sm">{table.tableName}</div>
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary">
                         {t('{count} columns', { count: table.columns.length })}
                       </Badge>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {table.columns.map((col) => (
-                        <Badge key={col.name} variant="outline" className="text-xs font-normal">
+                        <Badge key={col.name} variant="outline" className="font-normal">
                           {col.name}
                           <span className="ml-1 text-muted-foreground">({col.type})</span>
                           {col.comment && (

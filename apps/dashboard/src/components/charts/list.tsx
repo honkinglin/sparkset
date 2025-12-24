@@ -23,7 +23,7 @@ import {
   RiPieChartLine,
   RiTableLine,
 } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';

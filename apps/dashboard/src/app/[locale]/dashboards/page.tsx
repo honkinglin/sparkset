@@ -14,7 +14,7 @@ import { dashboardsApi } from '@/lib/api/dashboards';
 import type { Dashboard } from '@/types/dashboard';
 import { RiAddLine, RiDashboardLine } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -152,7 +152,7 @@ export default function DashboardsPage() {
             </Button>
           }
         />
-        <div className="text-center py-12 text-muted-foreground">{t('Loading…')}</div>
+        <div className="text-center py-12 text-muted-foreground">{t('Loading...')}</div>
       </div>
     );
   }
@@ -204,7 +204,7 @@ export default function DashboardsPage() {
         columns={columns}
         data={dashboards}
         searchKey="title"
-        searchPlaceholder={t('Search…')}
+        searchPlaceholder={t('Search...')}
         enableRowSelection
         onDeleteSelected={handleDeleteSelected}
         deleteConfirmTitle={t('Delete Dashboard')}

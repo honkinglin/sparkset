@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { chartsApi } from '@/lib/api/charts';
 import type { ChartRenderResult } from '@/types/chart';
 import type { ChartWidgetConfig } from '@/types/dashboard';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useEffect, useState } from 'react';
 
 interface ChartWidgetProps {

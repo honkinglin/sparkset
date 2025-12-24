@@ -17,7 +17,7 @@ import { RiAddLine } from '@remixicon/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 
 export default function DashboardDetailPage() {
   const t = useTranslations();

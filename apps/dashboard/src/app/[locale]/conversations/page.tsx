@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getDictionary, hasLocale } from '@/i18n/dictionaries';
 
 import { ConversationList } from '@/components/conversation/list';
 import { PageHeader } from '@/components/page-header';
@@ -10,8 +10,11 @@ interface PageProps {
 
 const ConversationsPage = async ({ params }: PageProps) => {
   const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations();
+  if (!hasLocale(locale)) {
+    throw new Error(`Invalid locale: ${locale}`);
+  }
+  const dict = await getDictionary(locale);
+  const t = (key: string) => dict[key] || key;
 
   const conversations = await fetchConversations().catch(() => []);
 

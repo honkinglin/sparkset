@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from '@/i18n/use-translations';
 import {
   RiAddLine,
   RiCheckboxCircleLine,
@@ -10,7 +11,6 @@ import {
   RiRefreshLine,
 } from '@remixicon/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { type ChangeEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -421,7 +421,7 @@ export default function DatasourceManager({ initial }: DatasourceManagerProps) {
                   id="name"
                   value={form.name}
                   onChange={onChange('name')}
-                  placeholder={t('eg production-mysql')}
+                  placeholder={t('e.g. production-mysql')}
                   required
                 />
               </div>

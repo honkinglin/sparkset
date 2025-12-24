@@ -1,6 +1,6 @@
 'use client';
 import { RiCodeSSlashLine, RiAlignJustify, RiAlignLeft } from '@remixicon/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useMemo, useState } from 'react';
 import { format } from 'sql-formatter';
 import { CodeViewer } from '@/components/code-viewer';

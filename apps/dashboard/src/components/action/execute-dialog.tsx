@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/i18n/use-translations';
 import { useState } from 'react';
 import { type ActionInputSchema } from '../../lib/api';
 import { Button } from '../ui/button';

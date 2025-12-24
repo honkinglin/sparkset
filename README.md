@@ -192,10 +192,9 @@ sparkset/
 
 ### Key Directories
 
-- **`apps/server`**: AdonisJS Server with controllers, services, and validators, contains repository interfaces
+- **`apps/server`**: AdonisJS Server with controllers, services, and validators, contains repository interfaces and AI client implementations
 - **`apps/dashboard`**: Next.js application with shadcn/ui components
 - **`packages/core`**: Core query execution and action processing logic, contains DBClient interfaces
-- **`packages/ai`**: AI provider abstraction and prompt management
 
 ## ⚙️ Configuration
 

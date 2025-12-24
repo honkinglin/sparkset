@@ -57,7 +57,7 @@ text
 
 2. **命名优雅美观**：目录、文件、变量和函数名称应简洁且具描述性。统一采用约定俗成的大小写风格：目录使用 kebab‑case，变量使用 camelCase，类与接口使用 PascalCase。
 
-3. **代码组织合理**：逻辑相关的功能聚合在一起，避免不同层次代码混杂。例如数据库 Repository 接口定义在 `apps/server/src/app/db/interfaces.ts`，DBClient 接口在 `packages/core/src/db/types.ts`，AI 调用封装在 `packages/ai`，各类业务模块在 `app/services`（也可命名为 `app/modules`）中分层实现。
+3. **代码组织合理**：逻辑相关的功能聚合在一起，避免不同层次代码混杂。例如数据库 Repository 接口定义在 `apps/server/app/db/interfaces.ts`，DBClient 接口在 `packages/core/src/db/types.ts`，AI 调用封装在 `apps/server/app/ai`，各类业务模块在 `app/services`（也可命名为 `app/modules`）中分层实现。
 
 4. **逻辑简洁严谨**：实现核心流程时保持逻辑清晰，避免过度嵌套和重复代码；对复杂步骤提供必要的注释，以便后续维护。
 
@@ -75,7 +75,7 @@ text
 
 4. **需求明确优先**：没有明确指定的功能不要擅自添加，例如前期未要求给数据源打标签，则不在 UI 或 API 中额外设计 tag 字段；遵循敏捷开发的迭代原则，需求变化时再添加新特性。
 
-其中 **packages/core** 中包含 Action 执行器，它会根据 Action 的 `type` 字段分发到对应的工具实现，例如 `sql`、`api` 或 `file`。新增工具只需在 **packages/ai** 或专用包中实现，并在注册表中声明。
+其中 **packages/core** 中包含 Action 执行器，它会根据 Action 的 `type` 字段分发到对应的工具实现，例如 `sql`、`api` 或 `file`。新增工具只需在 **apps/server/app/ai** 或专用包中实现，并在注册表中声明。
 
 ## 数据模型设计
 

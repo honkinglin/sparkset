@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'AI Operations Assistant',
 };
 
-// Root layout for next-intl: HTML and body are rendered in [locale]/layout.tsx
+// Root layout: HTML and body are rendered in [locale]/layout.tsx
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

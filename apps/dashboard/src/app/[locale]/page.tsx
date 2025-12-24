@@ -1,5 +1,3 @@
-import { setRequestLocale } from 'next-intl/server';
-
 import DatasourceManager from '@/components/datasource/manager';
 import { PageHeader } from '@/components/page-header';
 import { fetchDatasources } from '@/lib/api';
@@ -10,7 +8,6 @@ interface Props {
 
 const Page = async ({ params }: Props) => {
   const { locale } = await params;
-  setRequestLocale(locale);
 
   const datasources = await fetchDatasources().catch(() => []);
 
