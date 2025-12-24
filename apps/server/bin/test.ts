@@ -35,7 +35,6 @@ const IMPORTER = (filePath: string) => {
 
 void new Ignitor(APP_ROOT, { importer: IMPORTER })
   .tap((app) => {
-     
     app.booting(async () => {
       await import('#start/env');
     });
