@@ -31,7 +31,19 @@
 
 - Lint: `pnpm lint`
 - Format: `pnpm format`
+- 测试: `pnpm test`
+- 类型检查: `pnpm --filter @sparkset/server typecheck`
 - 构建单包: `pnpm build --filter <pkg>`
+
+## 开发规范
+
+本项目使用 Git Hooks 自动验证代码质量。详细规范请查看 [AGENTS.md](./AGENTS.md) 中的 "Development Validation & Quality Gates" 部分。
+
+### 快速参考
+
+- **Pre-commit**：自动格式化、lint 检查、类型检查
+- **Pre-push**：完整验证（lint、类型、测试、构建）
+- **验证失败**：提交/推送会被阻止，请修复后重试
 
 ## 后续待办（建议）
 

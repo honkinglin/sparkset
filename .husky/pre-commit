@@ -1,1 +1,21 @@
-pnpm lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit validation..."
+
+# 运行 lint-staged（格式化、lint）
+pnpm lint-staged || {
+  echo "❌ Pre-commit validation failed. Please fix the errors before committing."
+  exit 1
+}
+
+# 如果有 server 相关的文件修改，运行类型检查
+if git diff --cached --name-only | grep -q "apps/server/.*\.ts"; then
+  echo "🔎 Running type check for server..."
+  pnpm --filter @sparkset/server typecheck || {
+    echo "❌ Type check failed. Please fix the type errors before committing."
+    exit 1
+  }
+fi
+
+echo "✅ Pre-commit validation passed!"

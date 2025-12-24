@@ -30,7 +30,12 @@
     "typescript": "^5.6.3"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json,md}": "prettier --check"
+    "**/*.{ts,tsx,js,jsx,json,md}": [
+      "prettier --write"
+    ],
+    "**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "mysql2": "^3.16.0"

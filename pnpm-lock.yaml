@@ -320,6 +320,9 @@ importers:
       '@swc/core':
         specifier: ^1.15.6
         version: 1.15.7
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.7.1
       hot-hook:
         specifier: ^0.4.0
         version: 0.4.0
@@ -2252,6 +2255,9 @@ packages:
 
   '@types/luxon@1.27.1':
     resolution: {integrity: sha512-cPiXpOvPFDr2edMnOXlz3UBDApwUfR+cpizvxCy0n3vp9bz/qe8BWzHPIEFcy+ogUOyjKuCISgyq77ELZPmkkg==}
+
+  '@types/luxon@3.7.1':
+    resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -6944,6 +6950,8 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/luxon@1.27.1': {}
+
+  '@types/luxon@3.7.1': {}
 
   '@types/mdast@4.0.4':
     dependencies:

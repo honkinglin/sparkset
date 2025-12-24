@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-push validation..."
+
+# 运行 lint 检查
+echo "📝 Checking code style..."
+pnpm lint || {
+  echo "❌ Lint failed. Please fix the errors before pushing."
+  exit 1
+}
+
+# 运行类型检查
+echo "🔎 Running type check..."
+pnpm --filter @sparkset/server typecheck || {
+  echo "❌ Type check failed. Please fix the type errors before pushing."
+  exit 1
+}
+
+# 运行测试
+echo "🧪 Running tests..."
+pnpm test || {
+  echo "❌ Tests failed. Please fix the failing tests before pushing."
+  exit 1
+}
+
+# 运行构建检查（确保代码可以编译）
+echo "🏗️  Checking build..."
+pnpm build || {
+  echo "❌ Build failed. Please fix the build errors before pushing."
+  exit 1
+}
+
+echo "✅ All validations passed!"
+

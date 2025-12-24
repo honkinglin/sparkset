@@ -1,8 +1,8 @@
-import { generateText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createDeepSeek } from '@ai-sdk/deepseek';
 import { createOpenAI } from '@ai-sdk/openai';
 import type { LanguageModel } from 'ai';
+import { generateText } from 'ai';
 
 export interface ModelCallOptions {
   model?: string;
@@ -17,12 +17,12 @@ export interface AIClientConfig {
   defaultProvider?: string;
   defaultApiKey?: string;
   defaultBaseURL?: string;
-  fallbackModels?: Array<{
+  fallbackModels?: {
     model: string;
     provider: string;
     apiKey?: string;
     baseURL?: string;
-  }>;
+  }[];
   logger?: {
     info: (msg: string, ...args: unknown[]) => void;
     warn: (msg: string, ...args: unknown[]) => void;
@@ -63,7 +63,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL,
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // Anthropic
@@ -76,7 +76,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL,
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // DeepSeek (官方 SDK)
@@ -89,7 +89,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL, // 如果不指定，使用官方默认 URL
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // Groq (OpenAI 兼容)
@@ -102,7 +102,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL || 'https://api.groq.com/openai/v1',
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // Moonshot / Kimi (OpenAI 兼容)
@@ -115,7 +115,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL || 'https://api.moonshot.cn/v1',
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // 智谱 AI / GLM (OpenAI 兼容)
@@ -128,7 +128,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL || 'https://open.bigmodel.cn/api/paas/v4',
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // 通义千问 / Qwen (OpenAI 兼容)
@@ -141,7 +141,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL || 'https://dashscope.aliyuncs.com/compatible-mode/v1',
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
   // 通用 OpenAI 兼容 provider
@@ -154,7 +154,7 @@ export const providerFactories: Record<string, ProviderFactory> = {
         apiKey: config.apiKey,
         baseURL: config.baseURL,
       });
-      return client(model);
+      return client(model) as unknown as LanguageModel;
     },
   },
 };
@@ -242,7 +242,7 @@ async function callOpenAICompatibleAPI(
     logger?.warn(`[fetch] Response body: ${responseText}`);
     throw new Error(`API error ${response.status}: ${responseText}`);
   }
-  let data: { choices?: Array<{ message?: { content?: string } }> };
+  let data: { choices?: { message?: { content?: string } }[] };
   try {
     data = JSON.parse(responseText);
   } catch {
@@ -304,13 +304,7 @@ function extractSQL(text: string): string {
   // 移除末尾的分号（如果存在）
   sql = sql.replace(/;+$/, '').trim();
   // 检查是否包含多语句（排除字符串和注释中的分号）
-  let cleaned = sql;
-  cleaned = cleaned.replace(/'([^'\\]|\\.)*'/g, '__STRING__');
-  cleaned = cleaned.replace(/"([^"\\]|\\.)*"/g, '__STRING__');
-  cleaned = cleaned.replace(/--[^\n]*/g, '');
-  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '');
-  // 如果移除字符串和注释后还有分号，说明是多语句查询
-  // 我们不在 extractSQL 中处理，让 executor 来报错，这样可以给用户更清晰的错误信息
+  // 注意：这里不检查多语句，让 executor 来报错，这样可以给用户更清晰的错误信息
   // 这里只移除末尾的分号，保留原始 SQL
   return sql;
 }
@@ -336,12 +330,12 @@ export class VercelAIClient implements AIClient {
     } = options;
 
     // 构建模型列表（主模型 + fallback）
-    const modelsToTry: Array<{
+    const modelsToTry: {
       model: string;
       provider: string;
       apiKey?: string;
       baseURL?: string;
-    }> = [{ model, provider, apiKey, baseURL }];
+    }[] = [{ model, provider, apiKey, baseURL }];
     if (this.config.fallbackModels && this.config.fallbackModels.length > 0) {
       modelsToTry.push(...this.config.fallbackModels);
     }
@@ -464,7 +458,7 @@ export async function testAIProviderConnection(options: {
   message: string;
   timestamp?: string;
 }> {
-  const { provider, apiKey, baseURL, model = 'gpt-4o-mini' } = options;
+  const { provider, apiKey, baseURL } = options;
 
   try {
     // 验证 provider 是否支持

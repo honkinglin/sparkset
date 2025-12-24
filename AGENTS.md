@@ -229,11 +229,111 @@ When multiple valid approaches exist, choose based on:
 - Use existing test utilities/helpers
 - Tests should be deterministic
 
+## Development Validation & Quality Gates
+
+### Automated Validation (Git Hooks)
+
+The project uses Git Hooks to automatically validate code quality on every commit and push:
+
+#### Pre-commit Hook (`.husky/pre-commit`)
+
+Automatically runs on `git commit`:
+
+1. **Code Formatting** - Prettier automatically formats staged files
+2. **Lint Check** - ESLint checks and auto-fixes code issues
+3. **Type Check** - TypeScript type checking (only when `apps/server` files are modified)
+
+**If validation fails, commit is blocked.** Fix errors and retry.
+
+#### Pre-push Hook (`.husky/pre-push`)
+
+Automatically runs on `git push`:
+
+1. **Full Lint Check** - Runs complete lint validation
+2. **Type Check** - Runs TypeScript type checking
+3. **Tests** - Runs all test suites
+4. **Build Check** - Ensures code compiles successfully
+
+**If validation fails, push is blocked.** Fix errors and retry.
+
+#### Lint-staged Configuration
+
+Optimized to run only on staged files:
+
+- Prettier formatting for all code files
+- ESLint auto-fix for TypeScript/JavaScript files
+
+### Manual Validation Commands
+
+You can also run validations manually:
+
+```bash
+# Format code
+pnpm format
+
+# Run lint check
+pnpm lint
+
+# Run type check (server only)
+pnpm --filter @sparkset/server typecheck
+
+# Run tests
+pnpm test
+
+# Run build
+pnpm build
+```
+
+### CI/CD Validation
+
+GitHub Actions automatically runs full validation on every PR and push:
+
+- Lint check
+- Type check
+- Tests
+- Build verification
+
+### Validation Workflow
+
+```
+git commit
+  ↓
+Pre-commit Hook
+  ├─ Prettier formatting
+  ├─ ESLint check & fix
+  └─ TypeScript type check (if needed)
+  ↓
+git push
+  ↓
+Pre-push Hook
+  ├─ Lint check
+  ├─ Type check
+  ├─ Tests
+  └─ Build verification
+  ↓
+GitHub Actions
+  └─ Full CI validation
+```
+
+### Bypassing Validation (Not Recommended)
+
+If you must skip validation (e.g., emergency fixes):
+
+```bash
+# Skip pre-commit hook
+git commit --no-verify
+
+# Skip pre-push hook
+git push --no-verify
+```
+
+**Warning**: Skipping validation may cause CI failures. Use with caution.
+
 ## Important Reminders
 
 **NEVER**:
 
-- Use `--no-verify` to bypass commit hooks
+- Use `--no-verify` to bypass commit hooks (unless absolutely necessary)
 - Disable tests instead of fixing them
 - Commit code that doesn't compile
 - Make assumptions - verify with existing code
@@ -241,6 +341,7 @@ When multiple valid approaches exist, choose based on:
 - Use TODO or placeholders to bypass implementation
 - Modify correct business logic to match wrong code
 - **Make syntax errors** - Every change must be syntactically correct
+- Skip validation steps - they exist to ensure code quality
 
 **ALWAYS**:
 
@@ -252,6 +353,8 @@ When multiple valid approaches exist, choose based on:
 - Understand why errors occur before fixing
 - Ensure implementation is complete and functional
 - **Verify syntax before applying changes** - Check that your edits will produce valid code
+- **Let Git Hooks validate your code** - Don't bypass unless absolutely necessary
+- Fix validation errors before committing/pushing
 
 ### Syntax Error Prevention
 
@@ -501,18 +604,26 @@ t('text', {
   - Use TypeScript types/interfaces for props
   - Prefer composition over complex prop drilling
 - **Formatting & Linting**:
-  - **Always format code after changes**: Run Prettier to format code after making any code changes
+  - **Automatic validation**: Git Hooks automatically handle formatting and linting:
+    - Pre-commit hook runs Prettier and ESLint automatically
+    - Pre-push hook runs full validation suite
+    - No need to manually run these commands before committing
+  - **Manual formatting** (optional, hooks handle this automatically):
+    - Use `pnpm format` to format all files
     - Use `pnpm prettier --write <file>` to format specific files
-    - Use `pnpm prettier --write .` to format all files (if needed)
-    - Pre-commit hooks will check formatting, but it's better to fix issues proactively
-  - **Fix linting issues**: Address ESLint warnings and errors before committing
+  - **Manual linting** (optional, hooks handle this automatically):
     - Run `pnpm lint` to check for linting issues
     - Fix issues or use appropriate ESLint disable comments only when necessary
-  - **Pre-commit checks**: The project uses Husky pre-commit hooks that run:
-    - Prettier formatting checks
-    - ESLint checks
-    - Ensure all checks pass before committing
-  - **Best practice**: Format and lint code immediately after making changes, not just before committing
+  - **Pre-commit validation** (automatic):
+    - Prettier formatting (auto-fix)
+    - ESLint check and auto-fix
+    - TypeScript type check (when server files change)
+  - **Pre-push validation** (automatic):
+    - Full lint check
+    - Type check
+    - All tests
+    - Build verification
+  - **Best practice**: Let Git Hooks handle validation automatically. They will block commits/pushes if issues are found.
 
 ## Security & Configuration Tips
 
