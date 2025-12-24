@@ -306,7 +306,9 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
             <Button
               variant="outline"
               size="sm"
-              onClick={handleSync}
+              onClick={() => {
+                void handleSync();
+              }}
               disabled={syncing || deleting || generating}
             >
               <RiRefreshLine className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
@@ -315,7 +317,9 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
             <Button
               variant="outline"
               size="sm"
-              onClick={handleDelete}
+              onClick={() => {
+                void handleDelete();
+              }}
               disabled={syncing || deleting || generating}
             >
               <RiDeleteBinLine className="h-4 w-4" />
@@ -373,7 +377,9 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
             <Button
               variant="outline"
               size="sm"
-              onClick={handleGenerateSemantic}
+              onClick={() => {
+                void handleGenerateSemantic();
+              }}
               disabled={syncing || deleting || generating}
             >
               <RiSparkling2Line className={`h-4 w-4 ${generating ? 'animate-spin' : ''}`} />
@@ -471,7 +477,13 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                 />
                               </div>
                               <div className="flex gap-2">
-                                <Button size="sm" onClick={handleSaveTable} disabled={saving}>
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    void handleSaveTable();
+                                  }}
+                                  disabled={saving}
+                                >
                                   <RiSave3Line className="h-4 w-4" />
                                   {t('Save')}
                                 </Button>
@@ -575,7 +587,9 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
                                       <Button
                                         size="sm"
                                         variant="ghost"
-                                        onClick={handleSaveColumn}
+                                        onClick={() => {
+                                          void handleSaveColumn();
+                                        }}
                                         disabled={saving}
                                       >
                                         <RiSave3Line className="h-4 w-4" />
@@ -621,7 +635,11 @@ export default function DatasourceDetail({ initial }: { initial: DatasourceDetai
             <DialogTitle>{t('Edit Datasource')}</DialogTitle>
             <DialogDescription>{t('Modify datasource configuration')}</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleEditSubmit}>
+          <form
+            onSubmit={(e) => {
+              void handleEditSubmit(e);
+            }}
+          >
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="edit-name">{t('Name')}</Label>

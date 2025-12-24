@@ -25,7 +25,6 @@ import {
 } from '@remixicon/react';
 import { useTranslations } from '@/i18n/use-translations';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { toast } from 'sonner';
 
@@ -37,7 +36,6 @@ interface ChartListProps {
 
 // Chart list component compatible with old interface, for code still referencing `@/components/charts/list`.
 export function ChartList({ charts, datasets, onRefresh }: ChartListProps) {
-  const router = useRouter();
   const t = useTranslations();
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [chartToDelete, setChartToDelete] = React.useState<Chart | null>(null);

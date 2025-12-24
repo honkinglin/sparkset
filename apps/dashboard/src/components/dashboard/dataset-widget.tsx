@@ -41,8 +41,7 @@ export function DatasetWidget({ config, refreshKey }: DatasetWidgetProps) {
   };
 
   useEffect(() => {
-    loadDataset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    void loadDataset();
   }, [config.datasetId, refreshKey]);
 
   if (loading) {

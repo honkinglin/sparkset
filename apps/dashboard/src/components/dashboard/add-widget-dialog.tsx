@@ -53,7 +53,7 @@ export function AddWidgetDialog({ open, onOpenChange, onAdd }: AddWidgetDialogPr
 
   useEffect(() => {
     if (open) {
-      loadData();
+      void loadData();
     } else {
       // 关闭时重置状态
       setSelectedChartIds(new Set());
@@ -72,7 +72,7 @@ export function AddWidgetDialog({ open, onOpenChange, onAdd }: AddWidgetDialogPr
       ]);
       setCharts(chartsResult.items);
       setDatasets(datasetsResult.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load data'));
     } finally {
       setLoading(false);

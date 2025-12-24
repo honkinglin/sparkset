@@ -24,6 +24,7 @@ interface SaveChartDialogProps {
   onOpenChange: (open: boolean) => void;
   sql: string;
   datasourceId?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rows: any[];
   defaultName?: string;
 }
@@ -77,7 +78,7 @@ export function SaveChartDialog({
       setCreatedDatasetId(dataset.id);
       setStep('create-chart');
       toast.success(t('Dataset created successfully'));
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to create dataset'));
     } finally {
       setLoading(false);
@@ -111,7 +112,7 @@ export function SaveChartDialog({
       toast.success(t('Chart created successfully'));
       onOpenChange(false);
       router.push('/charts');
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to create chart'));
     } finally {
       setLoading(false);
@@ -227,6 +228,7 @@ export function SaveChartDialog({
 }
 
 // Helper functions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function inferSchema(rows: any[]) {
   if (!rows || rows.length === 0) return [];
 
@@ -241,6 +243,7 @@ function inferSchema(rows: any[]) {
   return schema;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function autoGenerateSpec(rows: any[]) {
   const schema = inferSchema(rows);
   const nominalFields = schema.filter((f) => f.type === 'nominal');

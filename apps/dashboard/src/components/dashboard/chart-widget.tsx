@@ -34,8 +34,7 @@ export function ChartWidget({ config, refreshKey }: ChartWidgetProps) {
   };
 
   useEffect(() => {
-    loadChart();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    void loadChart();
   }, [config.chartId, refreshKey]);
 
   if (loading) {

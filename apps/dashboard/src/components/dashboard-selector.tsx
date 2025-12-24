@@ -26,6 +26,7 @@ interface DashboardSelectorProps {
   // 查询结果数据（仅当 type === 'query-result' 时需要）
   queryResult?: {
     sql: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rows: any[];
     datasourceId: number;
     question?: string;
@@ -45,6 +46,7 @@ interface DashboardSelectorProps {
 }
 
 // 从 rows 推断 schema
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function inferSchema(rows: any[]) {
   if (!rows || rows.length === 0) return [];
 
@@ -91,7 +93,7 @@ export function DashboardSelector({
   // 加载仪表盘列表
   useEffect(() => {
     if (open) {
-      loadDashboards();
+      void loadDashboards();
     }
   }, [open]);
 
@@ -100,7 +102,7 @@ export function DashboardSelector({
       setLoading(true);
       const result = await dashboardsApi.list();
       setDashboards(result.items);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to load dashboards'));
     } finally {
       setLoading(false);
@@ -179,7 +181,7 @@ export function DashboardSelector({
       onAdded?.(selectedDashboardId);
       // 跳转到仪表盘页面
       router.push(`/dashboards/${selectedDashboardId}`);
-    } catch (error) {
+    } catch {
       toast.error(t('Failed to add to dashboard'));
     } finally {
       setAdding(false);

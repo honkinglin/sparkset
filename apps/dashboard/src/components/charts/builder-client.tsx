@@ -38,6 +38,7 @@ export function ChartBuilderClient({
 }: ChartBuilderClientProps) {
   const t = useTranslations();
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSaving, setIsSaving] = useState(false);
   const builderRef = useRef<ChartBuilderHandle>(null);
 
